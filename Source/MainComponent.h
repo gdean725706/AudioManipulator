@@ -9,6 +9,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "XYPadComponent.h"
 
 class TestComponent : public Button, public FlexItem
 {
@@ -90,9 +91,15 @@ private:
 	ScopedPointer<TextButton> m_settingsButton;
 	// Define our own scopedpointer custom componenet
 	typedef ScopedPointer<TestComponent> TestPtr;
+	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 
 	// Our test objects
-	TestPtr m_custom1, m_custom2, m_custom3, m_custom4, m_custom5;
+	//TestPtr m_custom1, m_custom2, m_custom3, m_custom4, m_custom5;
+
+	// Create XY Pad
+	XYPadPtr m_XYPad1;
+
+	ScopedPointer<Label> m_XYpositionLabel;
 
 	// Define our audio device manager - this deals with the audio i/o for us
 	AudioDeviceManager m_audioManager;

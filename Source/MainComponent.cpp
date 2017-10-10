@@ -8,33 +8,23 @@
 
 #include "MainComponent.h"
 
-
 //==============================================================================
 MainContentComponent::MainContentComponent()
 {
 	m_settingsButton = new TextButton("Settings");
 
-	// Create test component objects
-	m_custom1 = new TestComponent(48);
-	m_custom2 = new TestComponent(50);
-	m_custom3 = new TestComponent(51);
-	m_custom4 = new TestComponent(53);
-	m_custom5 = new TestComponent(55);
+	// Create XY Pad component
+	m_XYPad1 = new XYPadComponent();
+
+	m_XYpositionLabel = new Label("XYPosLbl", "");
 
 	// Make our components visible
 	addAndMakeVisible(m_settingsButton);
-	addAndMakeVisible(m_custom1);
-	addAndMakeVisible(m_custom2);
-	addAndMakeVisible(m_custom3);
-	addAndMakeVisible(m_custom4);
-	addAndMakeVisible(m_custom5);
+	addAndMakeVisible(m_XYPad1);
+	addAndMakeVisible(m_XYpositionLabel);
 
 	// Add them to our flexbox list (inherited)
-	items.add(m_custom1->withMargin(3));
-	items.add(m_custom2->withMargin(3));
-	items.add(m_custom3->withMargin(3));
-	items.add(m_custom4->withMargin(3));
-	items.add(m_custom5->withMargin(3));
+	items.add(m_XYPad1->withMargin(3));
 
 	// flexWrap CSS equiv attribute
 	flexWrap = Wrap::wrap;
@@ -42,13 +32,8 @@ MainContentComponent::MainContentComponent()
 
 	// Set up our button click event observers
 	m_settingsButton->addListener(this);
-	m_custom1->addListener(this);
-	m_custom2->addListener(this);
-	m_custom3->addListener(this);
-	m_custom4->addListener(this);
-	m_custom5->addListener(this);
 
-    setSize (600, 400);
+    setSize (1024, 768);
 
 	//Specify number of audio i/o channels
 	setAudioChannels(2, 2);
@@ -97,7 +82,7 @@ void MainContentComponent::resized()
 
 	m_settingsButton->setBounds(header.removeFromLeft(100).reduced(3));
 
-	int buttonHeight = 30;
+	int buttonHeight = 20;
 
 	// Call flexbox perform layout method, as we have already set up the list of items
 	// flexbox will magically arrange for us
@@ -119,21 +104,6 @@ void MainContentComponent::buttonClicked(Button * button)
 
 		// Get our midi output device from audio manager
 		m_midiOutput = m_audioManager.getDefaultMidiOutput();
-	}
-	else if (button == m_custom1) {
-		playNote(m_custom1->getPitch());
-	}
-	else if (button == m_custom2) {
-		playNote(m_custom2->getPitch());
-	}
-	else if (button == m_custom3) {
-		playNote(m_custom3->getPitch());
-	}
-	else if (button == m_custom4) {
-		playNote(m_custom4->getPitch());
-	}
-	else if (button == m_custom5) {
-		playNote(m_custom5->getPitch());
 	}
 
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="z831Sd" name="Audio Manipulator AM-10 Alpha" displaySplashScreen="1"
+<JUCERPROJECT id="z831Sd" name="Audio Manipulator" displaySplashScreen="1"
               reportAppUsage="1" splashScreenColour="Dark" projectType="guiapp"
               version="0.0.1" bundleIdentifier="com.yourcompany.FlexBoxIntro"
               includeBinaryInAppConfig="1" cppLanguageStandard="11" jucerVersion="5.1.2">
-  <MAINGROUP id="m0xuvL" name="Audio Manipulator AM-10 Alpha">
+  <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
+      <FILE id="ojlf88" name="XYPadComponent.h" compile="0" resource="0"
+            file="Source/XYPadComponent.h"/>
       <FILE id="JrETl4" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="tKQXiH" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
