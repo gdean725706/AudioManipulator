@@ -32,6 +32,7 @@ MainContentComponent::MainContentComponent()
 	// flexWrap CSS equiv attribute
 	flexWrap = Wrap::wrap;
 	alignContent = AlignContent::spaceBetween;
+	justifyContent = JustifyContent::center;
 
 	// Set up our button click event observers
 	m_settingsButton->addListener(this);
@@ -134,8 +135,10 @@ void MainContentComponent::resized()
     // update their positions.
 
 	auto bounds = getLocalBounds();
-	int headerHeight = getHeight() * 0.2f;
+	int headerHeight = getHeight() * 0.05f;
 	auto header = bounds.removeFromTop(headerHeight);
+
+	int centerPosition = getWidth() * 0.5f;
 
 	m_settingsButton->setBounds(header.removeFromLeft(100).reduced(3));
 
