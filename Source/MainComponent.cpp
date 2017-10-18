@@ -65,7 +65,7 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 
 	// Set up the filter
 	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 18000.0f) + 0.0001f;
-	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 24.0f) + 0.0001f;
+	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 12.0f) + 0.0001f;
 	IIRCoefficients ic = IIRCoefficients::makeLowPass(m_sampleRate, freq, res);
 	m_testFilter->setCoefficients(ic);
 
@@ -88,7 +88,7 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 			{
 				bufferToFill.buffer->clear(channel, bufferToFill.startSample, bufferToFill.numSamples);
 			}
-			// Now we can actually DO the processing (right now passing input straight to output)
+			// Now we can actually DO the processing
 			else
 			{
 				// Get pointers to our in/out buffer locations
@@ -98,9 +98,7 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 				//Output our input samples * volume scale & apply filtering
 				for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
 				{
-					outBuffer[sample] = inBuffer[sample] * 0.9f;
-
-					m_testFilter->processSingleSampleRaw(outBuffer[sample]);
+					outBuffer[sample] = m_testFilter->processSingleSampleRaw(inBuffer[sample]) * 0.9f;
 				}
 			}
 		}
@@ -165,6 +163,11 @@ void MainContentComponent::buttonClicked(Button * button)
 		m_midiOutput = m_audioManager.getDefaultMidiOutput();
 	}
 
+}
+
+void MainContentComponent::mouseMove(const MouseEvent& evt)
+{
+	repaint();
 }
 
 void MainContentComponent::playNote(int note)

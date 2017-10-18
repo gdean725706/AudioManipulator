@@ -84,6 +84,7 @@ public:
 	void releaseResources() override;
     void paint (Graphics&) override;
     void resized() override;
+	void mouseMove(const MouseEvent& event) override;
 
 	void buttonClicked(Button* button) override;
 
@@ -108,7 +109,7 @@ private:
 	MidiOutput* m_midiOutput;
 
 	// Define a fiter object
-	IIRFilter* m_testFilter;
+	ScopedPointer<IIRFilter> m_testFilter;
 
 	double m_sampleRate;
 
