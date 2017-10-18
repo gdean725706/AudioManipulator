@@ -110,7 +110,7 @@ private:
 	// Define a fiter object
 	IIRFilter* m_testFilter;
 
-	float m_sampleRate;
+	double m_sampleRate;
 
 	void playNote(int note);
 
