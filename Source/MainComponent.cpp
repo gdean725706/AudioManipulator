@@ -14,9 +14,12 @@ MainContentComponent::MainContentComponent()
 	m_settingsButton = new TextButton("Settings");
 
 	// Create XY Pad component
-	m_XYPad1 = new XYPadComponent();
+	m_XYPad1 = new XYPadComponent(400,400);
 
 	m_XYpositionLabel = new Label("XYPosLbl", "");
+
+	// Initialise IIR Filter
+	m_testFilter = new IIRFilter();
 
 	// Make our components visible
 	addAndMakeVisible(m_settingsButton);
@@ -46,13 +49,65 @@ MainContentComponent::~MainContentComponent()
 
 void MainContentComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-	
+	m_sampleRate = sampleRate;
 }
 
 void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
+	// Get current audio device
+	AudioIODevice* device = deviceManager.getCurrentAudioDevice();
+	// Juce uses bitmasking for active i/o channels
+	const BigInteger activeInputChannels = device->getActiveInputChannels();
+	const BigInteger activeOutputChannels = device->getActiveOutputChannels();
+	// Inspect the bits, max channels will be highest bit +1
+	const int maxInputChannels = activeInputChannels.getHighestBit() + 1;
+	const int maxOutputChannels = activeOutputChannels.getHighestBit() + 1;
+
+	// Set up the filter
+	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 18000.0f) + 0.0001f;
+	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 24.0f) + 0.0001f;
+	IIRCoefficients ic = IIRCoefficients::makeLowPass(m_sampleRate, freq, res);
+	m_testFilter->setCoefficients(ic);
+
+	// Cycle through each channel
+	for (int channel = 0; channel < maxOutputChannels; ++channel)
+	{
+		// Check that we have an active channel to output to, if not - clear it
+		if ((!activeOutputChannels[channel] || maxInputChannels == 0))
+		{
+			bufferToFill.buffer->clear(channel, bufferToFill.startSample, bufferToFill.numSamples);	
+		}
+		else
+		{
+			// In case we are going to cycle through more output channels than there are input channels
+			// Wrap current channel using Mod of max input channels
+			const int actualInputChannel = channel & maxInputChannels;
+
+			// Again clear the buffer if we have ourselves an inactive input channel
+			if (!activeInputChannels[channel])
+			{
+				bufferToFill.buffer->clear(channel, bufferToFill.startSample, bufferToFill.numSamples);
+			}
+			// Now we can actually DO the processing (right now passing input straight to output)
+			else
+			{
+				// Get pointers to our in/out buffer locations
+				const float* inBuffer = bufferToFill.buffer->getReadPointer(actualInputChannel, bufferToFill.startSample);
+				float* outBuffer = bufferToFill.buffer->getWritePointer(channel, bufferToFill.startSample);
+
+				//Output our input samples * volume scale & apply filtering
+				for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+				{
+					outBuffer[sample] = inBuffer[sample] * 0.9f;
+
+					m_testFilter->processSingleSampleRaw(outBuffer[sample]);
+				}
+			}
+		}
+	}
+
 	// Clear buffer to prevent random noise output.
-	bufferToFill.clearActiveBufferRegion();
+	//bufferToFill.clearActiveBufferRegion();
 }
 
 void MainContentComponent::releaseResources()
@@ -67,7 +122,11 @@ void MainContentComponent::paint (Graphics& g)
 
     g.setFont (Font (16.0f));
     g.setColour (Colours::white);
-    g.drawText ("Hello World!", getLocalBounds(), Justification::centred, true);
+
+	String valueFreq, valueRes;
+	valueFreq << scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 18000.0f) + 0.0001f;
+	valueRes << scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 24.0f) + 0.0001f;
+	g.drawText(valueFreq + " , " + valueRes , getLocalBounds(), Justification::centred, true);
 }
 
 void MainContentComponent::resized()
@@ -82,7 +141,7 @@ void MainContentComponent::resized()
 
 	m_settingsButton->setBounds(header.removeFromLeft(100).reduced(3));
 
-	int buttonHeight = 20;
+	int buttonHeight = 10;
 
 	// Call flexbox perform layout method, as we have already set up the list of items
 	// flexbox will magically arrange for us
@@ -120,4 +179,9 @@ void MainContentComponent::playNote(int note)
 		MidiMessage msgOff = MidiMessage::noteOff(1, note);
 		m_midiOutput->sendMessageNow(msgOff);
 	}
+}
+
+double MainContentComponent::scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd)
+{
+	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
 }

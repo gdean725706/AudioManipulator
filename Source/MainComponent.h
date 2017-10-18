@@ -18,7 +18,7 @@ private:
 	int m_midiPitch;
 public:
 	TestComponent(int pitch) :
-		FlexItem(200, 100),
+		FlexItem(100, 25),
 		Button("Midi Button"),
 		m_midiPitch(pitch),
 		m_colour(Colours::lightgrey)
@@ -107,7 +107,14 @@ private:
 	// Define midi output device
 	MidiOutput* m_midiOutput;
 
+	// Define a fiter object
+	IIRFilter* m_testFilter;
+
+	float m_sampleRate;
+
 	void playNote(int note);
+
+	double scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
