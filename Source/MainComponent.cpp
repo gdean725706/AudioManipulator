@@ -18,6 +18,8 @@ MainContentComponent::MainContentComponent()
 
 	m_XYpositionLabel = new Label("XYPosLbl", "");
 
+	m_effectButtonContainer = new EffectButtonContainerComponent(600, 100);
+
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
 
@@ -25,6 +27,7 @@ MainContentComponent::MainContentComponent()
 	addAndMakeVisible(m_settingsButton);
 	addAndMakeVisible(m_XYPad1);
 	addAndMakeVisible(m_XYpositionLabel);
+	addAndMakeVisible(m_effectButtonContainer);
 
 	// Add them to our flexbox list (inherited)
 	items.add(m_XYPad1->withMargin(3));
@@ -137,10 +140,10 @@ void MainContentComponent::resized()
 	auto bounds = getLocalBounds();
 	int headerHeight = getHeight() * 0.05f;
 	auto header = bounds.removeFromTop(headerHeight);
-
-	int centerPosition = getWidth() * 0.5f;
+	//auto center = header.removeFromTop(getHeight() * 0.05f);
 
 	m_settingsButton->setBounds(header.removeFromLeft(100).reduced(3));
+	m_effectButtonContainer->setBounds(header.removeFromTop(5).reduced(3));
 
 	int buttonHeight = 10;
 

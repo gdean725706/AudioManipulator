@@ -33,7 +33,6 @@ public:
 		//Set up flexbox
 		associatedComponent = this;
 		alignSelf = AlignSelf::center;
-
     }
 
     ~XYPadComponent()
