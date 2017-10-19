@@ -10,7 +10,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainComponent.h"
-#include "EffectButtonContainerComponent.h"
 
 //==============================================================================
 class AudioManipulatorApplication  : public JUCEApplication
