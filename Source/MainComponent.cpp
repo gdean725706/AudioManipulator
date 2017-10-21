@@ -70,8 +70,27 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 	// Set up the filter
 	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 18000.0f) + 0.0001f;
 	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 12.0f) + 0.0001f;
-	IIRCoefficients ic = IIRCoefficients::makeLowPass(m_sampleRate, freq, res);
-	m_testFilter->setCoefficients(ic);
+
+	IIRCoefficients ic;
+	bool filterEnabled = false;
+	// Get currently selected filter and set up
+	FXType currentEffect = m_effectButtonContainer->getCurrentEffect();
+	switch (currentEffect)
+	{
+	case FXType::LowPassFilter:
+		ic = IIRCoefficients::makeLowPass(m_sampleRate, freq, res);
+		filterEnabled = true;
+		break;
+	case FXType::HighPassFilter:
+		ic = IIRCoefficients::makeHighPass(m_sampleRate, freq, res);
+		filterEnabled = true;
+		break;
+	default:
+		filterEnabled = false;
+	}
+	
+	if (filterEnabled)
+		m_testFilter->setCoefficients(ic);
 
 	// Cycle through each channel
 	for (int channel = 0; channel < maxOutputChannels; ++channel)
@@ -102,7 +121,10 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 				//Output our input samples * volume scale & apply filtering
 				for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
 				{
-					outBuffer[sample] = m_testFilter->processSingleSampleRaw(inBuffer[sample]) * 0.9f;
+					if (filterEnabled)
+						outBuffer[sample] = m_testFilter->processSingleSampleRaw(inBuffer[sample]) * 0.9f;
+					else
+						outBuffer[sample] = inBuffer[sample] * 0.9f;
 				}
 			}
 		}

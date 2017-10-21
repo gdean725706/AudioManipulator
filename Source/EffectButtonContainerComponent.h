@@ -116,6 +116,11 @@ public:
 
 	}
 
+	EffectType getCurrentEffect()
+	{
+		return m_currentEffect;
+	}
+
 private:
 	int m_width, m_height;
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;

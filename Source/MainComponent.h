@@ -42,6 +42,8 @@ private:
 	// Define our own scopedpointer custom component
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 
+	typedef EffectBase::EffectType FXType;
+
 	// Our test objects
 	//TestPtr m_custom1, m_custom2, m_custom3, m_custom4, m_custom5;
 
