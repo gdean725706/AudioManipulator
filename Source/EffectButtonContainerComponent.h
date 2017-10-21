@@ -43,9 +43,9 @@ public:
         // Set up flexbox
 	    flexDirection = Direction::row;
 	    flexWrap = Wrap::wrap;
-	    justifyContent = JustifyContent::spaceAround;
+	    justifyContent = JustifyContent::center;
 	    alignItems = AlignItems::center;
-	    alignContent = AlignContent::spaceAround;
+	    alignContent = AlignContent::center;
 
     }
 
@@ -62,7 +62,7 @@ public:
            drawing code..
         */
 
-        g.fillAll (Colours::lightcoral);   // clear the background
+        g.fillAll (Colours::lightslategrey);   // clear the background
 
         g.setColour (Colours::grey);
         g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
@@ -77,6 +77,9 @@ public:
     {
         // This method is where you should set the bounds of any child
         // components that your component contains..
+
+		auto bounds = getLocalBounds();
+		performLayout(bounds);
 
     }
 

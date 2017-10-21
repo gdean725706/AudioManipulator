@@ -18,7 +18,7 @@ MainContentComponent::MainContentComponent()
 
 	m_XYpositionLabel = new Label("XYPosLbl", "");
 
-	m_effectButtonContainer = new EffectButtonContainerComponent(600, 100);
+	m_effectButtonContainer = new EffectButtonContainerComponent(600, 400);
 
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
@@ -140,10 +140,12 @@ void MainContentComponent::resized()
 	auto bounds = getLocalBounds();
 	int headerHeight = getHeight() * 0.05f;
 	auto header = bounds.removeFromTop(headerHeight);
-	//auto center = header.removeFromTop(getHeight() * 0.05f);
 
-	m_settingsButton->setBounds(header.removeFromLeft(100).reduced(3));
-	m_effectButtonContainer->setBounds(header.removeFromTop(5).reduced(3));
+	auto settingsButtonBounds = header.removeFromLeft(100).reduced(3);
+	m_settingsButton->setBounds(settingsButtonBounds);
+
+	//bounds.removeFromTop(m_XYPad1->getHeight()).reduced(3);
+	m_effectButtonContainer->setBounds(bounds.removeFromTop(100).reduced(3));
 
 	int buttonHeight = 10;
 

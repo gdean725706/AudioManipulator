@@ -34,7 +34,7 @@ public:
 	EffectButtonComponent(EffectType effectType, String labelText) :
 		m_effectType(effectType),
 		m_labelText(labelText),
-		FlexItem(50, 25),
+		FlexItem(75, 50),
 		Button("Effect Button"),
 		m_midiPitch(),
 		m_colour(Colours::lightgrey)

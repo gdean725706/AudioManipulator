@@ -30,9 +30,10 @@ public:
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
 
-		//Set up flexbox
+		//Set up flex item
 		associatedComponent = this;
-		alignSelf = AlignSelf::center;
+		alignSelf = AlignSelf::autoAlign;
+		order = 0;
     }
 
     ~XYPadComponent()
