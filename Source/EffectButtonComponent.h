@@ -19,18 +19,17 @@ class EffectButtonComponent : public Button, public FlexItem, public EffectBase
 private:
 	Colour m_colour;
 	int m_midiPitch;
-
 	EffectType m_effectType;
 	String m_labelText;
 
 public:
-	EffectButtonComponent(EffectType effectType, String labelText) :
-		m_effectType(effectType),
-		m_labelText(labelText),
+	EffectButtonComponent(EffectType effectType, String buttonName) :
+		m_labelText(buttonName),
 		FlexItem(75, 50),
-		Button("Effect Button"),
+		Button("btnEffect" + buttonName),
 		m_midiPitch(),
-		m_colour(Colours::lightgrey)
+		m_colour(Colours::lightgrey),
+		m_effectType(effectType)
 	{
 		// Randomize colour
 		//Random r;
@@ -41,12 +40,13 @@ public:
 		alignSelf = AlignSelf::autoAlign;
 
 		// Not active yet
-		setActive(true);
+		setActive(false);
 	}
 
 	// Override paint virtual to make it do what we want it to do
 	void paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown) override
 	{
+
 		// Set up button colour to change based on mouse events
 		if (isButtonDown) {
 			m_colour = Colours::black;
@@ -55,6 +55,7 @@ public:
 			m_colour = Colours::grey;
 		}
 
+
 		if (isMouseOverButton)
 		{
 			m_colour = m_colour.brighter();
@@ -62,7 +63,7 @@ public:
 
 		if (isActive())
 		{
-			m_colour = m_colour.brighter();
+			m_colour = Colours::darkgrey;
 		}
 
 		// fill colours

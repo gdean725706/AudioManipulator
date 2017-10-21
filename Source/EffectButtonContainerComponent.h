@@ -41,6 +41,11 @@ public:
 		items.add(m_buttonHPF->withMargin(3));
 		items.add(m_buttonDelay->withMargin(3));
 
+		//
+		m_buttonLPF->addListener(this);
+		m_buttonHPF->addListener(this);
+		m_buttonDelay->addListener(this);
+
         // Set up flexbox
 	    flexDirection = Direction::row;
 	    flexWrap = Wrap::wrap;
@@ -86,18 +91,29 @@ public:
 
 	void buttonClicked(Button* button) override
 	{
-		//if (button == m_buttonLPF)
-		//{
-		//	m_buttonLPF->setActive(true);
-		//}
-		//else if (button == m_buttonHPF)
-		//{
-		//	m_buttonLPF->setActive(true);
-		//}
-		//else if (button = m_buttonDelay)
-		//{
-		//	m_buttonDelay->setActive(true);
-		//}
+		if (button == m_buttonLPF)
+		{
+			m_currentEffect = EffectType::LowPassFilter;
+		}
+		
+		if (button == m_buttonHPF)
+		{
+			m_currentEffect = EffectType::HighPassFilter;
+		}
+
+		if (button == m_buttonDelay)
+		{
+			m_currentEffect = EffectType::Delay;
+		}
+
+		m_buttonLPF->setActive(m_currentEffect == EffectType::LowPassFilter);
+		m_buttonHPF->setActive(m_currentEffect == EffectType::HighPassFilter);
+		m_buttonDelay->setActive(m_currentEffect == EffectType::Delay);
+		
+		m_buttonLPF->repaint();
+		m_buttonHPF->repaint();
+		m_buttonDelay->repaint();
+
 	}
 
 private:
