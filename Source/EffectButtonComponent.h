@@ -11,18 +11,11 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "EffectBase.h"
 
-class EffectButtonComponent : public Button, public FlexItem
+class EffectButtonComponent : public Button, public FlexItem, public EffectBase
 {
-public:
-	// This feels wrong... Perhaps I should make an effect class and inherit it
-	enum EffectType
-	{
-		LowPassFilter,
-		HighPassFilter,
-		Phaser,
-		Delay
-	};
+
 private:
 	Colour m_colour;
 	int m_midiPitch;
@@ -45,8 +38,10 @@ public:
 
 		// Due to FlexBox multiple inheritance we must set the associated component to this
 		associatedComponent = this;
-
 		alignSelf = AlignSelf::autoAlign;
+
+		// Not active yet
+		setActive(true);
 	}
 
 	// Override paint virtual to make it do what we want it to do
@@ -65,6 +60,11 @@ public:
 			m_colour = m_colour.brighter();
 		}
 
+		if (isActive())
+		{
+			m_colour = m_colour.brighter();
+		}
+
 		// fill colours
 		g.fillAll(m_colour);
 
@@ -72,7 +72,8 @@ public:
 		g.drawText(m_labelText, getLocalBounds(), Justification::centred, false);
 	}
 
-	int getPitch() {
+	int getPitch() 
+	{
 		return m_midiPitch;
 	}
 private:

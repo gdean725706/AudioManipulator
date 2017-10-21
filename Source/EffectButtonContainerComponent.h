@@ -11,11 +11,12 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "EffectBase.h"
 
 //==============================================================================
 /*
 */
-class EffectButtonContainerComponent    : public Component, public FlexBox
+class EffectButtonContainerComponent    : public Component, public FlexBox, public ButtonListener, public EffectBase
 {
 public:
     EffectButtonContainerComponent(int width, int height):
@@ -26,19 +27,19 @@ public:
         // initialise any special settings that your component needs.
 
 		// Add buttons
-		m_button1 = new EffectButtonComponent(EffectButtonComponent::EffectType::LowPassFilter, "LPF");
-		m_button2 = new EffectButtonComponent(EffectButtonComponent::EffectType::HighPassFilter, "HPF");
-		m_button3 = new EffectButtonComponent(EffectButtonComponent::EffectType::Delay, "Delay");
+		m_buttonLPF = new EffectButtonComponent(EffectType::LowPassFilter, "LPF");
+		m_buttonHPF = new EffectButtonComponent(EffectType::HighPassFilter, "HPF");
+		m_buttonDelay = new EffectButtonComponent(EffectType::Delay, "Delay");
 
 		// Make visible
-		addAndMakeVisible(m_button1);
-		addAndMakeVisible(m_button2);
-		addAndMakeVisible(m_button3);
+		addAndMakeVisible(m_buttonLPF);
+		addAndMakeVisible(m_buttonHPF);
+		addAndMakeVisible(m_buttonDelay);
 
 		//Add to flexbox
-		items.add(m_button1->withMargin(3));
-		items.add(m_button2->withMargin(3));
-		items.add(m_button3->withMargin(3));
+		items.add(m_buttonLPF->withMargin(3));
+		items.add(m_buttonHPF->withMargin(3));
+		items.add(m_buttonDelay->withMargin(3));
 
         // Set up flexbox
 	    flexDirection = Direction::row;
@@ -83,9 +84,26 @@ public:
 
     }
 
+	void buttonClicked(Button* button) override
+	{
+		//if (button == m_buttonLPF)
+		//{
+		//	m_buttonLPF->setActive(true);
+		//}
+		//else if (button == m_buttonHPF)
+		//{
+		//	m_buttonLPF->setActive(true);
+		//}
+		//else if (button = m_buttonDelay)
+		//{
+		//	m_buttonDelay->setActive(true);
+		//}
+	}
+
 private:
 	int m_width, m_height;
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
-	FlexButtonPtr m_button1, m_button2, m_button3;
+	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay;
+	EffectType m_currentEffect;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonContainerComponent)
 };
