@@ -32,8 +32,11 @@ public:
 
 		//Set up flex item
 		associatedComponent = this;
-		alignSelf = AlignSelf::autoAlign;
+		//flexGrow = 2;
 		order = 0;
+
+		//setSize(width, height);
+
     }
 
     ~XYPadComponent()

@@ -12,6 +12,7 @@
 #include "XYPadComponent.h"
 #include "EffectButtonComponent.h"
 #include "EffectButtonContainerComponent.h"
+#include "ControlContainerComponent.h"
 
 
 //==============================================================================
@@ -39,21 +40,16 @@ public:
 
 private:
 	ScopedPointer<TextButton> m_settingsButton;
-	// Define our own scopedpointer custom component
-	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 
+	// Typedef for our enum containing all the FX types
 	typedef EffectBase::EffectType FXType;
-
-	// Our test objects
-	//TestPtr m_custom1, m_custom2, m_custom3, m_custom4, m_custom5;
-
-	// Create XY Pad
-	XYPadPtr m_XYPad1;
-
-	ScopedPointer<Label> m_XYpositionLabel;
 
 	// Create container for our flex buttons
 	ScopedPointer<EffectButtonContainerComponent> m_effectButtonContainer;
+	// Create container for control buttons
+	ScopedPointer<ControlContainerComponent> m_controlsContainer;
+
+	ScopedPointer<XYPadComponent> m_XYPad1;
 
 	// Define midi output device
 	MidiOutput* m_midiOutput;

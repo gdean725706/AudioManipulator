@@ -13,24 +13,22 @@ MainContentComponent::MainContentComponent()
 {
 	m_settingsButton = new TextButton("Settings");
 
-	// Create XY Pad component
-	m_XYPad1 = new XYPadComponent(400,400);
+	// Create controls container component
+	m_controlsContainer = new ControlContainerComponent();
 
-	m_XYpositionLabel = new Label("XYPosLbl", "");
-
+	// Create effect button container
 	m_effectButtonContainer = new EffectButtonContainerComponent(600, 400);
+
+	// set up pointer to XY pad in controls container
+	m_XYPad1 = m_controlsContainer->getXYPad();
 
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
 
 	// Make our components visible
 	addAndMakeVisible(m_settingsButton);
-	addAndMakeVisible(m_XYPad1);
-	addAndMakeVisible(m_XYpositionLabel);
+	addAndMakeVisible(m_controlsContainer);
 	addAndMakeVisible(m_effectButtonContainer);
-
-	// Add them to our flexbox list (inherited)
-	items.add(m_XYPad1->withMargin(3));
 
 	// flexWrap CSS equiv attribute
 	flexWrap = Wrap::wrap;
@@ -54,6 +52,10 @@ MainContentComponent::~MainContentComponent()
 void MainContentComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
 	m_sampleRate = sampleRate;
+
+	// Double check our pointer to the XY pad is not null
+	if (!m_XYPad1)
+		m_XYPad1 = m_controlsContainer->getXYPad();
 }
 
 void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
@@ -168,6 +170,7 @@ void MainContentComponent::resized()
 
 	//bounds.removeFromTop(m_XYPad1->getHeight()).reduced(3);
 	m_effectButtonContainer->setBounds(bounds.removeFromTop(100).reduced(3));
+	m_controlsContainer->setBounds(bounds.removeFromTop(400).reduced(3));
 
 	int buttonHeight = 10;
 
