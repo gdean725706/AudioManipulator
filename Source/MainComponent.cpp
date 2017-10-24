@@ -68,8 +68,8 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 	const int maxOutputChannels = activeOutputChannels.getHighestBit() + 1;
 
 	// Set up the filter
-	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 18000.0f) + 0.0001f;
-	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 12.0f) + 0.0001f;
+	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 20000.0f) + 0.0001f;
+	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 1.0f, 8.0f) + 0.0001f;
 
 	IIRCoefficients ic;
 	bool filterEnabled = false;
@@ -183,14 +183,14 @@ void MainContentComponent::buttonClicked(Button * button)
 	if (button == m_settingsButton)
 	{
 		// Create our settings selector object and define our input parameters
-		ScopedPointer<AudioDeviceSelectorComponent> settingsSelect = new AudioDeviceSelectorComponent(m_audioManager,1,2,1,2,true,true,true,false);
+		ScopedPointer<AudioDeviceSelectorComponent> settingsSelect = new AudioDeviceSelectorComponent(deviceManager,1,2,1,2,true,true,true,false);
 		// set arbitrary dialog window size
 		settingsSelect->setSize(600, 600);
 		// Create a window containing our settings select component
 		DialogWindow::showModalDialog("Audio Settings", settingsSelect, this, Colours::cadetblue, true, true, true);
 
 		// Get our midi output device from audio manager
-		m_midiOutput = m_audioManager.getDefaultMidiOutput();
+		m_midiOutput = deviceManager.getDefaultMidiOutput();
 	}
 
 }

@@ -23,7 +23,7 @@ public:
 		m_height(height),
 		FlexItem(width,height),
 		m_pointX(0),
-		m_pointY(0),
+		m_pointY(height),
 		m_colour(Colours::lightgrey),
 		m_currentXY("Default")
     {

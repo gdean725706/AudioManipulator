@@ -55,9 +55,6 @@ private:
 	// Create container for our flex buttons
 	ScopedPointer<EffectButtonContainerComponent> m_effectButtonContainer;
 
-	// Define our audio device manager - this deals with the audio i/o for us
-	AudioDeviceManager m_audioManager;
-
 	// Define midi output device
 	MidiOutput* m_midiOutput;
 

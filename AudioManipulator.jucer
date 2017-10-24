@@ -6,6 +6,7 @@
               includeBinaryInAppConfig="1" cppLanguageStandard="11" jucerVersion="5.1.2">
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
+      <FILE id="z6YkcR" name="DelayUnit.h" compile="0" resource="0" file="Source/DelayUnit.h"/>
       <FILE id="TrIgzB" name="EffectButtonComponent.h" compile="0" resource="0"
             file="Source/EffectButtonComponent.h"/>
       <FILE id="XkzVIK" name="EffectBase.h" compile="0" resource="0" file="Source/EffectBase.h"/>
