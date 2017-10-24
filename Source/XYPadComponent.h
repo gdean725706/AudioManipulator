@@ -35,7 +35,6 @@ public:
 		//flexGrow = 2;
 		order = 0;
 
-		//setSize(width, height);
 
     }
 

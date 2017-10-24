@@ -22,10 +22,10 @@ public:
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
+
+		// Add XY pad component
 		m_XYPad = new XYPadComponent(400, 400);
-
 		addAndMakeVisible(m_XYPad);
-
 		items.add(m_XYPad->withMargin(3));
 
 		// flexWrap CSS equiv attribute
@@ -65,9 +65,12 @@ public:
     {
         // This method is where you should set the bounds of any child
         // components that your component contains..
+
+		// Call flexbox performlayout method to arrange flex items
 		performLayout(getLocalBounds());
     }
 
+	// Returns ScopedPointer to XY pad component
 	ScopedPointer<XYPadComponent> getXYPad()
 	{
 		return m_XYPad;
