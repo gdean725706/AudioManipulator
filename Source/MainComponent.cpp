@@ -68,8 +68,8 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 	const int maxOutputChannels = activeOutputChannels.getHighestBit() + 1;
 
 	// Set up the filter
-	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 20000.0f) + 0.0001f;
-	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 1.0f, 8.0f) + 0.0001f;
+	const double freq = scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 20.0f, 20000.0f) + 0.0001f;
+	const double res = scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.5f, 2.0f) + 0.0001f;
 
 	IIRCoefficients ic;
 	bool filterEnabled = false;
@@ -120,12 +120,12 @@ void MainContentComponent::getNextAudioBlock(const AudioSourceChannelInfo& buffe
 
 				//Output our input samples * volume scale & apply filtering
 				for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
-				{
-					if (filterEnabled)
-						outBuffer[sample] = m_testFilter->processSingleSampleRaw(inBuffer[sample]) * 0.9f;
-					else
-						outBuffer[sample] = inBuffer[sample] * 0.9f;
+				{	
+					outBuffer[sample] = inBuffer[sample] * 0.9f;
 				}
+
+				if (filterEnabled)
+					m_testFilter->processSamples(outBuffer, bufferToFill.numSamples);
 			}
 		}
 	}

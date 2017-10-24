@@ -139,7 +139,6 @@ public:
 		m_currentXY = xText + "," + yText;
 	}
 
-
 private:
 	Colour m_colour;
 	int m_width, m_height;

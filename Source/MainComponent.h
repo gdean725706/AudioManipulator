@@ -60,6 +60,7 @@ private:
 
 	// Define a fiter object
 	ScopedPointer<IIRFilter> m_testFilter;
+	double m_filterFreq, m_filterRes;
 
 	double m_sampleRate;
 
