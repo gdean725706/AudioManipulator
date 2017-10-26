@@ -10,12 +10,13 @@
             file="Source/EffectButtonComponent.h"/>
       <FILE id="wbQREA" name="ControlContainerComponent.h" compile="0" resource="0"
             file="Source/ControlContainerComponent.h"/>
-      <FILE id="IJHtjA" name="DelayUnit.h" compile="0" resource="0" file="Source/DelayUnit.h"/>
-      <FILE id="XkzVIK" name="EffectBase.h" compile="0" resource="0" file="Source/EffectBase.h"/>
       <FILE id="LNrluv" name="EffectButtonContainerComponent.h" compile="0"
             resource="0" file="Source/EffectButtonContainerComponent.h"/>
+      <FILE id="IJHtjA" name="DelayUnit.h" compile="0" resource="0" file="Source/DelayUnit.h"/>
       <FILE id="ojlf88" name="XYPadComponent.h" compile="0" resource="0"
             file="Source/XYPadComponent.h"/>
+      <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
+      <FILE id="XkzVIK" name="EffectBase.h" compile="0" resource="0" file="Source/EffectBase.h"/>
       <FILE id="JrETl4" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="tKQXiH" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
