@@ -11,8 +11,10 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <vector>
 
-// In good practise would this be a struct instead?
+//Make this abstract
+
 class EffectBase
 {
 public:
@@ -33,6 +35,13 @@ public:
 	{
 		return m_active;
 	}
+
+	virtual void getType() = 0;
+
 private:
 	bool m_active = false;
+
+	int m_Xparameter, m_yParameter;
+
+	std::vector<AudioParameterFloat>  m_parameterVector;
 };

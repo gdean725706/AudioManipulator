@@ -13,15 +13,16 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EffectBase.h"
 
-class EffectButtonComponent : public Button, public FlexItem, public EffectBase
+class EffectButtonComponent : public Button, public FlexItem
 {
 
 private:
 	Colour m_colour;
 	int m_midiPitch;
+	typedef EffectBase::EffectType EffectType;
 	EffectType m_effectType;
 	String m_labelText;
-
+	bool m_active;
 public:
 	EffectButtonComponent(EffectType effectType, String buttonName) :
 		m_labelText(buttonName),
@@ -29,7 +30,8 @@ public:
 		Button("btnEffect" + buttonName),
 		m_midiPitch(),
 		m_colour(Colours::lightgrey),
-		m_effectType(effectType)
+		m_effectType(effectType),
+		m_active(false)
 	{
 		// Randomize colour
 		//Random r;
@@ -38,9 +40,6 @@ public:
 		// Due to FlexBox multiple inheritance we must set the associated component to this
 		associatedComponent = this;
 		alignSelf = AlignSelf::autoAlign;
-
-		// Not active yet
-		setActive(false);
 	}
 
 	// Override paint virtual to make it do what we want it to do
@@ -61,7 +60,7 @@ public:
 			m_colour = m_colour.brighter();
 		}
 
-		if (isActive())
+		if (m_active)
 		{
 			m_colour = Colours::darkgrey;
 		}
@@ -77,6 +76,12 @@ public:
 	{
 		return m_midiPitch;
 	}
+
+	void setActive(bool active)
+	{
+		m_active = active;
+	}
+
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonComponent)
 };

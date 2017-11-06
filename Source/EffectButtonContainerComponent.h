@@ -16,7 +16,7 @@
 //==============================================================================
 /*
 */
-class EffectButtonContainerComponent    : public Component, public FlexBox, public ButtonListener, public EffectBase
+class EffectButtonContainerComponent    : public Component, public FlexBox, public ButtonListener
 {
 public:
     EffectButtonContainerComponent(int width, int height):
@@ -116,7 +116,7 @@ public:
 
 	}
 
-	EffectType getCurrentEffect()
+	EffectBase::EffectType getCurrentEffect()
 	{
 		return m_currentEffect;
 	}
@@ -125,6 +125,7 @@ private:
 	int m_width, m_height;
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay;
+	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonContainerComponent)
 };
