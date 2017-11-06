@@ -15,7 +15,7 @@
 
 //Make this abstract
 
-class EffectBase
+class EffectBase : public AudioProcessor
 {
 public:
 	enum EffectType
@@ -36,11 +36,68 @@ public:
 		return m_active;
 	}
 
-	virtual void getType() = 0;
+	// Must specify effect type
+	virtual EffectType getType() = 0;
+
+	// AudioProcessor
+
+	const String getName() const override
+	{
+		return m_name;
+	}
+
+	bool acceptsMidi() const override
+	{
+		return false;
+	}
+
+	bool producesMidi() const override
+	{
+		return false;
+	}
+
+	AudioProcessorEditor* createEditor() override
+	{
+		return false;
+	}
+
+	bool hasEditor() const override
+	{
+		return false;
+	}
+
+	int getNumPrograms() override
+	{
+		return 0;
+	}
+
+	int getCurrentProgram() override
+	{
+		return 0;
+	}
+
+	void setCurrentProgram(int index) override
+	{
+	}
+
+	const String getProgramName(int index) override
+	{
+		return "";
+	}
+
+	void changeProgramName(int index, const String& newName) override
+	{
+	}
+	void getStateInformation(juce::MemoryBlock& destData) override
+	{
+	}
+	void setStateInformation(const void* data, int sizeInBytes) override
+	{
+	}
 
 private:
 	bool m_active = false;
-
+	String m_name;
 	int m_Xparameter, m_yParameter;
 
 	std::vector<AudioParameterFloat>  m_parameterVector;

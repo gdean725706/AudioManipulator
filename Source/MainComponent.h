@@ -13,6 +13,7 @@
 #include "EffectButtonComponent.h"
 #include "EffectButtonContainerComponent.h"
 #include "ControlContainerComponent.h"
+#include "EffectChain.h"
 
 //==============================================================================
 /*

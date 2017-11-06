@@ -11,8 +11,9 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "EffectBase.h"
 
-class DelayLine : public AudioProcessor
+class DelayLine : public EffectBase
 {
 private:
 	ScopedPointer<float> m_delayBuffer;
@@ -29,5 +30,15 @@ public:
 	void tick();
 
 	float getDelay(int delayTime);
+
+	EffectType getType() override
+	{
+		return EffectType::Delay;
+	}
+
+	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;
+	void releaseResources() override;
+	void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override;
+	double getTailLengthSeconds() const override;
 
 };

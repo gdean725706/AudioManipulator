@@ -3,7 +3,7 @@
 
     DelayLine.cpp
     Created: 6 Nov 2017 6:08:07pm
-    Author:  deano
+    Author:  George Dean
 
   ==============================================================================
 */
@@ -67,4 +67,24 @@ float DelayLine::getDelay(int delayTime)
 	}
 
 	return m_delayBuffer[pos];
+}
+
+void DelayLine::prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock)
+{
+
+}
+
+void DelayLine::releaseResources()
+{
+
+}
+
+void DelayLine::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+{
+
+}
+
+double DelayLine::getTailLengthSeconds() const
+{
+	return 0;
 }

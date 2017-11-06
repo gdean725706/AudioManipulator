@@ -6,20 +6,23 @@
               includeBinaryInAppConfig="1" cppLanguageStandard="11" jucerVersion="5.1.2">
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
+      <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
+        <FILE id="TrIgzB" name="EffectButtonComponent.h" compile="0" resource="0"
+              file="Source/EffectButtonComponent.h"/>
+        <FILE id="wbQREA" name="ControlContainerComponent.h" compile="0" resource="0"
+              file="Source/ControlContainerComponent.h"/>
+        <FILE id="LNrluv" name="EffectButtonContainerComponent.h" compile="0"
+              resource="0" file="Source/EffectButtonContainerComponent.h"/>
+        <FILE id="ojlf88" name="XYPadComponent.h" compile="0" resource="0"
+              file="Source/XYPadComponent.h"/>
+        <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
+      </GROUP>
       <GROUP id="{71B1F06F-79FF-AC10-2049-9AE73604CA73}" name="Effects">
+        <FILE id="EjQ8KB" name="EffectChain.h" compile="0" resource="0" file="Source/EffectChain.h"/>
+        <FILE id="XkzVIK" name="EffectBase.h" compile="0" resource="0" file="Source/EffectBase.h"/>
         <FILE id="DOCq6u" name="DelayLine.cpp" compile="1" resource="0" file="Source/DelayLine.cpp"/>
         <FILE id="oGGGJD" name="DelayLine.h" compile="0" resource="0" file="Source/DelayLine.h"/>
       </GROUP>
-      <FILE id="TrIgzB" name="EffectButtonComponent.h" compile="0" resource="0"
-            file="Source/EffectButtonComponent.h"/>
-      <FILE id="wbQREA" name="ControlContainerComponent.h" compile="0" resource="0"
-            file="Source/ControlContainerComponent.h"/>
-      <FILE id="LNrluv" name="EffectButtonContainerComponent.h" compile="0"
-            resource="0" file="Source/EffectButtonContainerComponent.h"/>
-      <FILE id="ojlf88" name="XYPadComponent.h" compile="0" resource="0"
-            file="Source/XYPadComponent.h"/>
-      <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
-      <FILE id="XkzVIK" name="EffectBase.h" compile="0" resource="0" file="Source/EffectBase.h"/>
       <FILE id="JrETl4" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="tKQXiH" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
