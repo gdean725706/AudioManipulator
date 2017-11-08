@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="z831Sd" name="Audio Manipulator" displaySplashScreen="1"
-              reportAppUsage="1" splashScreenColour="Dark" projectType="guiapp"
-              version="0.0.1" bundleIdentifier="com.yourcompany.FlexBoxIntro"
-              includeBinaryInAppConfig="1" cppLanguageStandard="11" jucerVersion="5.1.2">
+              reportAppUsage="1" splashScreenColour="Dark" projectType="audioplug"
+              version="0.0.1" bundleIdentifier="com.point3dsp.AudioManipulator"
+              includeBinaryInAppConfig="1" cppLanguageStandard="11" jucerVersion="5.1.2"
+              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" buildStandalone="1" enableIAA="0" pluginName="Audio Manipulator"
+              pluginDesc="Audio Manipulator" pluginManufacturer="point3" pluginManufacturerCode="p3au"
+              pluginCode="Z831" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="AudioManipulatorAU" pluginRTASCategory=""
+              aaxIdentifier="com.yourcompany.AudioManipulator" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              companyName="point3dsp" companyEmail="gdean170@gmail.com" pluginVSTCategory="Effect">
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
@@ -26,11 +34,13 @@
       <FILE id="JrETl4" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="tKQXiH" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-      <FILE id="TMGhbN" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="ggqrGO" name="MainProcessor.cpp" compile="1" resource="0"
+            file="Source/MainProcessor.cpp"/>
+      <FILE id="J3Zo2L" name="MainProcessor.h" compile="0" resource="0" file="Source/MainProcessor.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017">
+    <VS2017 targetFolder="Builds/VisualStudio2017" vst3Folder="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        isDebug="1" optimisation="1" targetName="FlexBoxIntro"/>

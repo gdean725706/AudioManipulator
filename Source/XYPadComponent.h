@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "MainProcessor.h"
 
 //==============================================================================
 /*
@@ -130,6 +131,11 @@ public:
 		// Clamp values so we can't exceed bounds of component
 		m_pointX = clamp(mousePoint.x, m_width, (double)0.0f);
 		m_pointY = clamp(mousePoint.y, m_height, (double) 0.0f);
+
+		if (m_mainProcessorPtr)
+		{
+			m_mainProcessorPtr->setXYValues(m_pointX, m_pointY);
+		}
 	}
 
 	// Update string containing mouse XY values
@@ -143,11 +149,19 @@ public:
 		m_currentXY = xText + "," + yText;
 	}
 
+	void setMainAudioProcessor(MainAudioProcessor* processor)
+	{
+		m_mainProcessorPtr = processor;
+	}
+
 private:
 	Colour m_colour;
 	int m_width, m_height;
 	int m_pointX, m_pointY;
 	String m_currentXY;
+
+	// Create pointer to main audio compoennt to update XY vals
+	MainAudioProcessor* m_mainProcessorPtr;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{

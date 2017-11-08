@@ -17,11 +17,12 @@ class DelayLine : public EffectBase
 {
 private:
 	ScopedPointer<float> m_delayBuffer;
-	int m_maxDelay;
-	int m_writeLocation;
-	
+	int m_maxDelay, m_writeLocation, m_channel;
+	float m_feedbackLevel, m_delayTime;
+	double m_sampleRate;
+
 public:
-	DelayLine(int maxDelay);
+	DelayLine(int channel, int maxDelay);
 
 	void clearBuffer();
 
@@ -34,6 +35,26 @@ public:
 	EffectType getType() override
 	{
 		return EffectType::Delay;
+	}
+
+	void setFeedbackLevel(float feedbackLevel)
+	{
+		m_feedbackLevel = feedbackLevel;
+	}
+
+	void setDelayTime(float delayTime)
+	{
+		m_delayTime = delayTime;
+	}
+
+	void setMaxDelayLength(float maxDelay)
+	{
+		m_maxDelay = maxDelay;
+	}
+
+	void setChannel(int channel)
+	{
+		m_channel = channel;
 	}
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;

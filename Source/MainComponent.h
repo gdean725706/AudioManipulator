@@ -13,7 +13,7 @@
 #include "EffectButtonComponent.h"
 #include "EffectButtonContainerComponent.h"
 #include "ControlContainerComponent.h"
-#include "EffectChain.h"
+#include "MainProcessor.h"
 
 //==============================================================================
 /*
@@ -22,16 +22,13 @@
 */
 // Use multiple inheritance to inherit flexbox into our component
 
-class MainContentComponent   : public AudioAppComponent, public FlexBox, public ButtonListener
+class MainContentComponent   : public AudioProcessorEditor, public FlexBox, public ButtonListener
 {
 public:
     //==============================================================================
-    MainContentComponent();
+    MainContentComponent(MainAudioProcessor&);
     ~MainContentComponent();
 
-	void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
-	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override;
-	void releaseResources() override;
     void paint (Graphics&) override;
     void resized() override;
 	void mouseMove(const MouseEvent& event) override;
@@ -51,16 +48,7 @@ private:
 
 	ScopedPointer<XYPadComponent> m_XYPad1;
 
-	// Define midi output device
-	MidiOutput* m_midiOutput;
-
-	// Define a fiter object
-	ScopedPointer<IIRFilter> m_testFilter;
-	double m_filterFreq, m_filterRes;
-
-	double m_sampleRate;
-
-	void playNote(int note);
+	MainAudioProcessor& processor;
 
 	double scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd);
 

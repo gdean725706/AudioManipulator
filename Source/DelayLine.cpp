@@ -10,9 +10,10 @@
 
 #include "DelayLine.h"
 
-DelayLine::DelayLine(int maxDelay) :
+DelayLine::DelayLine(int channel, int maxDelay) :
 	m_maxDelay(maxDelay),
-	m_writeLocation(0)
+	m_writeLocation(0),
+	m_channel(channel)
 {
 	m_delayBuffer = new float[m_maxDelay];
 	clearBuffer();
@@ -35,7 +36,6 @@ void DelayLine::writeSample(float sample)
 void DelayLine::tick()
 {
 	// Makes a circular buffer
-
 	m_writeLocation += 1;
 
 	while (m_writeLocation >= m_maxDelay)
@@ -71,20 +71,30 @@ float DelayLine::getDelay(int delayTime)
 
 void DelayLine::prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock)
 {
-
+	m_sampleRate = sampleRate;
+	clearBuffer();
 }
 
 void DelayLine::releaseResources()
 {
-
+	clearBuffer();
 }
 
 void DelayLine::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+	float* channel = buffer.getWritePointer(0);
+
+	for (int i = 0; i < buffer.getNumSamples(); ++i)
+	{
+		channel[i] += getDelay(m_delayTime * (m_sampleRate * 0.001f));
+		writeSample(channel[i] * m_feedbackLevel);
+
+		tick();
+	}
 
 }
 
 double DelayLine::getTailLengthSeconds() const
 {
-	return 0;
+	return 0.0;
 }

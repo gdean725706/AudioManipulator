@@ -16,7 +16,7 @@
 class EffectChain
 {
 private:
-	DelayLine m_delay;
+
 
 public:
 

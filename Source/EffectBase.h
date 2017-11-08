@@ -13,8 +13,6 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include <vector>
 
-//Make this abstract
-
 class EffectBase : public AudioProcessor
 {
 public:
@@ -39,7 +37,7 @@ public:
 	// Must specify effect type
 	virtual EffectType getType() = 0;
 
-	// AudioProcessor
+	// AudioProcessor overrides
 
 	const String getName() const override
 	{
