@@ -206,6 +206,12 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 
 	}
 
+	if (currentEffect == FXType::Delay)
+	{
+		m_leftDelay.processBlock(buffer, midiMessages);
+		m_rightDelay.processBlock(buffer, midiMessages);
+	}
+
 	// Clear buffer to prevent random noise output.
 	//bufferToFill.clearActiveBufferRegion();
 }
