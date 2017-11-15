@@ -28,7 +28,7 @@ MainAudioProcessor::MainAudioProcessor()
 	m_rightDelay(1, 44100 * 5),
 	m_padX(0),
 	m_padY(0),
-	m_currentEffect(FXType::Delay)
+	m_currentEffect(FXType::LowPassFilter)
 
 {
 
@@ -160,6 +160,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	// This is here to avoid people getting screaming feedback
 	// when they first compile a plugin, but obviously you don't need to keep
 	// this code if your algorithm always overwrites all the output channels.
+
 	for (int i = maxInputChannels; i < maxOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
@@ -212,8 +213,6 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 		m_rightDelay.processBlock(buffer, midiMessages);
 	}
 
-	// Clear buffer to prevent random noise output.
-	//bufferToFill.clearActiveBufferRegion();
 }
 
 //==============================================================================

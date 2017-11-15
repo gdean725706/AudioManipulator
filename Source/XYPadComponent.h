@@ -134,7 +134,7 @@ public:
 
 		if (m_mainProcessorPtr)
 		{
-			m_mainProcessorPtr->setXYValues(m_pointX, m_pointY);
+			m_mainProcessorPtr->setXYValues(getXValueNormalised(), getYValueNormalised());
 		}
 	}
 
