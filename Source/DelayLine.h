@@ -21,6 +21,10 @@ private:
 	float m_feedbackLevel, m_delayTime;
 	double m_sampleRate;
 
+	// Audio params
+	AudioParameterFloat* m_feedbackLevelParam, *m_delayTimeParam;
+
+
 public:
 	DelayLine(int channel, int maxDelay);
 

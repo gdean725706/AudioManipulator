@@ -92,11 +92,14 @@ public:
 	void setStateInformation(const void* data, int sizeInBytes) override
 	{
 	}
+protected:
+
+	std::vector<AudioParameterFloat*>  m_parameterVector;
 
 private:
 	bool m_active = false;
 	String m_name;
 	int m_Xparameter, m_yParameter;
 
-	std::vector<AudioParameterFloat>  m_parameterVector;
+
 };

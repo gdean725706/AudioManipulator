@@ -31,6 +31,9 @@ public:
 		m_buttonHPF = new EffectButtonComponent(EffectType::HighPassFilter, "HPF");
 		m_buttonDelay = new EffectButtonComponent(EffectType::Delay, "Delay");
 
+		// LPF init state on
+		m_buttonLPF->setActive(true);
+
 		// Make visible
 		addAndMakeVisible(m_buttonLPF);
 		addAndMakeVisible(m_buttonHPF);

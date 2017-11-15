@@ -17,6 +17,20 @@ DelayLine::DelayLine(int channel, int maxDelay) :
 {
 	m_delayBuffer = new float[m_maxDelay];
 	clearBuffer();
+
+	// set up audio parameters
+	m_feedbackLevelParam = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 1, 0.303);
+	addParameter(m_feedbackLevelParam);
+	m_delayTimeParam = new AudioParameterFloat("Delay Time", "Delay Time", 0, 1, 0.303);
+	addParameter(m_delayTimeParam);
+
+	const OwnedArray<AudioProcessorParameter>& params = getParameters();
+
+	for (auto param : params)
+	{
+		m_parameterVector.push_back(dynamic_cast<AudioParameterFloat*>(param));
+	}
+	
 }
 
 void DelayLine::clearBuffer()
