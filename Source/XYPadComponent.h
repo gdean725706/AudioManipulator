@@ -33,8 +33,6 @@ public:
 
 		//Set up flex item
 		associatedComponent = this;
-		//flexGrow = 2;
-		order = 0;
 
 		setSize(width, height);
 

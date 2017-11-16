@@ -18,13 +18,14 @@
 class FlexSlider    : public Slider, public FlexItem
 {
 public:
-    FlexSlider(int flexOrder)
+    FlexSlider(String name) :
+		Slider(name),
+		FlexItem(25, 75)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
 
 		associatedComponent = this;
-		order = flexOrder;
     }
 
     ~FlexSlider()
@@ -33,22 +34,8 @@ public:
 
     void paint (Graphics& g) override
     {
-        /* This demo code just fills the component's background and
-           draws some placeholder text to get you started.
-
-           You should replace everything in this method with your own
-           drawing code..
-        */
-
-        g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
-
-        g.setColour (Colours::grey);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-        g.setColour (Colours::white);
-        g.setFont (14.0f);
-        g.drawText ("FlexSliderComponent", getLocalBounds(),
-                    Justification::centred, true);   // draw some placeholder text
+		g.setColour(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+		g.fillAll();
     }
 
     void resized() override
