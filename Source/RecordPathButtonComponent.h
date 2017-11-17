@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class RecordPathButtonComponent    : public ToggleButton, public FlexItem
+class RecordPathButtonComponent    : public Button, public FlexItem
 {
 private:
 	Colour m_colour;
@@ -23,7 +23,7 @@ private:
 	String m_labelText;
 public:
     RecordPathButtonComponent(String buttonName) :
-		ToggleButton("btnPath" + buttonName),
+		Button("btnPath" + buttonName),
 		FlexItem(75, 50),
 		m_labelText(buttonName),
 		m_colour(Colours::lightgrey),
@@ -40,8 +40,6 @@ public:
 	// Override paint virtual to make it do what we want it to do
 	void paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown) override
 	{
-
-		getLookAndFeel().drawToggleButton(g, *this, isMouseOverButton, isButtonDown);
 
 		// Set up button colour to change based on mouse events
 		if (isButtonDown) {
@@ -75,6 +73,11 @@ public:
         // components that your component contains..
 
     }
+
+	void setActive(bool active)
+	{
+		m_active = active;
+	}
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordPathButtonComponent)

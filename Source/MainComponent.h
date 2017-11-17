@@ -9,8 +9,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "XYPadComponent.h"
-#include "EffectButtonComponent.h"
 #include "EffectButtonContainerComponent.h"
 #include "ControlContainerComponent.h"
 #include "MainProcessor.h"

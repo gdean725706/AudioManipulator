@@ -51,8 +51,7 @@ public:
 	}
 	float getXValueNormalised()
 	{
-		float v = (float)m_pointX / (float)m_width;
-		return v;
+		return (float)m_pointX / (float)m_width;
 	}
 
 	int getYValue(int minScaleValue, int maxScaleValue)
@@ -62,10 +61,7 @@ public:
 	}
 	float getYValueNormalised()
 	{
-		// Need to invert the Y axis
-		int invertedY = m_height - m_pointY;
-		float v = (float)invertedY / (float)m_height;
-		return v; 
+		return (float)m_height - m_pointY / (float)m_height;
 	}
 
     void paint (Graphics& g) override

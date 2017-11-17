@@ -13,14 +13,20 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FlexSlider.h"
 #include "RecordPathButtonComponent.h"
+#include "XYPadComponent.h"
+#include <vector>
+#include <stack>
 
 //==============================================================================
 /*
 */
-class ControlContainerComponent    : public Component, public FlexBox, public SliderListener
+class ControlContainerComponent    : public Component, public FlexBox,
+	public SliderListener, public ButtonListener, private Timer
 {
 public:
-    ControlContainerComponent()
+    ControlContainerComponent():
+		m_writingPoints(false),
+		m_pointsSaved(0)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
@@ -44,6 +50,9 @@ public:
 		// Buttons
 		m_pathButton1 = new RecordPathButtonComponent("Path1");
 		m_testButton1 = new TextButton("Test");
+
+		m_pathButton1->addListener(this);
+		m_testButton1->addListener(this);
 
 		// Add and make visible
 		addAndMakeVisible(m_XYPad);
@@ -71,6 +80,9 @@ public:
 		alignItems = AlignItems::center;
 		alignContent = AlignContent::spaceBetween;
 
+		m_xStore.reserve(32000);
+		m_yStore.reserve(32000);
+
     }
 
     ~ControlContainerComponent()
@@ -93,7 +105,9 @@ public:
 
         g.setColour (Colours::white);
         g.setFont (14.0f);
-        g.drawText ("ControlContainerComponent", getLocalBounds(),
+		String points;
+		points << m_pointsSaved;
+        g.drawText (points, getLocalBounds().removeFromLeft(50),
                     Justification::centred, true);   // draw some placeholder text
     }
 
@@ -119,7 +133,49 @@ public:
 		return m_XYPad;
 	}
 
+	void buttonClicked(Button* button) override
+	{
+		if (button == m_pathButton1)
+		{
+			if (!m_writingPoints)
+			{
+				m_writingPoints = true;
+				m_pathButton1->setActive(true);
+				m_pointsSaved = 0;
+				startTimer(1);
+			}
+			else if (m_writingPoints)
+			{
+				m_writingPoints = false;
+				m_pathButton1->setActive(false);
+				stopTimer();
+				m_xStore.shrink_to_fit();
+				m_yStore.shrink_to_fit();
+				std::cout << "Saved " << m_pointsSaved << "to path1." << std::endl;
+			}	
+		}
+	}
+
 private:
+	void timerCallback() override
+	{
+		if (m_XYPad)
+		{
+			m_xStore.push_back(m_XYPad->getXValueNormalised());
+			m_yStore.push_back(m_XYPad->getYValueNormalised());
+			m_pointsSaved++;
+		}
+	}
+
+	// Path writing system
+	std::vector<float> m_xStore, m_yStore;
+
+	// save to stack	
+	// then copy back into vector
+	// quick intermediate storage
+	int m_pointsSaved;
+	bool m_writingPoints;
+
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
 
@@ -128,7 +184,6 @@ private:
 	ScopedPointer<RecordPathButtonComponent> m_pathButton1;
 
 	ScopedPointer<TextButton> m_testButton1;
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlContainerComponent)
 };
