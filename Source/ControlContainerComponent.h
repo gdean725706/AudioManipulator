@@ -14,25 +14,28 @@
 #include "FlexSlider.h"
 #include "RecordPathButtonComponent.h"
 #include "XYPadComponent.h"
-#include <vector>
-#include <stack>
-
+#include "EffectChain.h"
 //==============================================================================
 /*
 */
 class ControlContainerComponent    : public Component, public FlexBox,
-	public SliderListener, public ButtonListener, private Timer
+	public SliderListener, public ButtonListener
 {
 public:
-    ControlContainerComponent():
+    ControlContainerComponent(int number, MainAudioProcessor& p):
 		m_writingPoints(false),
-		m_pointsSaved(0)
+		m_processor(p),
+		m_chainNumber(number)
     {
-        // In your constructor, you should add any child components, and
-        // initialise any special settings that your component needs.
+		// Buttons
+		m_pathButton1 = new RecordPathButtonComponent("Path1");
+		m_testButton1 = new TextButton("Test");
+
+		// Set this effect chain
+		m_processor.getChain(&m_effectChain, m_chainNumber);
 
 		// Add XY pad and sliders
-		m_XYPad = new XYPadComponent(400, 400);
+		m_XYPad = new XYPadComponent(400, 400, m_effectChain);
 
 		// Add and setup sliders
 		m_slider1 = new FlexSlider("flexSlider1");
@@ -46,10 +49,6 @@ public:
 
 		m_slider1->addListener(this);
 		m_slider2->addListener(this);
-
-		// Buttons
-		m_pathButton1 = new RecordPathButtonComponent("Path1");
-		m_testButton1 = new TextButton("Test");
 
 		m_pathButton1->addListener(this);
 		m_testButton1->addListener(this);
@@ -80,9 +79,6 @@ public:
 		alignItems = AlignItems::center;
 		alignContent = AlignContent::spaceBetween;
 
-		m_xStore.reserve(32000);
-		m_yStore.reserve(32000);
-
     }
 
     ~ControlContainerComponent()
@@ -103,12 +99,6 @@ public:
         g.setColour (Colours::grey);
         g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-        g.setColour (Colours::white);
-        g.setFont (14.0f);
-		String points;
-		points << m_pointsSaved;
-        g.drawText (points, getLocalBounds().removeFromLeft(50),
-                    Justification::centred, true);   // draw some placeholder text
     }
 
     void resized() override
@@ -127,63 +117,29 @@ public:
 
 	}
 
-	// Returns ScopedPointer to XY pad component
-	ScopedPointer<XYPadComponent> getXYPad()
-	{
-		return m_XYPad;
-	}
-
 	void buttonClicked(Button* button) override
 	{
 		if (button == m_pathButton1)
 		{
-			if (!m_writingPoints)
-			{
-				m_writingPoints = true;
-				m_pathButton1->setActive(true);
-				m_pointsSaved = 0;
-				startTimer(1);
-			}
-			else if (m_writingPoints)
-			{
-				m_writingPoints = false;
-				m_pathButton1->setActive(false);
-				stopTimer();
-				m_xStore.shrink_to_fit();
-				m_yStore.shrink_to_fit();
-				std::cout << "Saved " << m_pointsSaved << "to path1." << std::endl;
-			}	
+			// Toggle writing points
+			m_writingPoints = !m_writingPoints;
+			m_pathButton1->setActive(m_writingPoints);
+			m_XYPad->writePoints(m_writingPoints);
 		}
 	}
 
 private:
-	void timerCallback() override
-	{
-		if (m_XYPad)
-		{
-			m_xStore.push_back(m_XYPad->getXValueNormalised());
-			m_yStore.push_back(m_XYPad->getYValueNormalised());
-			m_pointsSaved++;
-		}
-	}
-
-	// Path writing system
-	std::vector<float> m_xStore, m_yStore;
-
-	// save to stack	
-	// then copy back into vector
-	// quick intermediate storage
-	int m_pointsSaved;
-	bool m_writingPoints;
-
+	ScopedPointer<RecordPathButtonComponent> m_pathButton1;
+	ScopedPointer<TextButton> m_testButton1;
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
-
 	ScopedPointer<FlexSlider> m_slider1, m_slider2;
 
-	ScopedPointer<RecordPathButtonComponent> m_pathButton1;
-
-	ScopedPointer<TextButton> m_testButton1;
+	bool m_writingPoints;
+	// Reference to linked effect chain
+	MainAudioProcessor& m_processor;
+	EffectChain m_effectChain;
+	int m_chainNumber;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlContainerComponent)
 };

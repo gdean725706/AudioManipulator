@@ -18,8 +18,8 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-// Use multiple inheritance to inherit flexbox into our component
 
+// Use multiple inheritance to inherit flexbox into our component
 class MainContentComponent   : public AudioProcessorEditor, public FlexBox, public ButtonListener
 {
 public:

@@ -24,20 +24,16 @@ MainAudioProcessor::MainAudioProcessor()
 				)
 #endif
 	,
-	m_leftDelay(0, 44100 * 5),
-	m_rightDelay(1, 44100 * 5),
 	m_padX(0),
 	m_padY(0),
-	m_currentEffect(FXType::LowPassFilter)
+	m_currentEffect(FXType::LowPassFilter),
+	m_numberOfChains(1),
+	m_effectChains(m_numberOfChains)
 
 {
 
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
-	// Create empty midi buffer
-
-	m_dummyMidiBuffer = new MidiBuffer();
-	m_dummyMidiBuffer->clear();
 
 	////Specify number of audio i/o channels
 	//setAudioChannels(2, 2);
@@ -209,8 +205,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 
 	if (currentEffect == FXType::Delay)
 	{
-		m_leftDelay.processBlock(buffer, midiMessages);
-		m_rightDelay.processBlock(buffer, midiMessages);
+		m_effectChains[0].processDelay(buffer, midiMessages);
 	}
 
 }

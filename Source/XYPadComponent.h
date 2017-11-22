@@ -12,21 +12,24 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainProcessor.h"
+#include <vector>
+
 
 //==============================================================================
 /*
 */
-class XYPadComponent    : public Component, public FlexItem
+class XYPadComponent    : public Component, public FlexItem, public Timer
 {
 public:
-    XYPadComponent(int width, int height):
+    XYPadComponent(int width, int height, EffectChain& effectChain):
 		m_width(width),
 		m_height(height),
 		FlexItem(width,height),
 		m_pointX(0),
 		m_pointY(height),
 		m_colour(Colours::lightgrey),
-		m_currentXY("Default")
+		m_currentXY("Default"),
+		m_linkedEffectChain(effectChain)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
@@ -36,7 +39,11 @@ public:
 
 		setSize(width, height);
 
-
+		m_xStore.reserve(32000);
+		m_yStore.reserve(32000);
+		m_pointsSaved = 0;
+		m_normalX = 0;
+		m_normalY = 0;
     }
 
     ~XYPadComponent()
@@ -91,6 +98,10 @@ public:
         g.setFont (14.0f);
         g.drawText (m_currentXY, getLocalBounds(),
                     Justification::centred, true);   // draw some placeholder text
+		String points;
+		points << m_pointsSaved;
+		g.drawText(points, getLocalBounds().removeFromLeft(50),
+			Justification::centred, true);   // debug points saved
    
 	}
 
@@ -126,10 +137,11 @@ public:
 		m_pointX = clamp(mousePoint.x, m_width, (double)0.0f);
 		m_pointY = clamp(mousePoint.y, m_height, (double) 0.0f);
 
-		if (m_mainProcessorPtr)
-		{
-			m_mainProcessorPtr->setXYValues(getXValueNormalised(), getYValueNormalised());
-		}
+		m_normalX = getXValueNormalised();
+		m_normalY = getYValueNormalised();
+		
+		m_linkedEffectChain.setXY(m_normalX, m_normalY);
+	
 	}
 
 	// Update string containing mouse XY values
@@ -143,9 +155,27 @@ public:
 		m_currentXY = xText + "," + yText;
 	}
 
-	void setMainAudioProcessor(MainAudioProcessor* processor)
+	void writePoints(bool writing)
 	{
-		m_mainProcessorPtr = processor;
+		if (writing)
+		{
+			m_pointsSaved = 0;
+			startTimer(10);
+		}
+		else
+		{
+			stopTimer();
+			m_xStore.shrink_to_fit();
+			m_yStore.shrink_to_fit();
+			std::cout << "Saved " << m_pointsSaved << "to path1." << std::endl;
+		}
+	}
+
+	void timerCallback() override
+	{
+		m_xStore.push_back(m_normalX);
+		m_yStore.push_back(m_normalY);
+		m_pointsSaved++;
 	}
 
 private:
@@ -153,9 +183,15 @@ private:
 	int m_width, m_height;
 	int m_pointX, m_pointY;
 	String m_currentXY;
+	EffectChain& m_linkedEffectChain;
+	float m_normalX, m_normalY;
 
-	// Create pointer to main audio compoennt to update XY vals
-	MainAudioProcessor* m_mainProcessorPtr;
+	// Path writing system
+	std::vector<float> m_xStore, m_yStore;
+	// save to stack	
+	// then copy back into vector
+	// quick intermediate storage
+	int m_pointsSaved;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{

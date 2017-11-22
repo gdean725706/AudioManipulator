@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EffectChain.h"
+#include <vector>
 
 //==============================================================================
 /*
@@ -71,6 +72,12 @@ public:
 		m_midiOutput = midiOut;
 	}
 
+	void getChain(EffectChain* chain, int num)
+	{
+		if (num < m_numberOfChains)
+			chain = &m_effectChains[num];
+	}
+
 private:
 
 	// Typedef for our enum containing all the FX types
@@ -79,14 +86,9 @@ private:
 	// Define midi output device
 	MidiOutput* m_midiOutput;
 
-	// Create a dummy midibuffer for our audioprocessors (until we add real midi)
-	ScopedPointer<MidiBuffer> m_dummyMidiBuffer;
-
 	// Define a fiter object
 	ScopedPointer<IIRFilter> m_testFilter;
 	double m_filterFreq, m_filterRes;
-
-	DelayLine m_leftDelay, m_rightDelay;
 
 	double m_sampleRate;
 
@@ -96,6 +98,9 @@ private:
 
 	float m_padX, m_padY;
 	FXType m_currentEffect;
+
+	int m_numberOfChains;
+	std::vector<EffectChain> m_effectChains;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

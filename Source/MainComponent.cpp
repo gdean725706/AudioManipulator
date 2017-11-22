@@ -16,14 +16,10 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	m_settingsButton = new TextButton("Settings");
 
 	// Create controls container component
-	m_controlsContainer = new ControlContainerComponent();
+	m_controlsContainer = new ControlContainerComponent(0, p);
 
 	// Create effect button container
 	m_effectButtonContainer = new EffectButtonContainerComponent(600, 400);
-
-	// set up pointer to XY pad in controls container
-	m_XYPad1 = m_controlsContainer->getXYPad();
-	m_XYPad1->setMainAudioProcessor(&p);
 
 	// Make our components visible
 	addAndMakeVisible(m_settingsButton);
@@ -57,8 +53,6 @@ void MainContentComponent::paint (Graphics& g)
     g.setColour (Colours::white);
 
 	String valueFreq, valueRes;
-	valueFreq << scaleRange(m_XYPad1->getXValueNormalised(), 0.0f, 1.0f, 0.0f, 18000.0f) + 0.0001f;
-	valueRes << scaleRange(m_XYPad1->getYValueNormalised(), 0.0f, 1.0f, 0.0f, 24.0f) + 0.0001f;
 	g.drawText(valueFreq + " , " + valueRes , getLocalBounds(), Justification::centred, true);
 }
 

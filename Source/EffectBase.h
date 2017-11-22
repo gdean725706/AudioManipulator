@@ -34,6 +34,12 @@ public:
 		return m_active;
 	}
 
+	void setXY(float x, float y)
+	{
+		m_xVal = x;
+		m_yVal = y;
+	}
+
 	// Must specify effect type
 	virtual EffectType getType() = 0;
 
@@ -100,6 +106,7 @@ private:
 	bool m_active = false;
 	String m_name;
 	int m_Xparameter, m_yParameter;
+	float m_xVal, m_yVal;
 
 
 };
