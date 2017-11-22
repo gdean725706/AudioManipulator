@@ -30,7 +30,7 @@ public:
     {
 		// Buttons
 		m_pathButton1 = new FlexButtonComponent("Path1");
-		m_recordControlButton = new FlexButtonComponent("Record");
+		m_recordControlButton = new FlexButtonComponent("PlayPath1");
 
 		// Set this effect chain
 		m_processor.getChain(&m_effectChain, m_chainNumber);

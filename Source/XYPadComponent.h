@@ -178,7 +178,7 @@ public:
 	{
 		if (writing)
 		{
-			startTimer(10);
+			startTimer(timer_rate);
 		}
 		else
 		{
@@ -193,7 +193,7 @@ public:
 	{
 		m_playbackCounter = 0;
 		m_playback = true;
-		startTimer(10);
+		startTimer(timer_rate);
 	}
 
 	void stopPointPlayback()
@@ -237,6 +237,8 @@ private:
 
 	bool m_playback;
 	int m_playbackCounter, m_playbackX, m_playbackY;
+
+	const int timer_rate = 10;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{
