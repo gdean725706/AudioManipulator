@@ -159,7 +159,6 @@ public:
 	{
 		if (writing)
 		{
-			m_pointsSaved = 0;
 			startTimer(10);
 		}
 		else
