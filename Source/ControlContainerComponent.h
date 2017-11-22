@@ -24,12 +24,13 @@ class ControlContainerComponent    : public Component, public FlexBox,
 public:
     ControlContainerComponent(int number, MainAudioProcessor& p):
 		m_writingPoints(false),
+		m_readingPoints(false),
 		m_processor(p),
 		m_chainNumber(number)
     {
 		// Buttons
-		m_pathButton1 = new RecordPathButtonComponent("Path1");
-		m_testButton1 = new TextButton("Test");
+		m_pathButton1 = new FlexButtonComponent("Path1");
+		m_recordControlButton = new FlexButtonComponent("Record");
 
 		// Set this effect chain
 		m_processor.getChain(&m_effectChain, m_chainNumber);
@@ -51,26 +52,28 @@ public:
 		m_slider2->addListener(this);
 
 		m_pathButton1->addListener(this);
-		m_testButton1->addListener(this);
+		m_recordControlButton->addListener(this);
 
 		// Add and make visible
 		addAndMakeVisible(m_XYPad);
 		addAndMakeVisible(m_slider1);
 		addAndMakeVisible(m_slider2);
 		addAndMakeVisible(m_pathButton1);
-		addAndMakeVisible(m_testButton1);
+		addAndMakeVisible(m_recordControlButton);
 
 		// Add to flex
 		items.add(m_XYPad->withMargin(3));
 		items.add(m_slider1->withMargin(3));
 		items.add(m_slider2->withMargin(3));
 		items.add(m_pathButton1->withMargin(3));
+		items.add(m_recordControlButton->withMargin(3));
 
 		// Set up order
 		m_slider1->order = 0;
 		m_slider2->order = 1;
-		m_pathButton1->order = 3;
 		m_XYPad->order = 2;
+		m_pathButton1->order = 3;
+		m_recordControlButton->order = 4;
 
 		// flexWrap CSS equiv attribute
 		flexDirection = Direction::row;
@@ -126,16 +129,29 @@ public:
 			m_pathButton1->setActive(m_writingPoints);
 			m_XYPad->writePoints(m_writingPoints);
 		}
+		else if (button == m_recordControlButton)
+		{
+			m_readingPoints = !m_readingPoints;
+			m_recordControlButton->setActive(m_readingPoints);
+			if (m_readingPoints && !m_writingPoints)
+			{
+				m_XYPad->startPointPlayback();
+			}
+			else if (!m_writingPoints)
+			{
+				m_XYPad->stopPointPlayback();
+			}
+		}
 	}
 
 private:
-	ScopedPointer<RecordPathButtonComponent> m_pathButton1;
-	ScopedPointer<TextButton> m_testButton1;
+	ScopedPointer<FlexButtonComponent> m_pathButton1;
+	ScopedPointer<FlexButtonComponent> m_recordControlButton;
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
 	ScopedPointer<FlexSlider> m_slider1, m_slider2;
 
-	bool m_writingPoints;
+	bool m_writingPoints, m_readingPoints;
 	// Reference to linked effect chain
 	MainAudioProcessor& m_processor;
 	EffectChain m_effectChain;

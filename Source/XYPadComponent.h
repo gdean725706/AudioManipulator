@@ -45,6 +45,8 @@ public:
 		m_pointsSaved = 0;
 		m_normalX = 0;
 		m_normalY = 0;
+		m_playback = false;
+		m_playbackCounter = 0;
     }
 
     ~XYPadComponent()
@@ -131,18 +133,33 @@ public:
 
 	void updateXYPoints()
 	{
-		// get mouse point relative to this component
-		auto mousePoint = this->getMouseXYRelative();
+		int x = 0, y = 0;
+
+		if (m_playback)
+		{
+			x = m_playbackX;
+			y = m_playbackY;
+		}
+		else
+		{
+			// get mouse point relative to this component
+			auto mousePoint = this->getMouseXYRelative();
+			x = mousePoint.x;
+			y = mousePoint.y;
+		}
 
 		// Clamp values so we can't exceed bounds of component
-		m_pointX = clamp(mousePoint.x, m_width, (double)0.0f);
-		m_pointY = clamp(mousePoint.y, m_height, (double) 0.0f);
+		m_pointX = clamp(x, m_width, (double)0.0f);
+		m_pointY = clamp(y, m_height, (double) 0.0f);
 
 		m_normalX = getXValueNormalised();
 		m_normalY = getYValueNormalised();
 		
 		m_linkedEffectChain.setXY(m_normalX, m_normalY);
 		m_processor.setXY(m_normalX, m_normalY);
+
+		if (m_playback)
+			repaint();
 	
 	}
 
@@ -172,28 +189,54 @@ public:
 		}
 	}
 
+	void startPointPlayback()
+	{
+		m_playbackCounter = 0;
+		m_playback = true;
+		startTimer(10);
+	}
+
+	void stopPointPlayback()
+	{
+		m_playback = false;
+		stopTimer();
+	}
+
 	void timerCallback() override
 	{
-		m_xStore.push_back(m_normalX);
-		m_yStore.push_back(m_normalY);
-		m_pointsSaved++;
+		if (m_playback)
+		{
+			m_playbackX = m_xStore[m_playbackCounter];
+			m_playbackY = m_yStore[m_playbackCounter];
+			if (m_playbackCounter >= m_pointsSaved - 1) m_playbackCounter = 0;
+			else m_playbackCounter++;
+			updateXYPoints();
+		}
+		else
+		{
+			m_xStore.push_back(m_pointX);
+			m_yStore.push_back(m_pointY);
+			m_pointsSaved++;
+		}
 	}
 
 private:
 	Colour m_colour;
+
 	int m_width, m_height;
 	int m_pointX, m_pointY;
+	float m_normalX, m_normalY;
 	String m_currentXY;
+
 	EffectChain& m_linkedEffectChain;
 	MainAudioProcessor& m_processor;
-	float m_normalX, m_normalY;
 
 	// Path writing system
-	std::vector<float> m_xStore, m_yStore;
-	// save to stack	
-	// then copy back into vector
-	// quick intermediate storage
+	std::vector<int> m_xStore, m_yStore;
 	int m_pointsSaved;
+
+	bool m_playback;
+	int m_playbackCounter, m_playbackX, m_playbackY;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{

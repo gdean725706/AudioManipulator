@@ -15,15 +15,15 @@
 //==============================================================================
 /*
 */
-class RecordPathButtonComponent    : public Button, public FlexItem
+class FlexButtonComponent    : public Button, public FlexItem
 {
 private:
 	Colour m_colour;
 	bool m_active;
 	String m_labelText;
 public:
-    RecordPathButtonComponent(String buttonName) :
-		Button("btnPath" + buttonName),
+    FlexButtonComponent(String buttonName) :
+		Button("btn" + buttonName),
 		FlexItem(75, 50),
 		m_labelText(buttonName),
 		m_colour(Colours::lightgrey),
@@ -33,7 +33,7 @@ public:
 		associatedComponent = this;
     }
 
-    ~RecordPathButtonComponent()
+    ~FlexButtonComponent()
     {
     }
 
@@ -79,6 +79,11 @@ public:
 		m_active = active;
 	}
 
+	bool isActive()
+	{
+		return m_active;
+	}
+
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordPathButtonComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FlexButtonComponent)
 };
