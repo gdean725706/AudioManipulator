@@ -35,7 +35,7 @@ public:
 		m_processor.getChain(&m_effectChain, m_chainNumber);
 
 		// Add XY pad and sliders
-		m_XYPad = new XYPadComponent(400, 400, m_effectChain);
+		m_XYPad = new XYPadComponent(400, 400, m_effectChain, p);
 
 		// Add and setup sliders
 		m_slider1 = new FlexSlider("flexSlider1");

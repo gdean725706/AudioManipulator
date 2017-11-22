@@ -254,6 +254,28 @@ double MainAudioProcessor::scaleRange(double input, double inputStart, double in
 	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
 }
 
+void MainAudioProcessor::setCurrentEffect(EffectBase::EffectType effect)
+{
+	m_currentEffect = effect;
+}
+
+void MainAudioProcessor::setXY(float x, float y)
+{
+	m_padX = x;
+	m_padY = y;
+}
+
+void MainAudioProcessor::setMidiOutput(MidiOutput* midiOut)
+{
+	m_midiOutput = midiOut;
+}
+
+void MainAudioProcessor::getChain(EffectChain* chain, int num)
+{
+	if (num < m_numberOfChains)
+		chain = &m_effectChains[num];
+}
+
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()

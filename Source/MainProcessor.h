@@ -56,27 +56,13 @@ public:
 	void getStateInformation(MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
-	void setCurrentEffect(EffectBase::EffectType effect)
-	{
-		m_currentEffect = effect;
-	}
+	void setCurrentEffect(EffectBase::EffectType effect);
 
-	void setXYValues(float x, float y)
-	{
-		m_padX = x;
-		m_padY = y;
-	}
+	void setXY(float x, float y);
 
-	void setMidiOutput(MidiOutput* midiOut)
-	{
-		m_midiOutput = midiOut;
-	}
+	void setMidiOutput(MidiOutput* midiOut);
 
-	void getChain(EffectChain* chain, int num)
-	{
-		if (num < m_numberOfChains)
-			chain = &m_effectChains[num];
-	}
+	void getChain(EffectChain* chain, int num);
 
 private:
 
