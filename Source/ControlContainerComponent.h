@@ -22,7 +22,7 @@ class ControlContainerComponent    : public Component, public FlexBox,
 	public SliderListener, public ButtonListener
 {
 public:
-    ControlContainerComponent(int number, MainAudioProcessor& p):
+    ControlContainerComponent(MainAudioProcessor& p, int number):
 		m_writingPoints(false),
 		m_readingPoints(false),
 		m_processor(p),

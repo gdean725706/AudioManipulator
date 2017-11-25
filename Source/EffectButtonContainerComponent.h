@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EffectButtonComponent.h"
+#include "MainProcessor.h"
 
 //==============================================================================
 /*
@@ -19,7 +20,8 @@
 class EffectButtonContainerComponent    : public Component, public FlexBox, public ButtonListener
 {
 public:
-    EffectButtonContainerComponent(int width, int height):
+	EffectButtonContainerComponent(MainAudioProcessor& p, int width, int height) :
+		m_processor(p),
 		m_width(width),
 		m_height(height)
     {
@@ -109,10 +111,15 @@ public:
 			m_currentEffect = EffectType::Delay;
 		}
 
+		// Update active buttons
 		m_buttonLPF->setActive(m_currentEffect == EffectType::LowPassFilter);
 		m_buttonHPF->setActive(m_currentEffect == EffectType::HighPassFilter);
 		m_buttonDelay->setActive(m_currentEffect == EffectType::Delay);
 		
+		// Update AudioProcessor
+		m_processor.setCurrentEffect(m_currentEffect);
+
+		// Redraw
 		m_buttonLPF->repaint();
 		m_buttonHPF->repaint();
 		m_buttonDelay->repaint();
@@ -130,5 +137,6 @@ private:
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
+	MainAudioProcessor& m_processor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonContainerComponent)
 };

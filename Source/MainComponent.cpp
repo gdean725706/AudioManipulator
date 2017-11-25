@@ -16,10 +16,10 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	m_settingsButton = new TextButton("Settings");
 
 	// Create controls container component
-	m_controlsContainer = new ControlContainerComponent(0, p);
+	m_controlsContainer = new ControlContainerComponent(p, 0);
 
 	// Create effect button container
-	m_effectButtonContainer = new EffectButtonContainerComponent(600, 400);
+	m_effectButtonContainer = new EffectButtonContainerComponent(p, 600, 400);
 
 	// Make our components visible
 	addAndMakeVisible(m_settingsButton);

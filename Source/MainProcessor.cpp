@@ -167,7 +167,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	IIRCoefficients ic;
 	bool filterEnabled = false;
 	// Get currently selected filter and set up
-	FXType currentEffect = m_currentEffect;
+	FXType currentEffect =  m_currentEffect;
 	switch (currentEffect)
 	{
 	case FXType::LowPassFilter:
