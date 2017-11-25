@@ -71,7 +71,8 @@ public:
 	}
 	float getYValueNormalised()
 	{
-		return (float)m_height - m_pointY / (float)m_height;
+		int invY = m_height - m_pointY;
+		return (float)invY / (float)m_height;
 	}
 
     void paint (Graphics& g) override
