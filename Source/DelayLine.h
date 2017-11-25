@@ -18,11 +18,10 @@ class DelayLine : public EffectBase
 private:
 	ScopedPointer<float> m_delayBuffer;
 	int m_maxDelay, m_writeLocation, m_channel;
-	float m_feedbackLevel, m_delayTime;
 	double m_sampleRate;
 
 	// Audio params
-	AudioParameterFloat* m_feedbackLevelParam, *m_delayTimeParam;
+	AudioParameterFloat* m_feedbackLevel, *m_delayTime;
 
 
 public:
@@ -43,12 +42,12 @@ public:
 
 	void setFeedbackLevel(float feedbackLevel)
 	{
-		m_feedbackLevel = feedbackLevel;
+		*m_feedbackLevel = feedbackLevel;
 	}
 
 	void setDelayTime(float delayTime)
 	{
-		m_delayTime = delayTime;
+		*m_delayTime = delayTime;
 	}
 
 	void setMaxDelayLength(float maxDelay)

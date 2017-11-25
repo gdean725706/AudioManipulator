@@ -19,17 +19,12 @@ DelayLine::DelayLine(int channel, int maxDelay) :
 	clearBuffer();
 
 	// set up audio parameters
-	m_feedbackLevelParam = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 1, 0.303);
-	addParameter(m_feedbackLevelParam);
-	m_delayTimeParam = new AudioParameterFloat("Delay Time", "Delay Time", 0, 1, 0.303);
-	addParameter(m_delayTimeParam);
+	m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 1, 0.303);
+	addParameter(m_feedbackLevel);
+	m_delayTime = new AudioParameterFloat("Delay Time", "Delay Time", 0, 2000, 1);
+	addParameter(m_delayTime);
 
-	const OwnedArray<AudioProcessorParameter>& params = getParameters();
-
-	for (auto param : params)
-	{
-		m_parameterVector.push_back(dynamic_cast<AudioParameterFloat*>(param));
-	}
+	registerAudioParameters(getParameters());
 	
 }
 
@@ -96,12 +91,12 @@ void DelayLine::releaseResources()
 
 void DelayLine::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-	float* channel = buffer.getWritePointer(0);
+	float* channel = buffer.getWritePointer(m_channel);
 
 	for (int i = 0; i < buffer.getNumSamples(); ++i)
 	{
-		channel[i] += getDelay(m_delayTime * (m_sampleRate * 0.001f));
-		writeSample(channel[i] * m_feedbackLevel);
+		channel[i] += getDelay(*m_delayTime * (m_sampleRate * 0.001f));
+		writeSample(channel[i] * *m_feedbackLevel);
 
 		tick();
 	}
