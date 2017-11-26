@@ -10,14 +10,10 @@
 
 #include "DelayLine.h"
 
-DelayLine::DelayLine(int channel, int maxDelay) :
-	m_maxDelay(maxDelay),
-	m_writeLocation(0),
-	m_channel(channel)
+StereoDelay::StereoDelay(int maxDelay) :
+	m_leftDelay(maxDelay),
+	m_rightDelay(maxDelay)
 {
-	m_delayBuffer = new float[m_maxDelay];
-	clearBuffer();
-
 	// set up audio parameters
 	m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 1, 0.303);
 	addParameter(m_feedbackLevel);
@@ -28,82 +24,43 @@ DelayLine::DelayLine(int channel, int maxDelay) :
 	
 }
 
-void DelayLine::clearBuffer()
+StereoDelay::~StereoDelay()
 {
-	for (int i = 0; i < m_maxDelay; ++i)
-	{
-		m_delayBuffer[i] = 0;
-	}
-}
-
-void DelayLine::writeSample(float sample)
-{
-	m_delayBuffer[m_writeLocation] = sample;
 }
 
 
-void DelayLine::tick()
-{
-	// Makes a circular buffer
-	m_writeLocation += 1;
-
-	while (m_writeLocation >= m_maxDelay)
-	{
-		m_writeLocation -= m_maxDelay;
-	}
-
-	while (m_writeLocation < 0)
-	{
-		m_writeLocation += m_maxDelay;
-	}
-}
-
-float DelayLine::getDelay(int delayTime)
-{
-	// Position in sound we're delaying from
-	int pos = m_writeLocation - delayTime;
-
-	while (pos < 0)
-	{
-		// Wraps around, stops pos entering neg numbers
-		pos += m_maxDelay;
-	}
-
-	while (pos > m_maxDelay)
-	{
-		// Keeps buffer in range - reading wraps around
-		pos -= m_maxDelay;
-	}
-
-	return m_delayBuffer[pos];
-}
-
-void DelayLine::prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock)
+void StereoDelay::prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock)
 {
 	m_sampleRate = sampleRate;
-	clearBuffer();
+	m_leftDelay.clearBuffer();
+	m_rightDelay.clearBuffer();
 }
 
-void DelayLine::releaseResources()
+void StereoDelay::releaseResources()
 {
-	clearBuffer();
+	m_leftDelay.clearBuffer();
+	m_rightDelay.clearBuffer();
 }
 
-void DelayLine::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void StereoDelay::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-	float* channel = buffer.getWritePointer(m_channel);
+	float* leftChannel = buffer.getWritePointer(0);
+	float* rightChannel = buffer.getWritePointer(1);
 
 	for (int i = 0; i < buffer.getNumSamples(); ++i)
 	{
-		channel[i] += getDelay(*m_delayTime * (m_sampleRate * 0.001f));
-		writeSample(channel[i] * *m_feedbackLevel);
+		leftChannel[i] += m_leftDelay.getDelay(*m_delayTime * (m_sampleRate * 0.001f));
+		rightChannel[i] += m_rightDelay.getDelay(*m_delayTime * (m_sampleRate * 0.001f));
+		m_leftDelay.writeSample(leftChannel[i] * *m_feedbackLevel);
+		m_rightDelay.writeSample(rightChannel[i] * *m_feedbackLevel);
 
-		tick();
+		m_leftDelay.tick();
+		m_rightDelay.tick();
 	}
 
 }
 
-double DelayLine::getTailLengthSeconds() const
+double StereoDelay::getTailLengthSeconds() const
 {
 	return 0.0;
 }

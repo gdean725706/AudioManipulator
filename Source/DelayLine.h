@@ -12,28 +12,20 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EffectBase.h"
+#include "DelayUnit.h"
 
-class DelayLine : public EffectBase
+class StereoDelay : public EffectBase
 {
 private:
-	ScopedPointer<float> m_delayBuffer;
-	int m_maxDelay, m_writeLocation, m_channel;
 	double m_sampleRate;
 
 	// Audio params
 	AudioParameterFloat* m_feedbackLevel, *m_delayTime;
-
+	DelayUnit m_leftDelay, m_rightDelay;
 
 public:
-	DelayLine(int channel, int maxDelay);
-
-	void clearBuffer();
-
-	void writeSample(float sample);
-
-	void tick();
-
-	float getDelay(int delayTime);
+	StereoDelay(int maxDelay);
+	~StereoDelay();
 
 	EffectType getType() override
 	{
@@ -48,16 +40,6 @@ public:
 	void setDelayTime(float delayTime)
 	{
 		*m_delayTime = delayTime;
-	}
-
-	void setMaxDelayLength(float maxDelay)
-	{
-		m_maxDelay = maxDelay;
-	}
-
-	void setChannel(int channel)
-	{
-		m_channel = channel;
 	}
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;
