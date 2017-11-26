@@ -297,7 +297,7 @@
  #define JucePlugin_Desc                   "Audio Manipulator"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "point3"
+ #define JucePlugin_Manufacturer           "Point3dsp"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
  #define JucePlugin_ManufacturerWebsite    ""
@@ -306,7 +306,7 @@
  #define JucePlugin_ManufacturerEmail      "gdean170@gmail.com"
 #endif
 #ifndef  JucePlugin_ManufacturerCode
- #define JucePlugin_ManufacturerCode       0x70336175 // 'p3au'
+ #define JucePlugin_ManufacturerCode       0x50336175 // 'P3au'
 #endif
 #ifndef  JucePlugin_PluginCode
  #define JucePlugin_PluginCode             0x5a383331 // 'Z831'
@@ -399,5 +399,5 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "point3: Audio Manipulator"
+ #define JucePlugin_IAAName                "Point3dsp: Audio Manipulator"
 #endif

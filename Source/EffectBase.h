@@ -97,7 +97,7 @@ public:
 
 	AudioProcessorEditor* createEditor() override
 	{
-		return false;
+		return nullptr;
 	}
 
 	bool hasEditor() const override
