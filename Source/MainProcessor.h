@@ -87,6 +87,7 @@ private:
 
 	int m_numberOfChains;
 	std::vector<EffectChain> m_effectChains;
+	EffectChain m_effectChain1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

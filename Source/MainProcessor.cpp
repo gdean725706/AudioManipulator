@@ -112,6 +112,8 @@ void MainAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 	// initialisation that you need..
 	m_sampleRate = sampleRate;
 
+	m_effectChains[0].prepareToPlay(sampleRate, samplesPerBlock);
+
 }
 
 void MainAudioProcessor::releaseResources()

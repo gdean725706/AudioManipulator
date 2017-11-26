@@ -23,6 +23,16 @@ public:
 		m_yVal = 0;
 	}
 
+	void prepareToPlay(double sampleRate, int samplesPerBlock)
+	{
+		m_delayLine.prepareToPlay(sampleRate, samplesPerBlock);
+	}
+
+	void releaseResources()
+	{
+		m_delayLine.releaseResources();
+	}
+
 	// Call this each block to process the delays
 	void processDelay(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 	{
