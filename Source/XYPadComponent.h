@@ -129,7 +129,7 @@ public:
 	{
 		updateXYPoints();
 
-		repaint();
+		repaint();		
 	}
 
 	void updateXYPoints()

@@ -12,7 +12,7 @@
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="AudioManipulatorAU"
               pluginRTASCategory="" aaxIdentifier="com.yourcompany.AudioManipulator"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" companyName="Point3dsp"
-              companyEmail="gdean170@gmail.com" pluginVSTCategory="">
+              companyEmail="gdean170@gmail.com" pluginVSTCategory="" companyCopyright="Point3dsp">
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
@@ -47,9 +47,11 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" vst3Folder="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="AudioManipulator"/>
+                       isDebug="1" optimisation="1" targetName="AudioManipulator" debugInformationFormat="ProgramDatabase"
+                       enablePluginBinaryCopyStep="0"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="0" optimisation="3" targetName="AudioManipulator"/>
+                       isDebug="0" optimisation="3" targetName="AudioManipulator" debugInformationFormat="ProgramDatabase"
+                       enablePluginBinaryCopyStep="0" linkTimeOptimisation="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
@@ -70,7 +72,7 @@
       </MODULEPATHS>
     </VS2017>
     <ANDROIDSTUDIO targetFolder="Builds/Android" androidSDKPath="" androidNDKPath=""
-                   androidActivityClass="com.Point3dsp.AudioManipulator">
+                   microphonePermissionNeeded="1">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" androidArchitectures="armeabi x86" isDebug="1" optimisation="1"
                        targetName="Audio Manipulator"/>

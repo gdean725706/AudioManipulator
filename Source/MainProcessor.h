@@ -3,7 +3,7 @@
 
     MainProcessor.h
     Created: 8 Nov 2017 5:55:31pm
-    Author:  deano
+    Author:  George Dean
 
   ==============================================================================
 */

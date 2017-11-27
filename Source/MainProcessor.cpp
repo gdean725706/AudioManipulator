@@ -31,7 +31,6 @@ MainAudioProcessor::MainAudioProcessor()
 	m_effectChains(m_numberOfChains)
 
 {
-
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
 
