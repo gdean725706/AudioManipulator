@@ -41,7 +41,7 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	m_glContext.attachTo(*this);
 
 #if JUCE_ANDROID
-    Desktop::getInstance().setScreenSaverEnabled(true);
+    Desktop::getInstance().setScreenSaverEnabled(false);
 #endif
 
 
