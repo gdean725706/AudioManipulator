@@ -121,7 +121,7 @@ public:
 	{
 		updateXYPoints();
 
-		repaint();
+		//repaint();
 	}
 
 	// Allow for dragging XY input
@@ -129,7 +129,7 @@ public:
 	{
 		updateXYPoints();
 
-		repaint();		
+		//repaint();		
 	}
 
 	void updateXYPoints()
@@ -159,8 +159,8 @@ public:
 		m_linkedEffectChain.setXY(m_normalX, m_normalY);
 		m_processor.setXY(m_normalX, m_normalY);
 
-		if (m_playback)
-			repaint();
+		//if (m_playback)
+		//	repaint();
 	
 	}
 

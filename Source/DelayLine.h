@@ -32,16 +32,6 @@ public:
 		return EffectType::Delay;
 	}
 
-	void setFeedbackLevel(float feedbackLevel)
-	{
-		*m_feedbackLevel = feedbackLevel;
-	}
-
-	void setDelayTime(float delayTime)
-	{
-		*m_delayTime = delayTime;
-	}
-
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;
 	void releaseResources() override;
 	void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override;

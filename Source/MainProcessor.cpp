@@ -26,11 +26,11 @@ MainAudioProcessor::MainAudioProcessor()
 	,
 	m_padX(0),
 	m_padY(0),
-	m_currentEffect(FXType::LowPassFilter),
-	m_numberOfChains(1),
-	m_effectChains(m_numberOfChains)
+	m_currentEffect(FXType::LowPassFilter)
 
 {
+	//m_effectChains.push_back(EffectChain());
+
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
 
@@ -111,7 +111,7 @@ void MainAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 	// initialisation that you need..
 	m_sampleRate = sampleRate;
 
-	m_effectChains[0].prepareToPlay(sampleRate, samplesPerBlock);
+	m_effectChain1.prepareToPlay(sampleRate, samplesPerBlock);
 
 }
 
@@ -206,7 +206,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 
 	if (currentEffect == FXType::Delay)
 	{
-		m_effectChains[0].processDelay(buffer, midiMessages);
+		m_effectChain1.processDelay(buffer, midiMessages);
 	}
 
 }

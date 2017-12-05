@@ -120,9 +120,9 @@ public:
 		m_processor.setCurrentEffect(m_currentEffect);
 
 		// Redraw
-		m_buttonLPF->repaint();
-		m_buttonHPF->repaint();
-		m_buttonDelay->repaint();
+		//m_buttonLPF->repaint();
+		//m_buttonHPF->repaint();
+		//m_buttonDelay->repaint();
 
 	}
 

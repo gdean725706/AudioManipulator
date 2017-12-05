@@ -15,12 +15,14 @@ StereoDelay::StereoDelay(int maxDelay) :
 	m_rightDelay(maxDelay)
 {
 	// set up audio parameters
-	m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 1, 0.303);
+	m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 0.9999, 0.303);
 	addParameter(m_feedbackLevel);
+	m_parameterVector.push_back(m_feedbackLevel);
 	m_delayTime = new AudioParameterFloat("Delay Time", "Delay Time", 0, 2000, 1);
 	addParameter(m_delayTime);
+	m_parameterVector.push_back(m_delayTime);
 
-	registerAudioParameters(getParameters());
+	//registerAudioParameters(getParameters());
 	
 }
 

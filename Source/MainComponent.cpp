@@ -36,11 +36,21 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 
 	setSize(1024, 768);
 
+	startTimerHz(60);
+
+	m_glContext.attachTo(*this);
+
+#if JUCE_ANDROID
+    Desktop::getInstance().setScreenSaverEnabled(true);
+#endif
+
+
 }
+
 
 MainContentComponent::~MainContentComponent()
 {
-
+    m_glContext.detach();
 }
 
 
@@ -100,6 +110,11 @@ void MainContentComponent::buttonClicked(Button * button)
 }
 
 void MainContentComponent::mouseMove(const MouseEvent& evt)
+{
+	//repaint();
+}
+
+void MainContentComponent::timerCallback()
 {
 	repaint();
 }

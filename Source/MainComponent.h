@@ -20,7 +20,7 @@
 */
 
 // Use multiple inheritance to inherit flexbox into our component
-class MainContentComponent   : public AudioProcessorEditor, public FlexBox, public ButtonListener
+class MainContentComponent   : public AudioProcessorEditor, public FlexBox, public ButtonListener, public Timer
 {
 public:
     //==============================================================================
@@ -32,6 +32,8 @@ public:
 	void mouseMove(const MouseEvent& event) override;
 
 	void buttonClicked(Button* button) override;
+
+	void timerCallback() override;
 
 private:
 	ScopedPointer<TextButton> m_settingsButton;
@@ -47,6 +49,8 @@ private:
 	ScopedPointer<XYPadComponent> m_XYPad1;
 
 	MainAudioProcessor& processor;
+
+	OpenGLContext m_glContext;
 
 	double scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd);
 

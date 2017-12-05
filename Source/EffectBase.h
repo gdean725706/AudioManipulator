@@ -150,7 +150,7 @@ public:
 	}
 
 protected:
-	std::vector<AudioParameterFloat*>  m_parameterVector;
+	std::vector<AudioParameterFloat*> m_parameterVector;
 
 private:
 	bool m_active = false;
