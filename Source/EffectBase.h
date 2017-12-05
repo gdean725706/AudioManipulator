@@ -23,7 +23,7 @@ public:
 		m_xVal(0),
 		m_yVal(0)
 	{}
-	enum EffectType
+	static enum EffectType
 	{
 		LowPassFilter,
 		HighPassFilter,
@@ -49,9 +49,16 @@ public:
 			x = scaleRange(x, 0, 1, m_parameterVector[m_xParameter]->range.start, m_parameterVector[m_xParameter]->range.end);
 			y = scaleRange(y, 0, 1, m_parameterVector[m_yParameter]->range.start, m_parameterVector[m_yParameter]->range.end);
 
-			*m_parameterVector[m_xParameter] = x;
-			*m_parameterVector[m_yParameter] = y;
+			m_parameterVector[m_xParameter]->setValueNotifyingHost(x);
+			m_parameterVector[m_yParameter]->setValueNotifyingHost(y);
 		}
+		String xstr, ystr;
+		xstr << x;
+		ystr << y;
+		Logger::writeToLog("Writing x as " + xstr);
+		Logger::writeToLog("Writing y as " + ystr);
+
+		
 
 		m_xVal = x;
 		m_yVal = y;
@@ -149,10 +156,9 @@ public:
 		return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart); 
 	}
 
-protected:
-	std::vector<AudioParameterFloat*> m_parameterVector;
-
 private:
+
+	std::vector<AudioParameterFloat*> m_parameterVector;
 	bool m_active = false;
 	String m_name;
 	int m_xParameter, m_yParameter;

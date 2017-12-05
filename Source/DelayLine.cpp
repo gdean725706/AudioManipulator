@@ -17,12 +17,10 @@ StereoDelay::StereoDelay(int maxDelay) :
 	// set up audio parameters
 	m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 0.9999, 0.303);
 	addParameter(m_feedbackLevel);
-	m_parameterVector.push_back(m_feedbackLevel);
 	m_delayTime = new AudioParameterFloat("Delay Time", "Delay Time", 0, 2000, 1);
 	addParameter(m_delayTime);
-	m_parameterVector.push_back(m_delayTime);
 
-	//registerAudioParameters(getParameters());
+	registerAudioParameters(getParameters());
 	
 }
 
@@ -51,10 +49,10 @@ void StereoDelay::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessa
 
 	for (int i = 0; i < buffer.getNumSamples(); ++i)
 	{
-		leftChannel[i] += m_leftDelay.getDelay(*m_delayTime * (m_sampleRate * 0.001f));
-		rightChannel[i] += m_rightDelay.getDelay(*m_delayTime * (m_sampleRate * 0.001f));
-		m_leftDelay.writeSample(leftChannel[i] * *m_feedbackLevel);
-		m_rightDelay.writeSample(rightChannel[i] * *m_feedbackLevel);
+		leftChannel[i] += m_leftDelay.getDelay(m_delayTime->get() * (m_sampleRate * 0.001f));
+		rightChannel[i] += m_rightDelay.getDelay(m_delayTime->get() * (m_sampleRate * 0.001f));
+		m_leftDelay.writeSample(leftChannel[i] * m_feedbackLevel->get());
+		m_rightDelay.writeSample(rightChannel[i] * m_feedbackLevel->get());
 
 		m_leftDelay.tick();
 		m_rightDelay.tick();
