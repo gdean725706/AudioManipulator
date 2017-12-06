@@ -271,10 +271,13 @@ void MainAudioProcessor::setMidiOutput(MidiOutput* midiOut)
 	m_midiOutput = midiOut;
 }
 
-void MainAudioProcessor::getChain(EffectChain* chain, int num)
+EffectChain& MainAudioProcessor::getChain(int num)
 {
+	return m_effectChain1;
+
+
 	if (num < m_numberOfChains)
-		chain = &m_effectChains[num];
+		return m_effectChains[num];
 }
 
 //==============================================================================

@@ -62,7 +62,7 @@ public:
 
 	void setMidiOutput(MidiOutput* midiOut);
 
-	void getChain(EffectChain* chain, int num);
+	EffectChain& MainAudioProcessor::getChain(int num);
 
 private:
 

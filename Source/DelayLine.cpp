@@ -19,7 +19,8 @@ StereoDelay::StereoDelay(int maxDelay) :
 	// set up audio parameters
 	addParameter(m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 0.9999, 0.303));
 	addParameter(m_delayTime = new AudioParameterFloat("Delay Time", "Delay Time", 0, 2000, 1));
-	
+
+	startTimerHz(25);
 }
 
 StereoDelay::~StereoDelay()
@@ -66,7 +67,7 @@ void StereoDelay::updateValues(float x, float y)
 	String xstr, ystr;
 	xstr << *m_feedbackLevel;
 	ystr << *m_delayTime;
-	Logger::writeToLog("feedback was " + xstr + " . dt was " + ystr);
+	//Logger::writeToLog("feedback was " + xstr + " . dt was " + ystr);
 
 	*m_feedbackLevel = x;
 	*m_delayTime = y;
@@ -78,7 +79,7 @@ void StereoDelay::updateValues(float x, float y)
 
 	xstr << *m_feedbackLevel;
 	ystr << *m_delayTime;
-	Logger::writeToLog("feedback set to " + xstr + " . dt set to " + ystr);
+	//Logger::writeToLog("feedback set to " + xstr + " . dt set to " + ystr);
 }
 
 
@@ -87,3 +88,10 @@ double StereoDelay::getTailLengthSeconds() const
 	return 0.0;
 }
 
+void StereoDelay::timerCallback()
+{
+	String fbkstr, dtstr;
+	fbkstr << m_fbk;
+	dtstr << m_dt;
+	Logger::writeToLog("Feedback is " + fbkstr + " . Delaytime is " + dtstr);
+}

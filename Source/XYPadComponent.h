@@ -29,7 +29,7 @@ public:
 		m_pointY(height),
 		m_colour(Colours::lightgrey),
 		m_currentXY("Default"),
-		m_linkedEffectChain(effectChain),
+		m_linkedEffectChain(&effectChain),
 		m_processor(processor)
     {
         // In your constructor, you should add any child components, and
@@ -156,7 +156,7 @@ public:
 		m_normalX = getXValueNormalised();
 		m_normalY = getYValueNormalised();
 		
-		m_linkedEffectChain.setXY(m_normalX, m_normalY);
+		m_linkedEffectChain->setXY(m_normalX, m_normalY);
 		m_processor.setXY(m_normalX, m_normalY);
 	
 	}
@@ -227,7 +227,7 @@ private:
 	float m_normalX, m_normalY;
 	String m_currentXY;
 
-	EffectChain& m_linkedEffectChain;
+	EffectChain* m_linkedEffectChain;
 	MainAudioProcessor& m_processor;
 
 	// Path writing system

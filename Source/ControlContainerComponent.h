@@ -32,11 +32,8 @@ public:
 		m_pathButton1 = new FlexButtonComponent("Path1");
 		m_recordControlButton = new FlexButtonComponent("PlayPath1");
 
-		// Set this effect chain
-		m_processor.getChain(&m_effectChain, m_chainNumber);
-
 		// Add XY pad and sliders
-		m_XYPad = new XYPadComponent(400, 400, m_effectChain, p);
+		m_XYPad = new XYPadComponent(400, 400, m_processor.getChain(m_chainNumber), p);
 
 		// Add and setup sliders
 		m_slider1 = new FlexSlider("flexSlider1");
@@ -154,7 +151,6 @@ private:
 	bool m_writingPoints, m_readingPoints;
 	// Reference to linked effect chain
 	MainAudioProcessor& m_processor;
-	EffectChain m_effectChain;
 	int m_chainNumber;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlContainerComponent)
