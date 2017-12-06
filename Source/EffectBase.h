@@ -26,7 +26,7 @@ public:
 
 	}
 
-	static enum EffectType
+	enum EffectType
 	{
 		LowPassFilter,
 		HighPassFilter,
