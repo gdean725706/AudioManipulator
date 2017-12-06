@@ -22,13 +22,18 @@ public:
 		m_yParameter(1),
 		m_xVal(0),
 		m_yVal(0)
-	{}
+	{
+
+	}
+
 	static enum EffectType
 	{
 		LowPassFilter,
 		HighPassFilter,
 		Phaser,
-		Delay
+		Delay,
+		Chorus,
+		Flanger
 	};
 
 	void setActive(bool active)
@@ -50,7 +55,7 @@ public:
 			y = scaleRange(y, 0, 1, m_parameterVector[m_yParameter]->range.start, m_parameterVector[m_yParameter]->range.end);
 
 			*m_parameterVector[m_xParameter] = (x);
-			*m_parameterVector[m_yParameter] =(y);
+			*m_parameterVector[m_yParameter] = (y);
 		}
 
 		
@@ -176,5 +181,6 @@ private:
 	float m_xVal, m_yVal;
 
 
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EffectBase)
 };
 

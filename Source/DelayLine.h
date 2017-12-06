@@ -14,7 +14,7 @@
 #include "EffectBase.h"
 #include "DelayUnit.h"
 
-class StereoDelay : public EffectBase, public Timer
+class StereoDelay : public EffectBase
 {
 private:
 	double m_sampleRate;
@@ -33,10 +33,6 @@ public:
 	{
 		return EffectType::Delay;
 	}
-
-	std::atomic<float> m_fbk, m_dt;
-
-	void timerCallback();
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;
 	void releaseResources() override;

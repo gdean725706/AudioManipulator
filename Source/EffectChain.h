@@ -42,8 +42,7 @@ public:
 
 	void setXY(float x, float y)
 	{
-		//m_delayLine.updateAudioParameters(x, y);
-		m_delayLine.updateValues(x, y);
+		m_delayLine.updateAudioParameters(x, y);
 
 		m_xVal = x;
 		m_yVal = y;
