@@ -39,7 +39,8 @@ public:
 
 		// Due to FlexBox multiple inheritance we must set the associated component to this
 		associatedComponent = this;
-		alignSelf = AlignSelf::autoAlign;
+		alignSelf = AlignSelf::center;
+		flexShrink = 0.5;
 	}
 
 	// Override paint virtual to make it do what we want it to do

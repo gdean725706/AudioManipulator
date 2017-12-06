@@ -27,10 +27,14 @@ public:
 	StereoDelay(int maxDelay);
 	~StereoDelay();
 
+	void updateValues(float x, float y);
+
 	EffectType getType() override
 	{
 		return EffectType::Delay;
 	}
+
+	std::atomic<float> m_fbk, m_dt;
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;
 	void releaseResources() override;

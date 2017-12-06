@@ -56,8 +56,8 @@ public:
 
 		// Add and make visible
 		addAndMakeVisible(m_XYPad);
-		addAndMakeVisible(m_slider1);
-		addAndMakeVisible(m_slider2);
+		//addAndMakeVisible(m_slider1);
+		//addAndMakeVisible(m_slider2);
 		addAndMakeVisible(m_pathButton1);
 		addAndMakeVisible(m_recordControlButton);
 

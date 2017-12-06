@@ -13,7 +13,6 @@
 MainContentComponent::MainContentComponent(MainAudioProcessor& p) 
 	: AudioProcessorEditor(&p), processor(p)
 {
-	m_settingsButton = new TextButton("Settings");
 
 	// Create controls container component
 	m_controlsContainer = new ControlContainerComponent(p, 0);
@@ -22,7 +21,6 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	m_effectButtonContainer = new EffectButtonContainerComponent(p, 600, 400);
 
 	// Make our components visible
-	addAndMakeVisible(m_settingsButton);
 	addAndMakeVisible(m_controlsContainer);
 	addAndMakeVisible(m_effectButtonContainer);
 
@@ -32,10 +30,10 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	justifyContent = JustifyContent::center;
 
 	// Set up our button click event observers
-	m_settingsButton->addListener(this);
 
 	setSize(1024, 768);
 
+	// Attach to OpenGL renderer to improve graphics performance
 	m_glContext.attachTo(*this);
 
 #if JUCE_ANDROID
@@ -70,16 +68,10 @@ void MainContentComponent::resized()
     // update their positions.
 
 	auto bounds = getLocalBounds();
-	int headerHeight = getHeight() * 0.05f;
-	auto header = bounds.removeFromTop(headerHeight);
+	int effectContainerHeight = getHeight() * 0.08f;
 
-	auto settingsButtonBounds = header.removeFromLeft(100).reduced(3);
-	m_settingsButton->setBounds(settingsButtonBounds);
-
-	//bounds.removeFromTop(m_XYPad1->getHeight()).reduced(3);
-	m_effectButtonContainer->setBounds(bounds.removeFromTop(100).reduced(3));
+	m_effectButtonContainer->setBounds(bounds.removeFromTop(effectContainerHeight).reduced(3));
 	m_controlsContainer->setBounds(bounds.removeFromTop(400).reduced(3));
-
 	int buttonHeight = 10;
 
 	// Call flexbox perform layout method, as we have already set up the list of items
@@ -91,18 +83,7 @@ void MainContentComponent::resized()
 // Callback for button clicked
 void MainContentComponent::buttonClicked(Button * button)
 {
-	if (button == m_settingsButton)
-	{
-		//// Create our settings selector object and define our input parameters
-		//ScopedPointer<AudioDeviceSelectorComponent> settingsSelect = new AudioDeviceSelectorComponent(deviceManager,1,2,1,2,true,true,true,false);
-		//// set arbitrary dialog window size
-		//settingsSelect->setSize(600, 600);
-		//// Create a window containing our settings select component
-		//DialogWindow::showModalDialog("Audio Settings", settingsSelect, this, Colours::cadetblue, true, true, true);
 
-		//// Get our midi output device from audio manager
-		//processor.setMidiOutput(deviceManager.getDefaultMidiOutput());
-	}
 
 }
 

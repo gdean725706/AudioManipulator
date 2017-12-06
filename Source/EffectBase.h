@@ -49,14 +49,9 @@ public:
 			x = scaleRange(x, 0, 1, m_parameterVector[m_xParameter]->range.start, m_parameterVector[m_xParameter]->range.end);
 			y = scaleRange(y, 0, 1, m_parameterVector[m_yParameter]->range.start, m_parameterVector[m_yParameter]->range.end);
 
-			m_parameterVector[m_xParameter]->setValueNotifyingHost(x);
-			m_parameterVector[m_yParameter]->setValueNotifyingHost(y);
+			*m_parameterVector[m_xParameter] = (x);
+			*m_parameterVector[m_yParameter] =(y);
 		}
-		String xstr, ystr;
-		xstr << x;
-		ystr << y;
-		Logger::writeToLog("Writing x as " + xstr);
-		Logger::writeToLog("Writing y as " + ystr);
 
 		
 
@@ -150,10 +145,26 @@ public:
 		}
 	}
 
+	void registerParameter(AudioParameterFloat* param)
+	{
+		m_parameterVector.push_back(param);
+		addParameter(m_parameterVector.back());
+	}
+
 	// Scales a value from one range to another
 	float scaleRange(float input, float inputStart, float inputEnd, float outputStart, float outputEnd)
 	{
 		return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart); 
+	}
+
+	float getBaseXVal()
+	{
+		return m_xVal;
+	}
+
+	float getBaseYVal()
+	{
+		return m_yVal;
 	}
 
 private:
@@ -166,3 +177,4 @@ private:
 
 
 };
+

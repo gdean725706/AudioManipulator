@@ -34,7 +34,6 @@ public:
 	void buttonClicked(Button* button) override;
 
 private:
-	ScopedPointer<TextButton> m_settingsButton;
 
 	// Typedef for our enum containing all the FX types
 	typedef EffectBase::EffectType FXType;

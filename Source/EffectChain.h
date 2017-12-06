@@ -13,7 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DelayLine.h"
 
-class EffectChain
+class EffectChain : public AudioProcessorGraph
 {
 public:
 	EffectChain() :
@@ -21,6 +21,7 @@ public:
 	{
 		m_xVal = 0;
 		m_yVal = 0;
+
 	}
 
 	void prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -41,7 +42,8 @@ public:
 
 	void setXY(float x, float y)
 	{
-		m_delayLine.updateAudioParameters(x, y);
+		//m_delayLine.updateAudioParameters(x, y);
+		m_delayLine.updateValues(x, y);
 
 		m_xVal = x;
 		m_yVal = y;

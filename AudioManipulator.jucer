@@ -42,8 +42,6 @@
             file="Source/MainProcessor.cpp"/>
       <FILE id="J3Zo2L" name="MainProcessor.h" compile="0" resource="0" file="Source/MainProcessor.h"/>
     </GROUP>
-    <FILE id="wrQThC" name="MaterialLookAndFeel.h" compile="0" resource="0"
-          file="Source/MaterialLookAndFeel.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" vst3Folder="">
