@@ -81,7 +81,7 @@ public:
            drawing code..
         */
 
-        g.fillAll (Colours::lightslategrey);   // clear the background
+        g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId).brighter());   // clear the background
 
         g.setColour (Colours::transparentWhite);
         g.drawRect (getLocalBounds(), 1);   // draw an outline around the component

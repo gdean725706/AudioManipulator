@@ -27,7 +27,7 @@ public:
 		FlexItem(width,height),
 		m_pointX(0),
 		m_pointY(height),
-		m_colour(Colours::lightgrey),
+		m_colour(Colours::grey),
 		m_currentXY("Default"),
 		m_linkedEffectChain(&effectChain),
 		m_processor(processor)
@@ -87,7 +87,7 @@ public:
 
         g.fillAll (m_colour);   // clear the background
 
-        g.setColour (Colours::grey);
+        g.setColour (Colours::darkgrey);
         g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 		
 		// Update string with XY coords
@@ -204,12 +204,17 @@ public:
 	{
 		if (m_playback)
 		{
-			m_playbackX = m_xStore[m_playbackCounter];
-			m_playbackY = m_yStore[m_playbackCounter];
-			if (m_playbackCounter >= m_pointsSaved - 1) m_playbackCounter = 0;
-			else m_playbackCounter++;
-			updateXYPoints();
-			repaint();
+			if ( !m_xStore.empty() && !m_yStore.empty() )
+			{
+				m_playbackX = m_xStore[m_playbackCounter];
+				m_playbackY = m_yStore[m_playbackCounter];
+
+				if (m_playbackCounter >= m_pointsSaved - 1) m_playbackCounter = 0;
+				else m_playbackCounter++;
+
+				updateXYPoints();
+				repaint();
+			}
 		}
 		else
 		{

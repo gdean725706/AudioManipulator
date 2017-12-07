@@ -121,22 +121,28 @@ public:
 	{
 		if (button == m_pathButton1)
 		{
-			// Toggle writing points
-			m_writingPoints = !m_writingPoints;
-			m_pathButton1->setActive(m_writingPoints);
-			m_XYPad->writePoints(m_writingPoints);
+			if (!m_readingPoints)
+			{
+				// Toggle writing points
+				m_writingPoints = !m_writingPoints;
+				m_pathButton1->setActive(m_writingPoints);
+				m_XYPad->writePoints(m_writingPoints);
+			}
 		}
 		else if (button == m_recordControlButton)
 		{
-			m_readingPoints = !m_readingPoints;
-			m_recordControlButton->setActive(m_readingPoints);
-			if (m_readingPoints && !m_writingPoints)
+			if (!m_writingPoints)
 			{
-				m_XYPad->startPointPlayback();
-			}
-			else if (!m_writingPoints)
-			{
-				m_XYPad->stopPointPlayback();
+				m_readingPoints = !m_readingPoints;
+				m_recordControlButton->setActive(m_readingPoints);
+				if (m_readingPoints && !m_writingPoints)
+				{
+					m_XYPad->startPointPlayback();
+				}
+				else if (!m_writingPoints)
+				{
+					m_XYPad->stopPointPlayback();
+				}
 			}
 		}
 	}
