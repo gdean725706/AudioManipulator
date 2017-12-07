@@ -31,6 +31,8 @@
         <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
       </GROUP>
       <GROUP id="{71B1F06F-79FF-AC10-2049-9AE73604CA73}" name="Effects">
+        <FILE id="r2MAW1" name="Flanger.cpp" compile="1" resource="0" file="Source/Flanger.cpp"/>
+        <FILE id="NKFCe6" name="Flanger.h" compile="0" resource="0" file="Source/Flanger.h"/>
         <FILE id="EjQ8KB" name="EffectChain.h" compile="0" resource="0" file="Source/EffectChain.h"/>
         <FILE id="fks8Ct" name="DelayUnit.h" compile="0" resource="0" file="Source/DelayUnit.h"/>
         <FILE id="XkzVIK" name="EffectBase.h" compile="0" resource="0" file="Source/EffectBase.h"/>

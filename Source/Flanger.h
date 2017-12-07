@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    DelayLine.h
-    Created: 6 Nov 2017 6:08:07pm
+    Flanger.h
+    Created: 7 Dec 2017 12:21:37am
     Author:  George Dean
 
   ==============================================================================
@@ -14,27 +14,28 @@
 #include "EffectBase.h"
 #include "DelayUnit.h"
 
-class StereoDelay : public EffectBase
+//==============================================================================
+/*
+*/
+class Flanger : public EffectBase
 {
 private:
 	double m_sampleRate;
-
-	// Audio params
-	AudioParameterFloat* m_feedbackLevel, *m_delayTime;
+	AudioParameterFloat* m_feedback, *m_depth, *m_frequency;
 	DelayUnit m_leftDelay, m_rightDelay;
+	float m_phase;
 
 public:
-	StereoDelay(int maxDelay);
-	~StereoDelay();
+    Flanger(int maxDelay);
+    ~Flanger();
 
 	EffectType getType() override
 	{
-		return EffectType::Delay;
+		return EffectType::Flanger;
 	}
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override;
 	void releaseResources() override;
 	void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override;
 	double getTailLengthSeconds() const override;
-
 };

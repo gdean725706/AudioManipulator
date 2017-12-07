@@ -15,8 +15,8 @@ StereoDelay::StereoDelay(int maxDelay) :
 	m_rightDelay(maxDelay)
 {
 	// set up audio parameters
-	addParameter(m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0, 0.9999, 0.303));
-	addParameter(m_delayTime = new AudioParameterFloat("Delay Time", "Delay Time", 0, 2000, 1));
+	addParameter(m_feedbackLevel = new AudioParameterFloat("Feedback Level", "Feedback Level", 0.0f, 0.9999f, 0.303f));
+	addParameter(m_delayTime = new AudioParameterFloat("Delay Time", "Delay Time", 0.0f, 2000.0f, 1.0f));
 	registerParameter(m_feedbackLevel);
 	registerParameter(m_delayTime);
 }
@@ -60,24 +60,6 @@ void StereoDelay::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessa
 		m_rightDelay.tick();
 	}
 
-}
-
-void StereoDelay::updateValues(float x, float y)
-{
-	String xstr, ystr;
-	xstr << *m_feedbackLevel;
-	ystr << *m_delayTime;
-	//Logger::writeToLog("feedback was " + xstr + " . dt was " + ystr);
-
-	*m_feedbackLevel = x;
-	*m_delayTime = y;
-
-	xstr = "";
-	ystr = "";
-
-	xstr << *m_feedbackLevel;
-	ystr << *m_delayTime;
-	//Logger::writeToLog("feedback set to " + xstr + " . dt set to " + ystr);
 }
 
 

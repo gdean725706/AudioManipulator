@@ -208,6 +208,10 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	{
 		m_effectChain1.processDelay(buffer, midiMessages);
 	}
+	else if (currentEffect == FXType::Flanger)
+	{
+		m_effectChain1.processFlanger(buffer, midiMessages);
+	}
 
 }
 

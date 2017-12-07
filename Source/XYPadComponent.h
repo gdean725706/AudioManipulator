@@ -104,8 +104,8 @@ public:
                     Justification::centred, true);   // draw some placeholder text
 		String points;
 		points << m_pointsSaved;
-		g.drawText(points, getLocalBounds().removeFromLeft(50),
-			Justification::centred, true);   // debug points saved
+		//g.drawText(points, getLocalBounds().removeFromLeft(50),
+		//	Justification::centred, true);   // debug points saved
    
 	}
 
