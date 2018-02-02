@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    RecordPathButtonComponent.h
+    FlexButtonComponent.h
     Created: 16 Nov 2017 1:10:45am
     Author:  George Dean
 
@@ -20,12 +20,10 @@ class FlexButtonComponent    : public Button, public FlexItem
 private:
 	Colour m_colour;
 	bool m_active;
-	String m_labelText;
 public:
     FlexButtonComponent(String buttonName) :
 		Button("btn" + buttonName),
 		FlexItem(75, 50),
-		m_labelText(buttonName),
 		m_colour(Colours::lightgrey),
 		m_active(false)
     {
@@ -64,7 +62,7 @@ public:
 		g.fillAll(m_colour);
 
 		g.setColour(Colours::white);
-		g.drawText(m_labelText, getLocalBounds(), Justification::centred, false);
+		g.drawText(getButtonText(), getLocalBounds(), Justification::centred, false);
 	}
 
     void resized() override

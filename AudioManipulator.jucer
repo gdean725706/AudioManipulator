@@ -18,8 +18,8 @@
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
         <FILE id="Or936Q" name="BottomContainer.h" compile="0" resource="0"
               file="Source/BottomContainer.h"/>
-        <FILE id="BJbiHe" name="RecordPathButtonComponent.h" compile="0" resource="0"
-              file="Source/RecordPathButtonComponent.h"/>
+        <FILE id="BJbiHe" name="FlexButtonComponent.h" compile="0" resource="0"
+              file="Source/FlexButtonComponent.h"/>
         <FILE id="TrIgzB" name="EffectButtonComponent.h" compile="0" resource="0"
               file="Source/EffectButtonComponent.h"/>
         <FILE id="wbQREA" name="ControlContainerComponent.h" compile="0" resource="0"

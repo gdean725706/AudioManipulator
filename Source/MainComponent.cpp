@@ -20,9 +20,12 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	// Create effect button container
 	m_effectButtonContainer = new EffectButtonContainerComponent(&p, 600, 400);
 
+	m_bottomContainer = new BottomContainer(&p);
+
 	// Make our components visible
 	addAndMakeVisible(m_controlsContainer);
 	addAndMakeVisible(m_effectButtonContainer);
+	addAndMakeVisible(m_bottomContainer);
 
 	// flexWrap CSS equiv attribute
 	flexWrap = Wrap::wrap;
@@ -69,9 +72,11 @@ void MainContentComponent::resized()
 
 	auto bounds = getLocalBounds();
 	int effectContainerHeight = getHeight() * 0.1f;
+	int bottomContainerHeight = getHeight() * 0.25f;
 
 	m_effectButtonContainer->setBounds(bounds.removeFromTop(effectContainerHeight).reduced(3));
 	m_controlsContainer->setBounds(bounds.removeFromTop(400).reduced(3));
+	m_bottomContainer->setBounds(bounds.removeFromBottom(bottomContainerHeight).reduced(3));
 	int buttonHeight = 10;
 
 	// Call flexbox perform layout method, as we have already set up the list of items

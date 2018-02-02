@@ -12,6 +12,7 @@
 #include "EffectButtonContainerComponent.h"
 #include "ControlContainerComponent.h"
 #include "MainProcessor.h"
+#include "BottomContainer.h"
 
 //==============================================================================
 /*
@@ -42,6 +43,8 @@ private:
 	ScopedPointer<EffectButtonContainerComponent> m_effectButtonContainer;
 	// Create container for control buttons
 	ScopedPointer<ControlContainerComponent> m_controlsContainer;
+
+	ScopedPointer<BottomContainer> m_bottomContainer;
 
 	ScopedPointer<XYPadComponent> m_XYPad1;
 

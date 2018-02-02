@@ -306,21 +306,30 @@ EffectChain* MainAudioProcessor::getChain(int num)
 		return &m_effectChains[num];
 }
 
-void MainAudioProcessor::startRecording()
+void MainAudioProcessor::startRecording(int index)
 {
+	index = index > 3 ? 3 : index < 0 ? 0 : index;
+	m_bufferIndex = index;
 	m_samplesWritten = 0;
-	m_sampleIndexCount++;
+	// Clean write cache buffer ready for new write
+	// Don't clear save buffer until audio recoridng is complete
 	m_floatBuffer.clear();
 	m_writingToBuffer = true;
 }
 
-void MainAudioProcessor::stopRecording()
+void MainAudioProcessor::stopRecording(int index)
 {
-	m_savedBuffers[m_sampleIndexCount].resize(m_samplesWritten);
-	m_savedBuffers[m_sampleIndexCount] = m_floatBuffer;
+	index = index > 3 ? 3 : index < 0 ? 0 : index;
+	// Clear and copy cache buffer into store buffer
+	m_savedBuffers[index].clear();
+	m_savedBuffers[index].resize(index);
+	m_savedBuffers[index] = m_floatBuffer;
+
 	DBG(m_samplesWritten);
 	// Assuming 2 channels of audio, deb seconds recorded
 	DBG((m_samplesWritten / m_sampleRate) / 2);
+
+	// Clear and reset cache
 	m_samplesWritten = 0;
 	m_floatBuffer.clear();
 	m_writingToBuffer = false;

@@ -65,8 +65,8 @@ public:
 
 	EffectChain* getChain(int num);
 
-	void startRecording();
-	void stopRecording();
+	void startRecording(int index);
+	void stopRecording(int index);
 
 private:
 
@@ -98,7 +98,7 @@ private:
 	bool m_writingToBuffer = false;
 	int m_samplesWritten = 0;
 	std::vector<float> m_floatBuffer;
-	int m_sampleIndexCount = 0;
+	int m_bufferIndex = 0;
 	std::vector<std::vector<float>> m_savedBuffers;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
