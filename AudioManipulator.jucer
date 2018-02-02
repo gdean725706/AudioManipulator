@@ -15,6 +15,7 @@
               companyEmail="gdean170@gmail.com" pluginVSTCategory="" companyCopyright="Point3dsp">
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
+      <FILE id="p7UrXk" name="Phasor.h" compile="1" resource="0" file="Source/Phasor.h"/>
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
         <FILE id="Or936Q" name="BottomContainer.h" compile="0" resource="0"
               file="Source/BottomContainer.h"/>
