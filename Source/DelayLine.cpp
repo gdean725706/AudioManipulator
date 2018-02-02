@@ -43,8 +43,8 @@ void StereoDelay::releaseResources()
 
 void StereoDelay::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-	float* leftChannel = buffer.getWritePointer(0);
-	float* rightChannel = buffer.getWritePointer(1);
+	float* leftChannel = buffer.getWritePointer(0, 0);
+	float* rightChannel = buffer.getWritePointer(1, 0);
 
 	const float dt = *m_delayTime;
 	const float fl = *m_feedbackLevel;

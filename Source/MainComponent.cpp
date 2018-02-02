@@ -15,10 +15,10 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 {
 
 	// Create controls container component
-	m_controlsContainer = new ControlContainerComponent(p, 0);
+	m_controlsContainer = new ControlContainerComponent(&p, 0);
 
 	// Create effect button container
-	m_effectButtonContainer = new EffectButtonContainerComponent(p, 600, 400);
+	m_effectButtonContainer = new EffectButtonContainerComponent(&p, 600, 400);
 
 	// Make our components visible
 	addAndMakeVisible(m_controlsContainer);
@@ -68,7 +68,7 @@ void MainContentComponent::resized()
     // update their positions.
 
 	auto bounds = getLocalBounds();
-	int effectContainerHeight = getHeight() * 0.08f;
+	int effectContainerHeight = getHeight() * 0.1f;
 
 	m_effectButtonContainer->setBounds(bounds.removeFromTop(effectContainerHeight).reduced(3));
 	m_controlsContainer->setBounds(bounds.removeFromTop(400).reduced(3));

@@ -26,11 +26,18 @@ MainAudioProcessor::MainAudioProcessor()
 	,
 	m_padX(0),
 	m_padY(0),
-	m_currentEffect(FXType::LowPassFilter)
+	m_currentEffect(FXType::LowPassFilter),
+	m_floatBuffer(44100 * 5),
+	m_savedBuffers(10)
 
 {
-	//m_effectChains.push_back(EffectChain());
+	// Init sample memory slots
+	for (int i = 0; i < m_savedBuffers.size(); ++i)
+	{
+		m_savedBuffers[i].resize(44100 * 5);
+	}
 
+	//m_effectChains.push_back(EffectChain());
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
 
@@ -110,6 +117,8 @@ void MainAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 	// Use this method as the place to do any pre-playback
 	// initialisation that you need..
 	m_sampleRate = sampleRate;
+
+	m_floatBuffer.resize(sampleRate * 5);
 
 	m_effectChain1.prepareToPlay(sampleRate, samplesPerBlock);
 
@@ -197,6 +206,19 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 		for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
 			outBuffer[sample] = inBuffer[sample] * 0.9f;
+
+			if (m_writingToBuffer)
+			{
+				// Prevent overflow of 5 second buffer
+				// TODO: way to link this to UI component to sync button state
+				// and stoprecording() method
+				if (m_samplesWritten <= m_sampleRate * 5)
+				{
+					m_floatBuffer.push_back(inBuffer[sample]);
+					m_samplesWritten++;
+				}
+			}
+
 		}
 
 		if (filterEnabled)
@@ -275,14 +297,35 @@ void MainAudioProcessor::setMidiOutput(MidiOutput* midiOut)
 	m_midiOutput = midiOut;
 }
 
-EffectChain& MainAudioProcessor::getChain(int num)
+EffectChain* MainAudioProcessor::getChain(int num)
 {
-	return m_effectChain1;
+	return &m_effectChain1;
 
 
 	if (num < m_numberOfChains)
-		return m_effectChains[num];
+		return &m_effectChains[num];
 }
+
+void MainAudioProcessor::startRecording()
+{
+	m_samplesWritten = 0;
+	m_sampleIndexCount++;
+	m_floatBuffer.clear();
+	m_writingToBuffer = true;
+}
+
+void MainAudioProcessor::stopRecording()
+{
+	m_savedBuffers[m_sampleIndexCount].resize(m_samplesWritten);
+	m_savedBuffers[m_sampleIndexCount] = m_floatBuffer;
+	DBG(m_samplesWritten);
+	// Assuming 2 channels of audio, deb seconds recorded
+	DBG((m_samplesWritten / m_sampleRate) / 2);
+	m_samplesWritten = 0;
+	m_floatBuffer.clear();
+	m_writingToBuffer = false;
+}
+
 
 //==============================================================================
 // This creates new instances of the plugin..

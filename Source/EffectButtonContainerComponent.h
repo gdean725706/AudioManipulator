@@ -20,7 +20,7 @@
 class EffectButtonContainerComponent    : public Component, public FlexBox, public ButtonListener
 {
 public:
-	EffectButtonContainerComponent(MainAudioProcessor& p, int width, int height) :
+	EffectButtonContainerComponent(MainAudioProcessor* p, int width, int height) :
 		m_processor(p),
 		m_width(width),
 		m_height(height)
@@ -137,7 +137,7 @@ public:
 		m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
 		
 		// Update AudioProcessor
-		m_processor.setCurrentEffect(m_currentEffect);
+		m_processor->setCurrentEffect(m_currentEffect);
 
 		repaint();
 
@@ -154,6 +154,6 @@ private:
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
-	MainAudioProcessor& m_processor;
+	MainAudioProcessor* m_processor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonContainerComponent)
 };

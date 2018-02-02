@@ -22,18 +22,20 @@ class ControlContainerComponent    : public Component, public FlexBox,
 	public SliderListener, public ButtonListener
 {
 public:
-    ControlContainerComponent(MainAudioProcessor& p, int number):
+    ControlContainerComponent(MainAudioProcessor* p, int number):
 		m_writingPoints(false),
 		m_readingPoints(false),
+		m_writingAudio(false),
 		m_processor(p),
 		m_chainNumber(number)
     {
 		// Buttons
 		m_pathButton1 = new FlexButtonComponent("Path1");
 		m_recordControlButton = new FlexButtonComponent("PlayPath1");
+		m_recordAudioButton = new FlexButtonComponent("RecordAudio");
 
 		// Add XY pad and sliders
-		m_XYPad = new XYPadComponent(400, 400, m_processor.getChain(m_chainNumber), p);
+		m_XYPad = new XYPadComponent(400, 400, m_processor->getChain(m_chainNumber), p);
 
 		// Add and setup sliders
 		m_slider1 = new FlexSlider("flexSlider1");
@@ -50,6 +52,7 @@ public:
 
 		m_pathButton1->addListener(this);
 		m_recordControlButton->addListener(this);
+		m_recordAudioButton->addListener(this);
 
 		// Add and make visible
 		addAndMakeVisible(m_XYPad);
@@ -57,6 +60,7 @@ public:
 		//addAndMakeVisible(m_slider2);
 		addAndMakeVisible(m_pathButton1);
 		addAndMakeVisible(m_recordControlButton);
+		addAndMakeVisible(m_recordAudioButton);
 
 		// Add to flex
 		items.add(m_XYPad->withMargin(3));
@@ -64,6 +68,7 @@ public:
 		items.add(m_slider2->withMargin(3));
 		items.add(m_pathButton1->withMargin(3));
 		items.add(m_recordControlButton->withMargin(3));
+		items.add(m_recordAudioButton->withMargin(3));
 
 		// Set up order
 		m_slider1->order = 0;
@@ -71,6 +76,7 @@ public:
 		m_XYPad->order = 2;
 		m_pathButton1->order = 3;
 		m_recordControlButton->order = 4;
+		m_recordAudioButton->order = 5;
 
 		// flexWrap CSS equiv attribute
 		flexDirection = Direction::row;
@@ -145,6 +151,21 @@ public:
 				}
 			}
 		}
+		else if (button == m_recordAudioButton)
+		{
+			m_writingAudio = !m_writingAudio;
+
+			if (m_writingAudio)
+			{
+				m_processor->startRecording();
+			}
+			else
+			{
+				m_processor->stopRecording();
+			}
+
+			m_recordAudioButton->setActive(m_writingAudio);
+		}
 	}
 
 private:
@@ -154,9 +175,11 @@ private:
 	XYPadPtr m_XYPad;
 	ScopedPointer<FlexSlider> m_slider1, m_slider2;
 
-	bool m_writingPoints, m_readingPoints;
+	ScopedPointer<FlexButtonComponent> m_recordAudioButton;
+
+	bool m_writingPoints, m_readingPoints, m_writingAudio;
 	// Reference to linked effect chain
-	MainAudioProcessor& m_processor;
+	MainAudioProcessor* m_processor;
 	int m_chainNumber;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlContainerComponent)
