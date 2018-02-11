@@ -15,6 +15,9 @@
               companyEmail="gdean170@gmail.com" pluginVSTCategory="" companyCopyright="Point3dsp">
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
+      <FILE id="UB9bgI" name="PresetManager.cpp" compile="1" resource="0"
+            file="Source/PresetManager.cpp"/>
+      <FILE id="C5LEa6" name="PresetManager.h" compile="0" resource="0" file="Source/PresetManager.h"/>
       <FILE id="p7UrXk" name="Phasor.h" compile="1" resource="0" file="Source/Phasor.h"/>
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
         <FILE id="Or936Q" name="BottomContainer.h" compile="0" resource="0"
@@ -32,6 +35,8 @@
         <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
       </GROUP>
       <GROUP id="{71B1F06F-79FF-AC10-2049-9AE73604CA73}" name="Effects">
+        <FILE id="irCOzu" name="RecordingBuffer.h" compile="0" resource="0"
+              file="Source/RecordingBuffer.h"/>
         <FILE id="r2MAW1" name="Flanger.cpp" compile="1" resource="0" file="Source/Flanger.cpp"/>
         <FILE id="NKFCe6" name="Flanger.h" compile="0" resource="0" file="Source/Flanger.h"/>
         <FILE id="EjQ8KB" name="EffectChain.h" compile="0" resource="0" file="Source/EffectChain.h"/>

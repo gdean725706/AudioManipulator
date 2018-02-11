@@ -14,6 +14,8 @@
 #include "EffectChain.h"
 #include <vector>
 #include <stack>
+#include "RecordingBuffer.h"
+
 
 //==============================================================================
 /*
@@ -67,6 +69,8 @@ public:
 
 	void startRecording(int index);
 	void stopRecording(int index);
+	void startPlayback(int index);
+	void stopPlayback(int index);
 
 private:
 
@@ -89,17 +93,22 @@ private:
 	float m_padX, m_padY;
 	FXType m_currentEffect;
 
-	int m_numberOfChains;
+	int m_numberOfChains; // not yet implemented
 	std::vector<EffectChain> m_effectChains;
 	EffectChain m_effectChain1;
 
-	AudioSampleBuffer m_audioSampleBuffer;
-
-	bool m_writingToBuffer = false;
-	int m_samplesWritten = 0;
+	int m_numberOfBuffers;
+	bool m_writingToBuffer;
+	int m_samplesWritten;
 	std::vector<float> m_floatBuffer;
-	int m_bufferIndex = 0;
-	std::vector<std::vector<float>> m_savedBuffers;
+	int m_bufferIndex;
+
+	std::vector<RecordingBuffer> m_savedBuffers;
+	bool m_playbackBuffer;
+	std::vector<Phasor> m_audioPhasors;
+	std::vector<float> m_phasorSpeedMultipliers;
+	std::vector<float> m_phasorSpeed;
+	std::vector<float> m_bufferSize;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

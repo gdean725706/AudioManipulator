@@ -15,6 +15,11 @@
 //==============================================================================
 /*
 */
+
+//abstract intermediary class with enum for each type
+// inherit from
+// istype
+
 class FlexButtonComponent    : public Button, public FlexItem
 {
 private:

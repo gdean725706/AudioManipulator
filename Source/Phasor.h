@@ -8,7 +8,7 @@ Author:  George Dean
 ==============================================================================
 */
 
-#pragma once
+#pragma once 
 
 class Phasor
 {

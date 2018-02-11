@@ -15,26 +15,37 @@
 MainAudioProcessor::MainAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
 	: AudioProcessor(BusesProperties()
-			#if ! JucePlugin_IsMidiEffect
-			#if ! JucePlugin_IsSynth
-					.withInput("Input", AudioChannelSet::stereo(), true)
-			#endif
-					.withOutput("Output", AudioChannelSet::stereo(), true)
-			#endif
-				)
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+		.withInput("Input", AudioChannelSet::stereo(), true)
+#endif
+		.withOutput("Output", AudioChannelSet::stereo(), true)
+#endif
+	)
 #endif
 	,
 	m_padX(0),
 	m_padY(0),
 	m_currentEffect(FXType::LowPassFilter),
+	m_numberOfBuffers(3),
+	m_writingToBuffer(false),
+	m_samplesWritten(0),
 	m_floatBuffer(44100 * 5),
-	m_savedBuffers(10)
+	m_bufferIndex(0),
+	m_savedBuffers(m_numberOfBuffers),
+	m_playbackBuffer(false),
+	m_audioPhasors(m_numberOfBuffers),
+	m_phasorSpeedMultipliers(m_numberOfBuffers),
+	m_phasorSpeed(m_numberOfBuffers)
 
 {
+
+
 	// Init sample memory slots
-	for (int i = 0; i < m_savedBuffers.size(); ++i)
+	for (int i = 0; i < m_numberOfBuffers; ++i)
 	{
 		m_savedBuffers[i].resize(44100 * 5);
+		m_phasorSpeedMultipliers[i] = 1;
 	}
 
 	//m_effectChains.push_back(EffectChain());
@@ -122,6 +133,10 @@ void MainAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 
 	m_effectChain1.prepareToPlay(sampleRate, samplesPerBlock);
 
+	for (int i = 0; i < m_numberOfBuffers; ++i)
+	{
+		m_audioPhasors[i].setSampleRate(sampleRate);
+	}
 }
 
 void MainAudioProcessor::releaseResources()
@@ -195,6 +210,15 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	if (filterEnabled)
 		m_testFilter->setCoefficients(ic);
 
+	auto bufferSize = m_savedBuffers[m_bufferIndex].size();
+	
+	for (int i = 0; i < m_numberOfBuffers; ++i)
+	{
+		m_bufferSize[i] = m_savedBuffers[m_bufferIndex].size();
+		m_phasorSpeed[i] = m_sampleRate / m_savedBuffers[i].size();
+		m_phasorSpeed[i] *= m_phasorSpeedMultipliers[i];
+	}
+
 	// Cycle through each channel
 	for (int channel = 0; channel < maxOutputChannels; ++channel)
 	{
@@ -217,6 +241,16 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 					m_floatBuffer.push_back(inBuffer[sample]);
 					m_samplesWritten++;
 				}
+				else
+				{
+					m_writingToBuffer = false;
+				}
+			}
+
+			if (m_playbackBuffer)
+			{
+				m_savedBuffers[m_bufferIndex][m_audioPhasors[m_bufferIndex].getPhase() * bufferSize];
+				m_audioPhasors[m_bufferIndex].tick();
 			}
 
 		}
@@ -301,7 +335,7 @@ EffectChain* MainAudioProcessor::getChain(int num)
 {
 	return &m_effectChain1;
 
-
+	// Not yet implemented
 	if (num < m_numberOfChains)
 		return &m_effectChains[num];
 }
@@ -309,12 +343,22 @@ EffectChain* MainAudioProcessor::getChain(int num)
 void MainAudioProcessor::startRecording(int index)
 {
 	index = index > 3 ? 3 : index < 0 ? 0 : index;
-	m_bufferIndex = index;
 	m_samplesWritten = 0;
 	// Clean write cache buffer ready for new write
 	// Don't clear save buffer until audio recoridng is complete
 	m_floatBuffer.clear();
+	m_playbackBuffer = false;
 	m_writingToBuffer = true;
+}
+
+void MainAudioProcessor::startPlayback(int index)
+{
+
+}
+
+void MainAudioProcessor::stopPlayback(int index)
+{
+
 }
 
 void MainAudioProcessor::stopRecording(int index)
@@ -322,17 +366,18 @@ void MainAudioProcessor::stopRecording(int index)
 	index = index > 3 ? 3 : index < 0 ? 0 : index;
 	// Clear and copy cache buffer into store buffer
 	m_savedBuffers[index].clear();
-	m_savedBuffers[index].resize(index);
+	m_savedBuffers[index].resize(m_samplesWritten);
 	m_savedBuffers[index] = m_floatBuffer;
 
 	DBG(m_samplesWritten);
-	// Assuming 2 channels of audio, deb seconds recorded
+	// seconds of audio -  num channels
 	DBG((m_samplesWritten / m_sampleRate) / 2);
 
 	// Clear and reset cache
 	m_samplesWritten = 0;
 	m_floatBuffer.clear();
 	m_writingToBuffer = false;
+	m_playbackBuffer = true;
 }
 
 
