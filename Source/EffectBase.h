@@ -33,7 +33,8 @@ public:
 		Phaser,
 		Delay,
 		Chorus,
-		Flanger
+		Flanger,
+		Speed
 	};
 
 	void setActive(bool active)

@@ -34,6 +34,7 @@ public:
 		m_buttonDelay = new EffectButtonComponent(EffectType::Delay, "Delay");
 		m_buttonChorus = new EffectButtonComponent(EffectType::Chorus, "Chorus");
 		m_buttonFlanger = new EffectButtonComponent(EffectType::Flanger, "Flanger");
+		m_buttonPlaybackSpeed = new EffectButtonComponent(EffectType::Speed, "Speed");
 
 		// LPF init state on
 		m_buttonLPF->setActive(true);
@@ -44,6 +45,7 @@ public:
 		addAndMakeVisible(m_buttonDelay);
 		addAndMakeVisible(m_buttonChorus);
 		addAndMakeVisible(m_buttonFlanger);
+		addAndMakeVisible(m_buttonPlaybackSpeed);
 
 		//Add to flexbox
 		items.add(m_buttonLPF->withMargin(3));
@@ -51,6 +53,7 @@ public:
 		items.add(m_buttonDelay->withMargin(3));
 		items.add(m_buttonChorus->withMargin(3));
 		items.add(m_buttonFlanger->withMargin(3));
+		items.add(m_buttonPlaybackSpeed->withMargin(3));
 
 		//
 		m_buttonLPF->addListener(this);
@@ -58,6 +61,7 @@ public:
 		m_buttonDelay->addListener(this);
 		m_buttonChorus->addListener(this);
 		m_buttonFlanger->addListener(this);
+		m_buttonPlaybackSpeed->addListener(this);
 
         // Set up flexbox
 	    flexDirection = Direction::row;
@@ -129,12 +133,18 @@ public:
 			m_currentEffect = EffectType::Flanger;
 		}
 
+		if (button == m_buttonPlaybackSpeed)
+		{
+			m_currentEffect = EffectType::Speed;
+		}
+
 		// Update active buttons
 		m_buttonLPF->setActive(m_currentEffect == EffectType::LowPassFilter);
 		m_buttonHPF->setActive(m_currentEffect == EffectType::HighPassFilter);
 		m_buttonDelay->setActive(m_currentEffect == EffectType::Delay);
 		m_buttonChorus->setActive(m_currentEffect == EffectType::Chorus);
 		m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
+		m_buttonPlaybackSpeed->setActive(m_currentEffect == EffectType::Speed);
 		
 		// Update AudioProcessor
 		m_processor->setCurrentEffect(m_currentEffect);
@@ -151,7 +161,8 @@ public:
 private:
 	int m_width, m_height;
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
-	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger;
+	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,
+		m_buttonPlaybackSpeed;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
 	MainAudioProcessor* m_processor;

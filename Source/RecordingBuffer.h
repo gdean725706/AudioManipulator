@@ -34,7 +34,7 @@ public:
 	{
 		m_sampleRate = sampleRate;
 		m_audioPhasor.setSampleRate(sampleRate);
-		calculatePhasorSpeed();
+		calculatePhasorFrequency();
 	}
 
 	void fillBuffer(std::vector<float> data, int size)
@@ -43,7 +43,7 @@ public:
 		m_audioBuffer.resize(size - 1);
 		m_audioBuffer = data;
 		m_bufferSize = size;
-		calculatePhasorSpeed();
+		calculatePhasorFrequency();
 		m_filled = true;
 	}
 
@@ -78,7 +78,7 @@ public:
 	void setSpeedMultiplier(float multiplier)
 	{
 		m_phasorSpeedMultiplier = multiplier;
-		calculatePhasorSpeed();
+		calculatePhasorFrequency();
 	}
 
 	bool isActive()
@@ -155,17 +155,20 @@ private:
 		return(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
 	}
 
-	void calculatePhasorSpeed()
+	// Recalculate phasor frequency
+	void calculatePhasorFrequency()
 	{
 		m_phasorSpeed = m_sampleRate / m_bufferSize;
 		m_phasorSpeed *= m_phasorSpeedMultiplier;
 		m_audioPhasor.setFrequency(m_phasorSpeed);
+
+/*
 		String s = ("Speed = ");
 		s << m_phasorSpeed;
 		String s1 = "Mult = ";
 		s1 << m_phasorSpeedMultiplier;
 		DBG(s);
-		DBG(s1);
+		DBG(s1);*/
 	}
 
 	float m_sampleRate, m_bufferSize, m_bufferSizeSeconds;

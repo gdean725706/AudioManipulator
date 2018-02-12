@@ -177,6 +177,19 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	const double freq = scaleRange(m_padX, 0.0f, 1.0f, 20.0f, 20000.0f) + 0.0001f;
 	const double res = scaleRange(m_padY, 0.0f, 1.0f, 0.5f, 2.0f) + 0.0001f;
 
+	//set up phasor speed playback control
+	if (m_currentEffect == FXType::Speed)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			if (m_savedBuffers[i].isActive() == true)
+			{
+				m_savedBuffers[i].setSpeedMultiplier(scaleRange(m_padX, 0.0f, 1.0f, -2.0f, 4.0f));
+			}
+
+		}
+	}
+
 	IIRCoefficients ic;
 	bool filterEnabled = false;
 	// Get currently selected filter and set up
@@ -348,11 +361,13 @@ void MainAudioProcessor::stopRecording(int index)
 {
 	index = index > 3 ? 3 : index < 0 ? 0 : index;
 	m_savedBuffers[index].fillBuffer(m_floatBuffer, m_samplesWritten);
+
 	// Clear and copy cache buffer into store buffer
-	DBG(m_samplesWritten);
+	//DBG(m_samplesWritten);
 	// seconds of audio -  num channels
-	DBG((m_samplesWritten / m_sampleRate) / 2);
+	//DBG((m_samplesWritten / m_sampleRate) / 2);
 	// Clear and reset cache
+
 	m_samplesWritten = 0;
 	m_floatBuffer.clear();
 	m_writingToBuffer = false;
