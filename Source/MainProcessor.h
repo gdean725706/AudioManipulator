@@ -104,11 +104,6 @@ private:
 	int m_bufferIndex;
 
 	std::vector<RecordingBuffer> m_savedBuffers;
-	bool m_playbackBuffer;
-	std::vector<Phasor> m_audioPhasors;
-	std::vector<float> m_phasorSpeedMultipliers;
-	std::vector<float> m_phasorSpeed;
-	std::vector<float> m_bufferSize;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

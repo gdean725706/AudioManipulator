@@ -32,21 +32,9 @@ MainAudioProcessor::MainAudioProcessor()
 	m_samplesWritten(0),
 	m_floatBuffer(44100 * 5),
 	m_bufferIndex(0),
-	m_savedBuffers(m_numberOfBuffers),
-	m_playbackBuffer(false),
-	m_audioPhasors(m_numberOfBuffers),
-	m_phasorSpeedMultipliers(m_numberOfBuffers),
-	m_phasorSpeed(m_numberOfBuffers)
+	m_savedBuffers(m_numberOfBuffers)
 
 {
-
-
-	// Init sample memory slots
-	for (int i = 0; i < m_numberOfBuffers; ++i)
-	{
-		m_savedBuffers[i].resize(44100 * 5);
-		m_phasorSpeedMultipliers[i] = 1;
-	}
 
 	//m_effectChains.push_back(EffectChain());
 	// Initialise IIR Filter
@@ -135,7 +123,7 @@ void MainAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 
 	for (int i = 0; i < m_numberOfBuffers; ++i)
 	{
-		m_audioPhasors[i].setSampleRate(sampleRate);
+		m_savedBuffers[i].setSampleRate(sampleRate);
 	}
 }
 
@@ -210,15 +198,6 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	if (filterEnabled)
 		m_testFilter->setCoefficients(ic);
 
-	auto bufferSize = m_savedBuffers[m_bufferIndex].size();
-	
-	for (int i = 0; i < m_numberOfBuffers; ++i)
-	{
-		m_bufferSize[i] = m_savedBuffers[m_bufferIndex].size();
-		m_phasorSpeed[i] = m_sampleRate / m_savedBuffers[i].size();
-		m_phasorSpeed[i] *= m_phasorSpeedMultipliers[i];
-	}
-
 	// Cycle through each channel
 	for (int channel = 0; channel < maxOutputChannels; ++channel)
 	{
@@ -246,11 +225,13 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 					m_writingToBuffer = false;
 				}
 			}
-
-			if (m_playbackBuffer)
+			
+			for (int i = 0; i < 3; ++i)
 			{
-				m_savedBuffers[m_bufferIndex][m_audioPhasors[m_bufferIndex].getPhase() * bufferSize];
-				m_audioPhasors[m_bufferIndex].tick();
+				if (m_savedBuffers[i].isActive() == true)
+				{
+					outBuffer[sample] += m_savedBuffers[i].getNextSample();
+				}
 			}
 
 		}
@@ -342,42 +323,39 @@ EffectChain* MainAudioProcessor::getChain(int num)
 
 void MainAudioProcessor::startRecording(int index)
 {
-	index = index > 3 ? 3 : index < 0 ? 0 : index;
-	m_samplesWritten = 0;
-	// Clean write cache buffer ready for new write
-	// Don't clear save buffer until audio recoridng is complete
-	m_floatBuffer.clear();
-	m_playbackBuffer = false;
-	m_writingToBuffer = true;
+	if (!m_writingToBuffer)
+	{
+		index = index > 3 ? 3 : index < 0 ? 0 : index;
+		m_samplesWritten = 0;
+		// Clean write cache buffer ready for new write
+		// Don't clear save buffer until audio recoridng is complete
+		m_floatBuffer.clear();
+		m_writingToBuffer = true;
+	}
 }
 
 void MainAudioProcessor::startPlayback(int index)
 {
-
+	m_savedBuffers[index].setActive(true);
 }
 
 void MainAudioProcessor::stopPlayback(int index)
 {
-
+	m_savedBuffers[index].setActive(false);
 }
 
 void MainAudioProcessor::stopRecording(int index)
 {
 	index = index > 3 ? 3 : index < 0 ? 0 : index;
+	m_savedBuffers[index].fillBuffer(m_floatBuffer, m_samplesWritten);
 	// Clear and copy cache buffer into store buffer
-	m_savedBuffers[index].clear();
-	m_savedBuffers[index].resize(m_samplesWritten);
-	m_savedBuffers[index] = m_floatBuffer;
-
 	DBG(m_samplesWritten);
 	// seconds of audio -  num channels
 	DBG((m_samplesWritten / m_sampleRate) / 2);
-
 	// Clear and reset cache
 	m_samplesWritten = 0;
 	m_floatBuffer.clear();
 	m_writingToBuffer = false;
-	m_playbackBuffer = true;
 }
 
 

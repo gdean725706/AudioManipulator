@@ -23,13 +23,14 @@
 class FlexButtonComponent    : public Button, public FlexItem
 {
 private:
-	Colour m_colour;
+	Colour m_baseColour, m_colour;
 	bool m_active;
 public:
     FlexButtonComponent(String buttonName) :
 		Button("btn" + buttonName),
 		FlexItem(75, 50),
-		m_colour(Colours::lightgrey),
+		m_baseColour(getLookAndFeel().findColour(TextButton::buttonColourId)),
+		m_colour(m_baseColour),
 		m_active(false)
     {
 		alignSelf = AlignSelf::autoAlign;
@@ -49,7 +50,7 @@ public:
 			m_colour = Colours::black;
 		}
 		else {
-			m_colour = Colours::grey;
+			m_colour = m_baseColour;
 		}
 
 
@@ -86,7 +87,16 @@ public:
 	{
 		return m_active;
 	}
+	void updateBaseColour(Colour col)
+	{
+		m_baseColour = col;
+	}
+	void resetBaseColour()
+	{
+		m_baseColour = getLookAndFeel().findColour(TextButton::buttonColourId);
+	}
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FlexButtonComponent)
 };
+

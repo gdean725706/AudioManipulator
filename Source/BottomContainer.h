@@ -26,6 +26,7 @@ public:
     {
 		for (int i = 0; i < 3; ++i)
 		{
+			m_buttonStates[i] = SlotState::Empty;
 			m_writing[i] = false;
 			m_recordButtons[i] = new FlexButtonComponent("RecordAudio" + i);
 			m_recordButtons[i]->addListener(this);
@@ -83,35 +84,65 @@ public:
 	{
 		if (button == m_recordButtons[0])
 		{
-			toggleButton(0);
+			toggleRecordButton(button, 0);
 		}
 		else if (button == m_recordButtons[1])
 		{
-			toggleButton(1);
+			toggleRecordButton(button, 1);
 		}
 		else if (button == m_recordButtons[2])
 		{
-			toggleButton(2);
+			toggleRecordButton(button, 2);
 		}
 
 	}
 
 private:
 
-	void toggleButton(int index)
+	void toggleRecordButton(Button* button, int index)
 	{
 		if (index < 0 || index > 3) return;
-		m_writing[index] = !m_writing[index];
-		if (m_writing[index])
+		FlexButtonComponent* flexBtn = dynamic_cast<FlexButtonComponent*>(button);
+
+		switch (m_buttonStates[index])
+		{
+		case SlotState::Empty:
 		{
 			m_processor->startRecording(index);
+			flexBtn->updateBaseColour(Colours::red);
+			m_buttonStates[index] = SlotState::Recording;
+			break;
 		}
-		else
+		case SlotState::Recording:
 		{
 			m_processor->stopRecording(index);
+			flexBtn->updateBaseColour(Colours::green);
+			m_buttonStates[index] = SlotState::Ready;
+			break;
 		}
-
-		m_recordButtons[index]->setActive(m_writing[index]);
+		case SlotState::Ready:
+		{
+			m_processor->startPlayback(index);
+			flexBtn->updateBaseColour(Colours::lightgreen);
+			m_buttonStates[index] = SlotState::Playback;
+			break;
+		}
+		case SlotState::Playback:
+		{
+			m_processor->stopPlayback(index);
+			flexBtn->updateBaseColour(Colours::green);
+			m_buttonStates[index] = SlotState::Ready;
+			break;
+		}
+		case SlotState::Deleting:
+		{
+			m_buttonStates[index] = SlotState::Empty;
+			break;
+		}
+		default:
+			break;
+		}
+		
 	}
 
 	int m_width, m_height;
@@ -120,6 +151,17 @@ private:
 	
 	FlexButtonPtr m_recordButtons[3];
 	bool m_writing[3];
+	enum SlotState
+	{
+		Empty,
+		Recording,
+		Ready,
+		Playback,
+		Deleting
+	};
+
+	SlotState m_buttonStates[3];
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BottomContainer)
 };
