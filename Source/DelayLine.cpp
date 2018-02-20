@@ -23,8 +23,7 @@ StereoDelay::StereoDelay(int maxDelay) :
 
 StereoDelay::~StereoDelay()
 {
-	delete m_feedbackLevel;
-	delete m_delayTime;
+
 }
 
 

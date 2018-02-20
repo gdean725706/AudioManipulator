@@ -186,7 +186,6 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 			{
 				m_savedBuffers[i].setSpeedMultiplier(scaleRange(m_padX, 0.0f, 1.0f, -2.0f, 4.0f));
 			}
-
 		}
 	}
 

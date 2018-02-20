@@ -154,7 +154,8 @@ public:
 	void registerParameter(AudioParameterFloat* param)
 	{
 		m_parameterVector.push_back(param);
-		addParameter(m_parameterVector.back());
+		// processor.addparam
+	//	addParameter(m_parameterVector.back());
 	}
 
 	// Scales a value from one range to another

@@ -35,6 +35,7 @@
         <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
       </GROUP>
       <GROUP id="{71B1F06F-79FF-AC10-2049-9AE73604CA73}" name="Effects">
+        <FILE id="LaU9UO" name="PitchShifter.h" compile="0" resource="0" file="Source/PitchShifter.h"/>
         <FILE id="irCOzu" name="RecordingBuffer.h" compile="0" resource="0"
               file="Source/RecordingBuffer.h"/>
         <FILE id="r2MAW1" name="Flanger.cpp" compile="1" resource="0" file="Source/Flanger.cpp"/>
