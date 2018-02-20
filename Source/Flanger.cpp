@@ -12,7 +12,8 @@
 #include "Flanger.h"
 
 //==============================================================================
-Flanger::Flanger(int maxDelay) :
+Flanger::Flanger(int maxDelay, AudioProcessor* processor) :
+	EffectBase(processor),
 	m_leftDelay(maxDelay),
 	m_rightDelay(maxDelay),
 	m_phase(0)
@@ -28,6 +29,7 @@ Flanger::Flanger(int maxDelay) :
 
 Flanger::~Flanger()
 {
+
 }
 
 

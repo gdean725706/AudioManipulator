@@ -24,7 +24,7 @@ private:
 	DelayUnit m_leftDelay, m_rightDelay;
 
 public:
-	StereoDelay(int maxDelay);
+	StereoDelay(int maxDelay, AudioProcessor* processor);
 	~StereoDelay();
 
 	EffectType getType() override

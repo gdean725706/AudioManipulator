@@ -17,11 +17,12 @@
 class EffectBase : public AudioProcessor
 {
 public:
-	EffectBase() :
+	EffectBase(AudioProcessor* processor) :
 		m_xParameter(0),
 		m_yParameter(1),
 		m_xVal(0),
-		m_yVal(0)
+		m_yVal(0),
+		m_processor(processor)
 	{
 
 	}
@@ -154,7 +155,7 @@ public:
 	void registerParameter(AudioParameterFloat* param)
 	{
 		m_parameterVector.push_back(param);
-		// processor.addparam
+		//m_processor->registerParameter
 	//	addParameter(m_parameterVector.back());
 	}
 
@@ -174,6 +175,17 @@ public:
 		return m_yVal;
 	}
 
+	AudioProcessor* getProcessor()
+	{
+		return m_processor;
+	}
+
+	void setProcessor(AudioProcessor* mainProcessor)
+	{
+		m_processor = mainProcessor;
+	}
+
+
 private:
 
 	std::vector<AudioParameterFloat*> m_parameterVector;
@@ -181,6 +193,7 @@ private:
 	String m_name;
 	int m_xParameter, m_yParameter;
 	float m_xVal, m_yVal;
+	AudioProcessor* m_processor;
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EffectBase)

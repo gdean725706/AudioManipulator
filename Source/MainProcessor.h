@@ -72,6 +72,8 @@ public:
 	void startPlayback(int index);
 	void stopPlayback(int index);
 
+	void registerParameter(AudioProcessorParameter* parameter);
+
 private:
 
 	// Typedef for our enum containing all the FX types

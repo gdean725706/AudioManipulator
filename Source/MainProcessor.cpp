@@ -32,8 +32,8 @@ MainAudioProcessor::MainAudioProcessor()
 	m_samplesWritten(0),
 	m_floatBuffer(44100 * 5),
 	m_bufferIndex(0),
-	m_savedBuffers(m_numberOfBuffers)
-
+	m_savedBuffers(m_numberOfBuffers),
+	m_effectChain1(this)
 {
 
 	//m_effectChains.push_back(EffectChain());
@@ -370,6 +370,11 @@ void MainAudioProcessor::stopRecording(int index)
 	m_samplesWritten = 0;
 	m_floatBuffer.clear();
 	m_writingToBuffer = false;
+}
+
+void MainAudioProcessor::registerParameter(AudioProcessorParameter* parameter)
+{
+	addParameter(parameter);
 }
 
 

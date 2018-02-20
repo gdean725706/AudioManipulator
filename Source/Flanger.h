@@ -26,7 +26,7 @@ private:
 	float m_phase;
 
 public:
-    Flanger(int maxDelay);
+    Flanger(int maxDelay, AudioProcessor* processor);
     ~Flanger();
 
 	EffectType getType() override

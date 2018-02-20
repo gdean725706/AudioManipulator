@@ -10,7 +10,8 @@
 
 #include "DelayLine.h"
 
-StereoDelay::StereoDelay(int maxDelay) :
+StereoDelay::StereoDelay(int maxDelay, AudioProcessor* processor) :
+	EffectBase(processor),
 	m_leftDelay(maxDelay),
 	m_rightDelay(maxDelay)
 {

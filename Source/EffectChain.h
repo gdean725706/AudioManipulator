@@ -13,13 +13,14 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DelayLine.h"
 #include "Flanger.h"
+#include "MainProcessor.h"
 
 class EffectChain
 {
 public:
-	EffectChain() :
-		m_delayLine(44100*5),
-		m_flanger(44100*40)
+	EffectChain(AudioProcessor* mainProcessor) :
+		m_delayLine(44100*5, mainProcessor),
+		m_flanger(44100*40, mainProcessor)
 	{
 		m_xVal = 0;
 		m_yVal = 0;
@@ -78,6 +79,7 @@ private:
 	StereoDelay m_delayLine;
 	Flanger m_flanger;
 	float m_xVal, m_yVal;
+	AudioProcessor* m_processor;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EffectChain)
 };
