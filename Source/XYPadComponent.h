@@ -128,6 +128,9 @@ public:
         // This method is where you should set the bounds of any child
         // components that your component contains..
 
+		m_width = getWidth();
+		m_height = getHeight();
+
     }
 
 	// Update XY point when mouse clicked
@@ -228,6 +231,15 @@ public:
 		stopTimer();
 	}
 
+	void setPlaybackRate(float rate)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			m_savedBuffersX[i].setSpeedMultiplier(rate);
+			m_savedBuffersY[i].setSpeedMultiplier(rate);
+		}
+	}
+
 	void timerCallback() override
 	{
 		if (m_playback)
@@ -278,7 +290,7 @@ private:
 	int m_playbackX, m_playbackY;
 	float m_bufferInterpolation;
 
-	const int timer_rate_Hz = 120;
+	const int timer_rate_Hz = 60;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{

@@ -18,7 +18,7 @@
 class FlexSlider    : public Slider, public FlexItem
 {
 public:
-    FlexSlider(String name) :
+	FlexSlider(String name) :
 		Slider(name),
 		FlexItem(25, 75)
     {
@@ -30,19 +30,6 @@ public:
 
     ~FlexSlider()
     {
-    }
-
-    void paint (Graphics& g) override
-    {
-		g.setColour(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-		g.fillAll();
-    }
-
-    void resized() override
-    {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
-
     }
 
 private:

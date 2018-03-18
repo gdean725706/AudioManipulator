@@ -28,28 +28,8 @@ public:
 		m_processor(p),
 		m_chainNumber(number)
     {
-		for (int i = 0; i < 3; ++i)
-		{
-			m_buttonStates[i] = SlotState::Empty;
-			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i);
-			m_pathButtons[i]->addListener(this);
-			addAndMakeVisible(m_pathButtons[i]);
-			items.add(m_pathButtons[i]->withMargin(3));
-			m_pathButtons[i]->order = i + 4;
-		}
-		m_pathButtons[0]->setButtonText("1");
-		m_pathButtons[1]->setButtonText("2");
-		m_pathButtons[2]->setButtonText("3");
 
-		// Buttons
-		m_pathButton1 = new FlexButtonComponent("Path1");
-		m_recordControlButton = new FlexButtonComponent("PlayPath1");
 
-		m_pathButton1->setButtonText("Rec Path");
-		m_recordControlButton->setButtonText("Play Path");
-
-		// Add XY pad and sliders
-		m_XYPad = new XYPadComponent(400, 400, m_processor->getChain(m_chainNumber), p);
 
 		// Add and setup sliders
 		m_slider1 = new FlexSlider("flexSlider1");
@@ -61,39 +41,68 @@ public:
 		m_slider1->setSliderStyle(Slider::LinearVertical);
 		m_slider2->setSliderStyle(Slider::LinearVertical);
 
+		m_slider1->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 50);
+		m_slider2->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 50);
+
 		m_slider1->addListener(this);
 		m_slider2->addListener(this);
 
-		m_pathButton1->addListener(this);
-		m_recordControlButton->addListener(this);
+		// Add XY pad and sliders
+		m_XYPad = new XYPadComponent(400, 400, m_processor->getChain(m_chainNumber), p);
 
 		// Add and make visible
+		addAndMakeVisible(m_slider1);
+		addAndMakeVisible(m_slider2);
 		addAndMakeVisible(m_XYPad);
-		//addAndMakeVisible(m_slider1);
-		//addAndMakeVisible(m_slider2);
-		//addAndMakeVisible(m_pathButton1);
-		//addAndMakeVisible(m_recordControlButton);
 
 		// Add to flex
-		items.add(m_XYPad->withMargin(3));
 		items.add(m_slider1->withMargin(3));
 		items.add(m_slider2->withMargin(3));
-		items.add(m_pathButton1->withMargin(3));
-		items.add(m_recordControlButton->withMargin(3));
+		items.add(m_XYPad->withMargin(3));
 
 		// Set up order
 		m_slider1->order = 0;
 		m_slider2->order = 1;
-		m_XYPad->order = 0;
-		m_pathButton1->order = 3;
-		m_recordControlButton->order = 4;
+		m_XYPad->order = 2;
+
+		m_XYPad->flexGrow = 1.0f;
+		m_XYPad->flexShrink = 1.0f;
+
+		m_slider1->flexGrow = 1.0f;
+		m_slider2->flexGrow = 1.0f;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			m_buttonStates[i] = SlotState::Empty;
+			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i);
+			m_pathButtons[i]->addListener(this);
+			addAndMakeVisible(m_pathButtons[i]);
+			items.add(m_pathButtons[i]->withMargin(3));
+			m_pathButtons[i]->order = i + 3;
+			m_pathButtons[i]->flexGrow = 1.0f;
+			m_pathButtons[i]->flexShrink = 1.0f;
+		}
+
+		m_pathButtons[0]->setButtonText("1");
+		m_pathButtons[1]->setButtonText("2");
+		m_pathButtons[2]->setButtonText("3");
+
+		m_playbackRateSlider = new FlexSlider("playbackRateSlider");
+		m_playbackRateSlider->setRange(-2.5, 2.5);
+		m_playbackRateSlider->setSliderStyle(Slider::RotaryVerticalDrag);
+		m_playbackRateSlider->order = 5;
+		m_playbackRateSlider->width = 100;
+		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 50);
+		items.add(m_playbackRateSlider->withMargin(3));
+		m_playbackRateSlider->addListener(this);
+		addAndMakeVisible(m_playbackRateSlider);
 
 		// flexWrap CSS equiv attribute
 		flexDirection = Direction::row;
-		flexWrap = Wrap::wrap;
+		flexWrap = Wrap::noWrap;
 		justifyContent = JustifyContent::center;
 		alignItems = AlignItems::center;
-		alignContent = AlignContent::spaceBetween;
+		alignContent = AlignContent::stretch;
 
     }
 
@@ -124,13 +133,16 @@ public:
 
 		// Call flexbox performlayout method to arrange flex items
 		auto bounds = getLocalBounds();
-
 		performLayout(bounds);
+		
     }
 
 	void sliderValueChanged(Slider* slider) override
 	{
-
+		if (slider == m_playbackRateSlider)
+		{
+			m_XYPad->setPlaybackRate(m_playbackRateSlider->getValue());
+		}
 	}
 
 	void buttonClicked(Button* button) override
@@ -195,14 +207,13 @@ private:
 		}
 
 	}
+
 	typedef ScopedPointer<FlexButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_pathButtons[3];
-	ScopedPointer<FlexButtonComponent> m_pathButton1;
-	ScopedPointer<FlexButtonComponent> m_recordControlButton;
 
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
-	ScopedPointer<FlexSlider> m_slider1, m_slider2;
+	ScopedPointer<FlexSlider> m_slider1, m_slider2, m_playbackRateSlider;
 
 	enum SlotState
 	{
