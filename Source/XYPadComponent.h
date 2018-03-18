@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainProcessor.h"
 #include <vector>
+#include "RecordingBuffer.h"
 
 
 //==============================================================================
@@ -30,7 +31,12 @@ public:
 		m_colour(Colours::grey),
 		m_currentXY("Default"),
 		m_linkedEffectChain(effectChain),
-		m_processor(processor)
+		m_processor(processor),
+		m_savedBuffersX(3),
+		m_savedBuffersY(3),
+		m_playbackX(0),
+		m_playbackY(0),
+		m_bufferInterpolation(0.0f)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
@@ -40,13 +46,21 @@ public:
 
 		setSize(width, height);
 
-		m_xStore.reserve(32000);
-		m_yStore.reserve(32000);
+		for (int i = 0; i < 3; ++i)
+		{
+			m_savedBuffersX[i].setSampleRate(timer_rate_Hz);
+			m_savedBuffersY[i].setSampleRate(timer_rate_Hz);
+		}
+
+		m_bufferX.reserve(32000);
+		m_bufferY.reserve(32000);
+		m_writingToBuffer = false;
 		m_pointsSaved = 0;
 		m_normalX = 0;
 		m_normalY = 0;
 		m_playback = false;
-		m_playbackCounter = 0;
+
+		
     }
 
     ~XYPadComponent()
@@ -104,8 +118,8 @@ public:
                     Justification::centred, true);   // draw some placeholder text
 		String points;
 		points << m_pointsSaved;
-		//g.drawText(points, getLocalBounds().removeFromLeft(50),
-		//	Justification::centred, true);   // debug points saved
+		g.drawText(points, getLocalBounds().removeFromLeft(50),
+			Justification::centred, true);   // debug points saved
    
 	}
 
@@ -172,30 +186,44 @@ public:
 		m_currentXY = xText + "," + yText;
 	}
 
-	void writePoints(bool writing)
+	void startRecordingPoints(int index)
 	{
-		if (writing)
+		if (!m_writingToBuffer)
 		{
-			startTimer(timer_rate);
-		}
-		else
-		{
-			stopTimer();
-			m_xStore.shrink_to_fit();
-			m_yStore.shrink_to_fit();
-			std::cout << "Saved " << m_pointsSaved << "to path1." << std::endl;
+			m_pointsSaved = 0;
+			m_bufferX.clear();
+			m_bufferY.clear();
+			m_writingToBuffer = true;
+			startTimerHz(timer_rate_Hz);
 		}
 	}
 
-	void startPointPlayback()
+	void stopRecordingPoints(int index)
 	{
-		m_playbackCounter = 0;
+		index = index > 3 ? 3 : index < 0 ? 0 : index;
+
+		m_savedBuffersX[index].fillBuffer(m_bufferX, m_pointsSaved);
+		m_savedBuffersY[index].fillBuffer(m_bufferY, m_pointsSaved);
+
+		m_bufferX.clear();
+		m_bufferY.clear();
+		m_pointsSaved = 0;
+		m_writingToBuffer = false;
+	}
+
+
+	void startPointPlayback(int index)
+	{
+		m_savedBuffersX[index].setActive(true);
+		m_savedBuffersY[index].setActive(true);
 		m_playback = true;
-		startTimer(timer_rate);
+		startTimerHz(timer_rate_Hz);
 	}
 
-	void stopPointPlayback()
+	void stopPointPlayback(int index)
 	{
+		m_savedBuffersX[index].setActive(false);
+		m_savedBuffersY[index].setActive(false);
 		m_playback = false;
 		stopTimer();
 	}
@@ -204,22 +232,26 @@ public:
 	{
 		if (m_playback)
 		{
-			if ( !m_xStore.empty() && !m_yStore.empty() )
+			for (int i = 0; i < 3; ++i)
 			{
-				m_playbackX = m_xStore[m_playbackCounter];
-				m_playbackY = m_yStore[m_playbackCounter];
-
-				if (m_playbackCounter >= m_pointsSaved - 1) m_playbackCounter = 0;
-				else m_playbackCounter++;
-
-				updateXYPoints();
-				repaint();
+				if (m_savedBuffersX[i].isActive() == true)
+				{
+					m_playbackX = m_savedBuffersX[i].getNextSample();
+				}
+				if (m_savedBuffersY[i].isActive() == true)
+				{
+					m_playbackY = m_savedBuffersY[i].getNextSample();
+				}
 			}
+
+			updateXYPoints();
+			repaint();
+
 		}
-		else
+		else if (m_writingToBuffer)
 		{
-			m_xStore.push_back(m_pointX);
-			m_yStore.push_back(m_pointY);
+			m_bufferX.push_back(m_pointX);
+			m_bufferY.push_back(m_pointY);
 			m_pointsSaved++;
 		}
 	}
@@ -236,13 +268,17 @@ private:
 	MainAudioProcessor* m_processor;
 
 	// Path writing system
-	std::vector<int> m_xStore, m_yStore;
+	std::vector<float> m_bufferX, m_bufferY;
+	bool m_writingToBuffer;
 	int m_pointsSaved;
 
+	std::vector<RecordingBuffer> m_savedBuffersX, m_savedBuffersY;
+	int m_numberOfBuffers;
 	bool m_playback;
-	int m_playbackCounter, m_playbackX, m_playbackY;
+	int m_playbackX, m_playbackY;
+	float m_bufferInterpolation;
 
-	const int timer_rate = 10;
+	const int timer_rate_Hz = 120;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{

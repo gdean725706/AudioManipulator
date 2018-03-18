@@ -28,6 +28,19 @@ public:
 		m_processor(p),
 		m_chainNumber(number)
     {
+		for (int i = 0; i < 3; ++i)
+		{
+			m_buttonStates[i] = SlotState::Empty;
+			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i);
+			m_pathButtons[i]->addListener(this);
+			addAndMakeVisible(m_pathButtons[i]);
+			items.add(m_pathButtons[i]->withMargin(3));
+			m_pathButtons[i]->order = i + 4;
+		}
+		m_pathButtons[0]->setButtonText("1");
+		m_pathButtons[1]->setButtonText("2");
+		m_pathButtons[2]->setButtonText("3");
+
 		// Buttons
 		m_pathButton1 = new FlexButtonComponent("Path1");
 		m_recordControlButton = new FlexButtonComponent("PlayPath1");
@@ -58,8 +71,8 @@ public:
 		addAndMakeVisible(m_XYPad);
 		//addAndMakeVisible(m_slider1);
 		//addAndMakeVisible(m_slider2);
-		addAndMakeVisible(m_pathButton1);
-		addAndMakeVisible(m_recordControlButton);
+		//addAndMakeVisible(m_pathButton1);
+		//addAndMakeVisible(m_recordControlButton);
 
 		// Add to flex
 		items.add(m_XYPad->withMargin(3));
@@ -71,7 +84,7 @@ public:
 		// Set up order
 		m_slider1->order = 0;
 		m_slider2->order = 1;
-		m_XYPad->order = 2;
+		m_XYPad->order = 0;
 		m_pathButton1->order = 3;
 		m_recordControlButton->order = 4;
 
@@ -122,42 +135,86 @@ public:
 
 	void buttonClicked(Button* button) override
 	{
-		if (button == m_pathButton1)
+		if (button == m_pathButtons[0])
 		{
-			if (!m_readingPoints)
-			{
-				// Toggle writing points
-				m_writingPoints = !m_writingPoints;
-				m_pathButton1->setActive(m_writingPoints);
-				m_XYPad->writePoints(m_writingPoints);
-			}
+			toggleRecordButton(button, 0);
 		}
-		else if (button == m_recordControlButton)
+		if (button == m_pathButtons[1])
 		{
-			if (!m_writingPoints)
-			{
-				m_readingPoints = !m_readingPoints;
-				m_recordControlButton->setActive(m_readingPoints);
-				if (m_readingPoints && !m_writingPoints)
-				{
-					m_XYPad->startPointPlayback();
-				}
-				else if (!m_writingPoints)
-				{
-					m_XYPad->stopPointPlayback();
-				}
-			}
+			toggleRecordButton(button, 1);
+		}
+		if (button == m_pathButtons[2])
+		{
+			toggleRecordButton(button, 2);
 		}
 	}
 
 private:
+	void toggleRecordButton(Button* button, int index)
+	{
+		if (index < 0 || index > 3) return;
+		FlexButtonComponent* flexBtn = dynamic_cast<FlexButtonComponent*>(button);
+
+		switch (m_buttonStates[index])
+		{
+		case SlotState::Empty:
+		{
+			m_XYPad->startRecordingPoints(index);
+			flexBtn->updateBaseColour(Colours::red);
+			m_buttonStates[index] = SlotState::Recording;
+			break;
+		}
+		case SlotState::Recording:
+		{
+			m_XYPad->stopRecordingPoints(index);
+			flexBtn->updateBaseColour(Colours::green);
+			m_buttonStates[index] = SlotState::Ready;
+			break;
+		}
+		case SlotState::Ready:
+		{
+			m_XYPad->startPointPlayback(index);
+			flexBtn->updateBaseColour(Colours::lightgreen);
+			m_buttonStates[index] = SlotState::Playback;
+			break;
+		}
+		case SlotState::Playback:
+		{
+			m_XYPad->stopPointPlayback(index);
+			flexBtn->updateBaseColour(Colours::green);
+			m_buttonStates[index] = SlotState::Ready;
+			break;
+		}
+		case SlotState::Deleting:
+		{
+			m_buttonStates[index] = SlotState::Empty;
+			break;
+		}
+		default:
+			break;
+		}
+
+	}
+	typedef ScopedPointer<FlexButtonComponent> FlexButtonPtr;
+	FlexButtonPtr m_pathButtons[3];
 	ScopedPointer<FlexButtonComponent> m_pathButton1;
 	ScopedPointer<FlexButtonComponent> m_recordControlButton;
+
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
 	ScopedPointer<FlexSlider> m_slider1, m_slider2;
 
-	
+	enum SlotState
+	{
+		Empty,
+		Recording,
+		Ready,
+		Playback,
+		Deleting
+	};
+
+	SlotState m_buttonStates[3];
+
 	bool m_writingPoints, m_readingPoints;
 	// Reference to linked effect chain
 	MainAudioProcessor* m_processor;

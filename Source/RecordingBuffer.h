@@ -162,13 +162,13 @@ private:
 		m_phasorSpeed *= m_phasorSpeedMultiplier;
 		m_audioPhasor.setFrequency(m_phasorSpeed);
 
-/*
+
 		String s = ("Speed = ");
 		s << m_phasorSpeed;
 		String s1 = "Mult = ";
 		s1 << m_phasorSpeedMultiplier;
 		DBG(s);
-		DBG(s1);*/
+		DBG(s1);
 	}
 
 	float m_sampleRate, m_bufferSize, m_bufferSizeSeconds;
