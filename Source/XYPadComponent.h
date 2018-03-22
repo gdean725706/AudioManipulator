@@ -318,11 +318,6 @@ private:
 
 	InterpolationMode m_currentInterpolationMode = InterpolationMode::Cubic;
 
-	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
-	{
-		return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
-	}
-
 	double clamp(double x, double upper, double lower)
 	{
 		return std::min(upper, std::max(x, lower));

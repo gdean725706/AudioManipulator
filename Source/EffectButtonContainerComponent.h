@@ -34,6 +34,7 @@ public:
 		m_buttonChorus = new EffectButtonComponent(EffectType::Chorus, "Chorus");
 		m_buttonFlanger = new EffectButtonComponent(EffectType::Flanger, "Flanger");
 		m_buttonPlaybackSpeed = new EffectButtonComponent(EffectType::Speed, "Speed");
+		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShifter, "Pitch Shifter");
 
 		// LPF init state on
 		m_buttonLPF->setActive(true);
@@ -45,6 +46,7 @@ public:
 		addAndMakeVisible(m_buttonChorus);
 		addAndMakeVisible(m_buttonFlanger);
 		addAndMakeVisible(m_buttonPlaybackSpeed);
+		addAndMakeVisible(m_buttonPitchShifter);
 
 		//Add to flexbox
 		items.add(m_buttonLPF->withMargin(3));
@@ -53,6 +55,7 @@ public:
 		items.add(m_buttonChorus->withMargin(3));
 		items.add(m_buttonFlanger->withMargin(3));
 		items.add(m_buttonPlaybackSpeed->withMargin(3));
+		items.add(m_buttonPitchShifter->withMargin(3));
 
 		//
 		m_buttonLPF->addListener(this);
@@ -61,6 +64,7 @@ public:
 		m_buttonChorus->addListener(this);
 		m_buttonFlanger->addListener(this);
 		m_buttonPlaybackSpeed->addListener(this);
+		m_buttonPitchShifter->addListener(this);
 
         // Set up flexbox
 	    flexDirection = Direction::row;
@@ -107,35 +111,9 @@ public:
 
 	void buttonClicked(Button* button) override
 	{
-		if (button == m_buttonLPF)
-		{
-			m_currentEffect = EffectType::LowPassFilter;
-		}
-		
-		if (button == m_buttonHPF)
-		{
-			m_currentEffect = EffectType::HighPassFilter;
-		}
+		EffectButtonComponent* effectButton = dynamic_cast<EffectButtonComponent*>(button);
 
-		if (button == m_buttonDelay)
-		{
-			m_currentEffect = EffectType::Delay;
-		}
-
-		if (button == m_buttonChorus)
-		{
-			m_currentEffect = EffectType::Chorus;
-		}
-
-		if (button == m_buttonFlanger)
-		{
-			m_currentEffect = EffectType::Flanger;
-		}
-
-		if (button == m_buttonPlaybackSpeed)
-		{
-			m_currentEffect = EffectType::Speed;
-		}
+		m_currentEffect = effectButton->getType();
 
 		// Update active buttons
 		m_buttonLPF->setActive(m_currentEffect == EffectType::LowPassFilter);
@@ -144,7 +122,8 @@ public:
 		m_buttonChorus->setActive(m_currentEffect == EffectType::Chorus);
 		m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
 		m_buttonPlaybackSpeed->setActive(m_currentEffect == EffectType::Speed);
-		
+		m_buttonPitchShifter->setActive(m_currentEffect == EffectType::PitchShifter);
+
 		// Update AudioProcessor
 		m_processor->setCurrentEffect(m_currentEffect);
 
@@ -160,7 +139,7 @@ public:
 private:
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,
-		m_buttonPlaybackSpeed;
+		m_buttonPlaybackSpeed, m_buttonPitchShifter;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
 	MainAudioProcessor* m_processor;

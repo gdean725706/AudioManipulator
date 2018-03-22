@@ -90,8 +90,6 @@ private:
 
 	void playNote(int note);
 
-	double scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd);
-
 	float m_padX, m_padY;
 	FXType m_currentEffect;
 

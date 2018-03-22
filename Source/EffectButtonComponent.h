@@ -83,6 +83,11 @@ public:
 		m_active = active;
 	}
 
+	EffectType getType()
+	{
+		return m_effectType;
+	}
+
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonComponent)
 };

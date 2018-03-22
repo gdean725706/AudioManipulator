@@ -30,6 +30,13 @@ public:
 
 	}
 
+	RecordingBuffer(int numberOfSamples) :
+		m_bufferSize(numberOfSamples),
+		m_audioBuffer(numberOfSamples)
+	{
+		fillHann();
+	}
+
 	void setSampleRate(float sampleRate)
 	{
 		m_sampleRate = sampleRate;
@@ -79,6 +86,7 @@ public:
 	void clearBuffer()
 	{
 		m_audioBuffer.clear();
+		m_bufferSize = 0;
 		m_filled = false;
 	}
 
@@ -98,6 +106,22 @@ public:
 		m_playbackActive = active;
 	}
 
+	int getSize()
+	{
+		if (m_filled)
+		{
+			return m_audioBuffer.size() - 1;
+		}
+		else return 0;
+	}
+
+	void setSize(int size)
+	{
+		m_filled = false;
+		m_audioBuffer.resize(size);
+		m_filled = true;
+	}
+
 	template <typename T>
 	void rangeMap(T& value)
 	{
@@ -105,6 +129,20 @@ public:
 
 		while (value < 0) value += size;
 		while (value > size) value -= size;
+	}
+
+	void fillHann(int length = 512)
+	{
+		clearBuffer();
+		m_audioBuffer.resize(length);
+
+		int size = m_audioBuffer.size() - 1;
+
+		for (int i = 0; i < size; ++i)
+		{
+			m_audioBuffer[i] = 0.5f * (1.0f - cos((6.28318530718 * i) / (float)size));
+		}
+		m_filled = true;
 	}
 
 private:
@@ -139,30 +177,7 @@ private:
 		return cubicInterpolate(y0Val, y1Val, y2Val, y3Val, remainder);
 	}
 
-	//https://devblogs.nvidia.com/lerp-faster-cuda/
-	template <typename T>
-	T lerp(T v0, T v1, T t)
-	{
-		return fma(t, v1, fma(-t, v0, v0));
-	}
 
-	//http://paulbourke.net/miscellaneous/interpolation/
-	template <typename T>
-	T cubicInterpolate(
-		T y0, T y1,
-		T y2, T y3,
-		T mu)
-	{
-		T a0, a1, a2, a3, mu2;
-
-		mu2 = mu*mu;
-		a0 = y3 - y2 - y0 + y1;
-		a1 = y0 - y1 - a0;
-		a2 = y2 - y0;
-		a3 = y1;
-
-		return(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
-	}
 
 	// Recalculate phasor frequency
 	void calculatePhasorFrequency()
@@ -188,3 +203,45 @@ private:
 	bool m_filled;
 
 };
+
+//https://devblogs.nvidia.com/lerp-faster-cuda/
+template <class T>
+T lerp(T v0, T v1, T t)
+{
+	return fma(t, v1, fma(-t, v0, v0));
+}
+
+//http://paulbourke.net/miscellaneous/interpolation/
+template <class T>
+T cubicInterpolate(
+	T y0, T y1,
+	T y2, T y3,
+	T mu)
+{
+	T a0, a1, a2, a3, mu2;
+
+	mu2 = mu*mu;
+	a0 = y3 - y2 - y0 + y1;
+	a1 = y0 - y1 - a0;
+	a2 = y2 - y0;
+	a3 = y1;
+
+	return(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
+}
+
+// Rangemap for audio signals
+// same as pd wrap~
+template <class T>
+T wrap(T value)
+{
+	while (value > 1.0)
+	{
+		value -= 1;
+	}
+	while (value < 0.0)
+	{
+		value += 1;
+	}
+
+	return value;
+}

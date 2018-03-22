@@ -51,7 +51,6 @@ private:
 	MainAudioProcessor& processor;
 
 	OpenGLContext m_glContext;
-	double scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)

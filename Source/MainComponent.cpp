@@ -32,8 +32,8 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	alignContent = AlignContent::spaceBetween;
 	justifyContent = JustifyContent::center;
 
-	// Set up our button click event observers
-
+	// Set window sizing constraints
+	setResizeLimits(648, 480, 1024, 768);
 	setSize(1024, 768);
 
 	// Attach to OpenGL renderer to improve graphics performance
@@ -98,9 +98,4 @@ void MainContentComponent::buttonClicked(Button * button)
 void MainContentComponent::mouseMove(const MouseEvent& evt)
 {
 	repaint();
-}
-
-double MainContentComponent::scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd)
-{
-	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
 }

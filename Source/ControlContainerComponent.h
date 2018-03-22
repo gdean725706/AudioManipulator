@@ -35,8 +35,8 @@ public:
 		m_slider1 = new FlexSlider("flexSlider1", 50, 100);
 		m_slider2 = new FlexSlider("flexSlider2", 50, 100);
 
-		m_slider1->setRange(0, 1);
-		m_slider2->setRange(0, 1);
+		m_slider1->setRange(-1.0f, 1.0f, 0.01f);
+		m_slider2->setRange(-1.0f, 1.0f, 0.01f);
 
 		m_slider1->setSliderStyle(Slider::LinearVertical);
 		m_slider2->setSliderStyle(Slider::LinearVertical);
@@ -66,7 +66,7 @@ public:
 		m_XYPad->order = 2;
 
 		m_XYPad->flexGrow = 1.0f;
-		m_XYPad->flexShrink = 1.0f;
+		m_XYPad->flexShrink = 2.0f;
 
 		m_slider1->flexGrow = 1.0f;
 		m_slider2->flexGrow = 1.0f;
@@ -74,6 +74,7 @@ public:
 		m_rightContainer = new FlexContainer();
 		addAndMakeVisible(m_rightContainer);
 		items.add(m_rightContainer->withMargin(3));
+		m_rightContainer->associatedComponent = this;
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -83,8 +84,9 @@ public:
 			m_rightContainer->items.add(m_pathButtons[i]->withMargin(3));
 			m_rightContainer->addAndMakeVisible(m_pathButtons[i]);
 			m_pathButtons[i]->order = i + 3;
-			m_pathButtons[i]->flexGrow = 2.0f;
-			m_pathButtons[i]->flexShrink = 1.0f;
+			m_pathButtons[i]->flexGrow = 0;
+			m_pathButtons[i]->flexShrink = 1;
+			m_pathButtons[i]->flexBasis = 0;
 		}
 
 		m_pathButtons[0]->setButtonText("1");
@@ -98,8 +100,9 @@ public:
 		m_playbackRateSlider->order = 5;
 		m_playbackRateSlider->width = 100;
 		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 25);
-		m_playbackRateSlider->flexGrow = 0.5f;
-		m_playbackRateSlider->flexShrink = 1.0f;
+		m_playbackRateSlider->flexGrow = 1.0f;
+		m_playbackRateSlider->flexShrink = 2.0f;
+		m_playbackRateSlider->setValue(1.0, NotificationType::dontSendNotification);
 		m_rightContainer->items.add(m_playbackRateSlider->withMargin(3));
 		m_playbackRateSlider->addListener(this);
 		m_rightContainer->addAndMakeVisible(m_playbackRateSlider);
@@ -108,11 +111,13 @@ public:
 		m_interpSelection = new FlexComboBox("interpolationSelectionBox");
 		m_interpSelection->addItem("Cubic", 1);
 		m_interpSelection->addItem("Linear", 2);
-		m_interpSelection->setTextWhenNothingSelected("Linear");
+		m_interpSelection->setTextWhenNothingSelected("Smoothing Mode");
 		m_rightContainer->items.add(m_interpSelection->withMargin(3));
 		m_interpSelection->addListener(this);
 		m_rightContainer->addAndMakeVisible(m_interpSelection);
 		m_rightContainer->performLayout(m_rightContainer->getLocalBounds());
+		m_interpSelection->flexGrow = 1.0f;
+		m_interpSelection->flexShrink = 2.0f;
 
 		// flexWrap CSS equiv attribute
 		flexDirection = Direction::row;
@@ -121,12 +126,11 @@ public:
 		alignItems = AlignItems::center;
 		alignContent = AlignContent::stretch;
 
-
 		// flexWrap CSS equiv attribute
 		m_rightContainer->flexDirection = Direction::column;
 		m_rightContainer->flexWrap = Wrap::wrap;
 		m_rightContainer->justifyContent = JustifyContent::center;
-		m_rightContainer->alignItems = AlignItems::stretch;
+		m_rightContainer->alignItems = AlignItems::center;
 		m_rightContainer->alignContent = AlignContent::center;
 
     }

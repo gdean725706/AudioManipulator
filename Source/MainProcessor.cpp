@@ -261,6 +261,10 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	{
 		m_effectChain1.processFlanger(buffer, midiMessages);
 	}
+	else if (currentEffect == FXType::PitchShifter)
+	{
+		m_effectChain1.processPitchShifter(buffer, midiMessages);
+	}
 
 }
 
@@ -301,11 +305,6 @@ void MainAudioProcessor::playNote(int note)
 		MidiMessage msgOff = MidiMessage::noteOff(1, note);
 		m_midiOutput->sendMessageNow(msgOff);
 	}
-}
-
-double MainAudioProcessor::scaleRange(double input, double inputStart, double inputEnd, double outputStart, double outputEnd)
-{
-	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
 }
 
 void MainAudioProcessor::setCurrentEffect(EffectBase::EffectType effect)

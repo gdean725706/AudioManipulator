@@ -33,7 +33,6 @@ public:
 		m_colour(m_baseColour),
 		m_active(false)
     {
-		alignSelf = AlignSelf::autoAlign;
 		associatedComponent = this;
     }
 

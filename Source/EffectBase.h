@@ -14,6 +14,12 @@
 #include <vector>
 #include <map>
 
+template <class T>
+T scaleRange(T input, T inputStart, T inputEnd, T outputStart, T outputEnd)
+{
+	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
+}
+
 class EffectBase : public AudioProcessor
 {
 public:
@@ -35,7 +41,8 @@ public:
 		Delay,
 		Chorus,
 		Flanger,
-		Speed
+		Speed,
+		PitchShifter
 	};
 
 	void setActive(bool active)
@@ -53,8 +60,8 @@ public:
 	{
 		if (!m_parameterVector.empty())
 		{
-			x = scaleRange(x, 0, 1, m_parameterVector[m_xParameter]->range.start, m_parameterVector[m_xParameter]->range.end);
-			y = scaleRange(y, 0, 1, m_parameterVector[m_yParameter]->range.start, m_parameterVector[m_yParameter]->range.end);
+			x = scaleRange(x, 0.0f, 1.0f, m_parameterVector[m_xParameter]->range.start, m_parameterVector[m_xParameter]->range.end);
+			y = scaleRange(y, 0.0f, 1.0f, m_parameterVector[m_yParameter]->range.start, m_parameterVector[m_yParameter]->range.end);
 
 			*m_parameterVector[m_xParameter] = (x);
 			*m_parameterVector[m_yParameter] = (y);
@@ -159,11 +166,6 @@ public:
 	//	addParameter(m_parameterVector.back());
 	}
 
-	// Scales a value from one range to another
-	float scaleRange(float input, float inputStart, float inputEnd, float outputStart, float outputEnd)
-	{
-		return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart); 
-	}
 
 	float getBaseXVal()
 	{
@@ -185,7 +187,6 @@ public:
 		m_processor = mainProcessor;
 	}
 
-
 private:
 
 	std::vector<AudioParameterFloat*> m_parameterVector;
@@ -198,4 +199,5 @@ private:
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EffectBase)
 };
+
 
