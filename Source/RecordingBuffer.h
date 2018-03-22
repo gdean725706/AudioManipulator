@@ -62,9 +62,16 @@ public:
 		}
 	}
 
-	float getNextSample()
+	float getNextSampleCubic()
 	{
 		float r = cubicLookup(m_audioPhasor.getPhase() * m_bufferSize);
+		m_audioPhasor.tick();
+		return r;
+	}
+
+	float getNextSampleLinear()
+	{
+		float r = linearLookup(m_audioPhasor.getPhase() * m_bufferSize);
 		m_audioPhasor.tick();
 		return r;
 	}
@@ -108,7 +115,9 @@ private:
 		T aIndex, bIndex, r;
 		r = modf(index, &aIndex);
 		bIndex = aIndex + 1;
-		return lerp(r, m_audioBuffer[aIndex], m_audioBuffer[bIndex]);
+		rangeMap(aIndex);
+		rangeMap(bIndex);
+		return lerp(m_audioBuffer[aIndex], m_audioBuffer[bIndex], r);
 	}
 
 	template <typename T>

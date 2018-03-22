@@ -22,6 +22,14 @@
 class XYPadComponent    : public Component, public FlexItem, public Timer
 {
 public:
+
+static enum InterpolationMode
+{
+	None,
+	Cubic,
+	Linear
+};
+
     XYPadComponent(int width, int height, EffectChain* effectChain, MainAudioProcessor* processor):
 		m_width(width),
 		m_height(height),
@@ -43,8 +51,8 @@ public:
 
 		//Set up flex item
 		associatedComponent = this;
-
-		setSize(width, height);
+		flexGrow = 1.0f;
+		flexShrink = 1.0f;
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -59,7 +67,6 @@ public:
 		m_normalX = 0;
 		m_normalY = 0;
 		m_playback = false;
-
 		
     }
 
@@ -73,6 +80,7 @@ public:
 	{
 		return scaleRange(m_pointX, 0, m_width, minScaleValue, maxScaleValue);
 	}
+
 	float getXValueNormalised()
 	{
 		return (float)m_pointX / (float)m_width;
@@ -85,24 +93,20 @@ public:
 	}
 	float getYValueNormalised()
 	{
+		// Invert height coordinate to start from bottom left corner.
 		int invY = m_height - m_pointY;
 		return (float)invY / (float)m_height;
 	}
 
     void paint (Graphics& g) override
-    {
-        /* This demo code just fills the component's background and
-           draws some placeholder text to get you started.
-
-           You should replace everything in this method with your own
-           drawing code..
-        */
-
-
-        g.fillAll (m_colour);   // clear the background
+    { 
+		// clear the background
+        g.fillAll (m_colour);  
 
         g.setColour (Colours::darkgrey);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+
+		// draw an outline around the component
+        g.drawRect (getLocalBounds(), 1);   
 		
 		// Update string with XY coords
 		updateMouseXYText();
@@ -116,10 +120,10 @@ public:
         g.setFont (14.0f);
         g.drawText (m_currentXY, getLocalBounds(),
                     Justification::centred, true);   // draw some placeholder text
-		String points;
-		points << m_pointsSaved;
-		g.drawText(points, getLocalBounds().removeFromLeft(50),
-			Justification::centred, true);   // debug points saved
+		//String points;
+		//points << m_pointsSaved;
+		//g.drawText(points, getLocalBounds().removeFromLeft(50),
+		//	Justification::centred, true);   // debug points saved
    
 	}
 
@@ -166,13 +170,15 @@ public:
 			y = mousePoint.y;
 		}
 
-		// Clamp values so we can't exceed bounds of component
-		m_pointX = clamp(x, m_width, (double)0.0f);
-		m_pointY = clamp(y, m_height, (double) 0.0f);
+		// Clamp values for safety so we can't exceed bounds of component
+		m_pointX = clamp(x, m_width, 0.0);
+		m_pointY = clamp(y, m_height, 0.0);
 
+		// Update normalised values
 		m_normalX = getXValueNormalised();
 		m_normalY = getYValueNormalised();
 		
+		// Pass back normalised values to processors
 		m_linkedEffectChain->setXY(m_normalX, m_normalY);
 		m_processor->setXY(m_normalX, m_normalY);
 	
@@ -248,11 +254,18 @@ public:
 			{
 				if (m_savedBuffersX[i].isActive() == true)
 				{
-					m_playbackX = m_savedBuffersX[i].getNextSample();
+					if (m_currentInterpolationMode == InterpolationMode::Cubic)
+						m_playbackX = m_savedBuffersX[i].getNextSampleCubic();
+					else
+						m_playbackX = m_savedBuffersX[i].getNextSampleLinear();
 				}
+
 				if (m_savedBuffersY[i].isActive() == true)
 				{
-					m_playbackY = m_savedBuffersY[i].getNextSample();
+					if (m_currentInterpolationMode == InterpolationMode::Cubic)
+						m_playbackY = m_savedBuffersY[i].getNextSampleCubic();
+					else
+						m_playbackY = m_savedBuffersY[i].getNextSampleLinear();
 				}
 			}
 
@@ -267,6 +280,17 @@ public:
 			m_pointsSaved++;
 		}
 	}
+
+	void setInterpolationMode(InterpolationMode mode)
+	{
+		m_currentInterpolationMode = mode;
+	}
+
+	InterpolationMode getInterpolationMode()
+	{
+		return m_currentInterpolationMode;
+	}
+
 
 private:
 	Colour m_colour;
@@ -291,6 +315,8 @@ private:
 	float m_bufferInterpolation;
 
 	const int timer_rate_Hz = 60;
+
+	InterpolationMode m_currentInterpolationMode = InterpolationMode::Cubic;
 
 	int scaleRange(int input, int inputStart, int inputEnd, int outputStart, int outputEnd)
 	{

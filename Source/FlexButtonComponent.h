@@ -26,9 +26,9 @@ private:
 	Colour m_baseColour, m_colour;
 	bool m_active;
 public:
-    FlexButtonComponent(String buttonName) :
+    FlexButtonComponent(String buttonName, int width = 150, int height = 75) :
 		Button("btn" + buttonName),
-		FlexItem(75, 50),
+		FlexItem(width, height),
 		m_baseColour(getLookAndFeel().findColour(TextButton::buttonColourId)),
 		m_colour(m_baseColour),
 		m_active(false)
@@ -68,15 +68,10 @@ public:
 		g.fillAll(m_colour);
 
 		g.setColour(Colours::white);
+		g.setFont(48);
+		
 		g.drawText(getButtonText(), getLocalBounds(), Justification::centred, false);
 	}
-
-    void resized() override
-    {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
-
-    }
 
 	void setActive(bool active)
 	{

@@ -20,6 +20,8 @@
       <FILE id="C5LEa6" name="PresetManager.h" compile="0" resource="0" file="Source/PresetManager.h"/>
       <FILE id="p7UrXk" name="Phasor.h" compile="1" resource="0" file="Source/Phasor.h"/>
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
+        <FILE id="cNi36Y" name="FlexComboBox.h" compile="0" resource="0" file="Source/FlexComboBox.h"/>
+        <FILE id="nQ8YMY" name="FlexContainer.h" compile="0" resource="0" file="Source/FlexContainer.h"/>
         <FILE id="Or936Q" name="BottomContainer.h" compile="0" resource="0"
               file="Source/BottomContainer.h"/>
         <FILE id="BJbiHe" name="FlexButtonComponent.h" compile="0" resource="0"

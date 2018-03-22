@@ -242,7 +242,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 			{
 				if (m_savedBuffers[i].isActive() == true)
 				{
-					outBuffer[sample] += m_savedBuffers[i].getNextSample();
+					outBuffer[sample] += m_savedBuffers[i].getNextSampleCubic();
 				}
 			}
 

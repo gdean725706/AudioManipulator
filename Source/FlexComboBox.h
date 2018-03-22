@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    FlexSliderComponent.h
-    Created: 25 Oct 2017 2:43:45pm
+    FlexComboBox.h
+    Created: 22 Mar 2018 2:26:21pm
     Author:  George Dean
 
   ==============================================================================
@@ -15,21 +15,20 @@
 //==============================================================================
 /*
 */
-class FlexSlider    : public Slider, public FlexItem
+class FlexComboBox    : public ComboBox, public FlexItem
 {
 public:
-	FlexSlider(String name, int width = 75, int height = 50) :
-		Slider(name),
+    FlexComboBox(String name, int width = 100, int height = 50) :
+		ComboBox(name),
 		FlexItem(width, height)
     {
 		associatedComponent = this;
     }
 
-
-    ~FlexSlider()
+    ~FlexComboBox()
     {
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FlexSlider)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FlexComboBox)
 };

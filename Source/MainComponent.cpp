@@ -18,7 +18,7 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	m_controlsContainer = new ControlContainerComponent(&p, 0);
 
 	// Create effect button container
-	m_effectButtonContainer = new EffectButtonContainerComponent(&p, 600, 400);
+	m_effectButtonContainer = new EffectButtonContainerComponent(&p);
 
 	m_bottomContainer = new BottomContainer(&p);
 
@@ -70,14 +70,17 @@ void MainContentComponent::resized()
     // If you add any child components, this is where you should
     // update their positions.
 
+	// Get this windows' bounds and set the containers height as a %age
 	auto bounds = getLocalBounds();
 	int effectContainerHeight = getHeight() * 0.1f;
+	int controlContainerHeight = getHeight() * 0.65f;
 	int bottomContainerHeight = getHeight() * 0.25f;
 
+	//Effect button and controls at the top of the window
 	m_effectButtonContainer->setBounds(bounds.removeFromTop(effectContainerHeight).reduced(3));
-	m_controlsContainer->setBounds(bounds.removeFromTop(400).reduced(3));
+	m_controlsContainer->setBounds(bounds.removeFromTop(controlContainerHeight).reduced(3));
+	// Bottom container removes from bottom
 	m_bottomContainer->setBounds(bounds.removeFromBottom(bottomContainerHeight).reduced(3));
-	int buttonHeight = 10;
 
 	// Call flexbox perform layout method, as we have already set up the list of items
 	// flexbox will magically arrange for us

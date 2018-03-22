@@ -13,17 +13,16 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EffectButtonComponent.h"
 #include "MainProcessor.h"
+#include "FlexContainer.h"
 
 //==============================================================================
 /*
 */
-class EffectButtonContainerComponent    : public Component, public FlexBox, public ButtonListener
+class EffectButtonContainerComponent    : public FlexContainer, public ButtonListener
 {
 public:
-	EffectButtonContainerComponent(MainAudioProcessor* p, int width, int height) :
-		m_processor(p),
-		m_width(width),
-		m_height(height)
+	EffectButtonContainerComponent(MainAudioProcessor* p) :
+		m_processor(p)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
@@ -159,7 +158,6 @@ public:
 	}
 
 private:
-	int m_width, m_height;
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,
 		m_buttonPlaybackSpeed;

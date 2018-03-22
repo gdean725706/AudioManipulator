@@ -49,6 +49,7 @@ public:
 		m_flanger.processBlock(buffer, midiMessages);
 	}
 
+	// Called from an X-Y controller with a reference
 	void setXY(float x, float y)
 	{
 		m_delayLine.updateAudioParameters(x, y);
@@ -56,22 +57,10 @@ public:
 		m_xVal = x;
 		m_yVal = y;
 	}
-
-	void updateParameterMappings(EffectBase::EffectType effect, int xMap, int yMap)
+	
+	void updateMapping(EffectBase* effect, int xMap, int yMap)
 	{
-		switch (effect)
-		{
-			case FXType::Delay:
-			{
-				m_delayLine.setParameterMapping(xMap, yMap);
-				break;
-			}
-			case FXType::Flanger:
-			{
-				m_flanger.setParameterMapping(xMap, yMap);
-				break;
-			}
-		}
+		effect->setParameterMapping(xMap, yMap);
 	}
 
 private:

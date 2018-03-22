@@ -15,11 +15,14 @@
 #include "FlexButtonComponent.h"
 #include "XYPadComponent.h"
 #include "EffectChain.h"
+#include "FlexContainer.h"
+#include "FlexComboBox.h"
+
 //==============================================================================
 /*
 */
-class ControlContainerComponent    : public Component, public FlexBox,
-	public SliderListener, public ButtonListener
+class ControlContainerComponent    : public FlexContainer,
+	public SliderListener, public ButtonListener, public ComboBoxListener
 {
 public:
     ControlContainerComponent(MainAudioProcessor* p, int number):
@@ -28,12 +31,9 @@ public:
 		m_processor(p),
 		m_chainNumber(number)
     {
-
-
-
 		// Add and setup sliders
-		m_slider1 = new FlexSlider("flexSlider1");
-		m_slider2 = new FlexSlider("flexSlider2");
+		m_slider1 = new FlexSlider("flexSlider1", 50, 100);
+		m_slider2 = new FlexSlider("flexSlider2", 50, 100);
 
 		m_slider1->setRange(0, 1);
 		m_slider2->setRange(0, 1);
@@ -71,15 +71,19 @@ public:
 		m_slider1->flexGrow = 1.0f;
 		m_slider2->flexGrow = 1.0f;
 
+		m_rightContainer = new FlexContainer();
+		addAndMakeVisible(m_rightContainer);
+		items.add(m_rightContainer->withMargin(3));
+
 		for (int i = 0; i < 3; ++i)
 		{
 			m_buttonStates[i] = SlotState::Empty;
-			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i);
+			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i, 150, 75);
 			m_pathButtons[i]->addListener(this);
-			addAndMakeVisible(m_pathButtons[i]);
-			items.add(m_pathButtons[i]->withMargin(3));
+			m_rightContainer->items.add(m_pathButtons[i]->withMargin(3));
+			m_rightContainer->addAndMakeVisible(m_pathButtons[i]);
 			m_pathButtons[i]->order = i + 3;
-			m_pathButtons[i]->flexGrow = 1.0f;
+			m_pathButtons[i]->flexGrow = 2.0f;
 			m_pathButtons[i]->flexShrink = 1.0f;
 		}
 
@@ -87,15 +91,28 @@ public:
 		m_pathButtons[1]->setButtonText("2");
 		m_pathButtons[2]->setButtonText("3");
 
-		m_playbackRateSlider = new FlexSlider("playbackRateSlider");
+		// Playback rate slider
+		m_playbackRateSlider = new FlexSlider("playbackRateSlider", 100, 50);
 		m_playbackRateSlider->setRange(-2.5, 2.5);
 		m_playbackRateSlider->setSliderStyle(Slider::RotaryVerticalDrag);
 		m_playbackRateSlider->order = 5;
 		m_playbackRateSlider->width = 100;
-		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 50);
-		items.add(m_playbackRateSlider->withMargin(3));
+		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 25);
+		m_playbackRateSlider->flexGrow = 0.5f;
+		m_playbackRateSlider->flexShrink = 1.0f;
+		m_rightContainer->items.add(m_playbackRateSlider->withMargin(3));
 		m_playbackRateSlider->addListener(this);
-		addAndMakeVisible(m_playbackRateSlider);
+		m_rightContainer->addAndMakeVisible(m_playbackRateSlider);
+
+		// Interpolation selection box
+		m_interpSelection = new FlexComboBox("interpolationSelectionBox");
+		m_interpSelection->addItem("Cubic", 1);
+		m_interpSelection->addItem("Linear", 2);
+		m_interpSelection->setTextWhenNothingSelected("Linear");
+		m_rightContainer->items.add(m_interpSelection->withMargin(3));
+		m_interpSelection->addListener(this);
+		m_rightContainer->addAndMakeVisible(m_interpSelection);
+		m_rightContainer->performLayout(m_rightContainer->getLocalBounds());
 
 		// flexWrap CSS equiv attribute
 		flexDirection = Direction::row;
@@ -103,6 +120,14 @@ public:
 		justifyContent = JustifyContent::center;
 		alignItems = AlignItems::center;
 		alignContent = AlignContent::stretch;
+
+
+		// flexWrap CSS equiv attribute
+		m_rightContainer->flexDirection = Direction::column;
+		m_rightContainer->flexWrap = Wrap::wrap;
+		m_rightContainer->justifyContent = JustifyContent::center;
+		m_rightContainer->alignItems = AlignItems::stretch;
+		m_rightContainer->alignContent = AlignContent::center;
 
     }
 
@@ -133,6 +158,20 @@ public:
 
 		// Call flexbox performlayout method to arrange flex items
 		auto bounds = getLocalBounds();
+
+		int rightContainerWidth = getWidth() * 0.25f;
+		m_rightContainer->setBounds(bounds.removeFromRight(rightContainerWidth).reduced(3));
+		m_rightContainer->width = rightContainerWidth;
+
+		int buttonWidth = m_rightContainer->getWidth() * 0.9f;
+		int rightContainerHeight = m_rightContainer->getHeight();
+
+		for (int i = 0; i < 3; ++i)
+		{
+			m_pathButtons[i]->width = buttonWidth;
+			m_pathButtons[i]->height = rightContainerHeight * 0.33f;
+		}
+		m_rightContainer->performLayout(m_rightContainer->getLocalBounds());
 		performLayout(bounds);
 		
     }
@@ -158,6 +197,15 @@ public:
 		if (button == m_pathButtons[2])
 		{
 			toggleRecordButton(button, 2);
+		}
+	}
+
+	void comboBoxChanged(ComboBox* comboBoxThatHasChanged)
+	{
+		if (comboBoxThatHasChanged == m_interpSelection)
+		{
+			// Selection IDs in interp combo box correspond to XY interp mode enum, so can cast
+			m_XYPad->setInterpolationMode((XYPadComponent::InterpolationMode)m_interpSelection->getSelectedId());
 		}
 	}
 
@@ -214,6 +262,10 @@ private:
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
 	ScopedPointer<FlexSlider> m_slider1, m_slider2, m_playbackRateSlider;
+
+	ScopedPointer<FlexContainer> m_rightContainer;
+
+	ScopedPointer<FlexComboBox> m_interpSelection;
 
 	enum SlotState
 	{

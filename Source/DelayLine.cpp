@@ -55,11 +55,9 @@ void StereoDelay::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessa
 		rightChannel[i] += m_rightDelay.getDelay(dt * (m_sampleRate * 0.001f));
 		m_leftDelay.writeSample(leftChannel[i] * fl);
 		m_rightDelay.writeSample(rightChannel[i] * fl);
-
 		m_leftDelay.tick();
 		m_rightDelay.tick();
 	}
-
 }
 
 

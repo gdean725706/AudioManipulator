@@ -14,11 +14,12 @@
 #include "MainProcessor.h"
 #include "FlexButtonComponent.h"
 #include <vector>
+#include "FlexContainer.h"
 
 //==============================================================================
 /*
 */
-class BottomContainer    : public Component, public FlexBox, public ButtonListener
+class BottomContainer    : public FlexContainer, public ButtonListener
 {
 public:
     BottomContainer(MainAudioProcessor *p):
@@ -106,6 +107,7 @@ private:
 
 		switch (m_buttonStates[index])
 		{
+		// Clicked while empty. Start recording and set state
 		case SlotState::Empty:
 		{
 			m_processor->startRecording(index);
@@ -113,6 +115,7 @@ private:
 			m_buttonStates[index] = SlotState::Recording;
 			break;
 		}
+		// Clicked while recording, stop recording and set state
 		case SlotState::Recording:
 		{
 			m_processor->stopRecording(index);
@@ -120,6 +123,7 @@ private:
 			m_buttonStates[index] = SlotState::Ready;
 			break;
 		}
+		// Clicked while ready, start playback and set state
 		case SlotState::Ready:
 		{
 			m_processor->startPlayback(index);
@@ -127,6 +131,7 @@ private:
 			m_buttonStates[index] = SlotState::Playback;
 			break;
 		}
+		// Clicked while playing back, stop playback and set state
 		case SlotState::Playback:
 		{
 			m_processor->stopPlayback(index);
