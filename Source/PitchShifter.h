@@ -37,16 +37,19 @@ public:
 
 	}
 
-	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock)
+	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override
 	{
+		m_phasor.setSampleRate(sampleRate);
 		m_transpose = sampleRate / 2048.0f;
 	}
 
-	void releaseResources()
+	void releaseResources() override
 	{
+		m_leftDelay.clearBuffer();
+		m_rightDelay.clearBuffer();
 	}
 
-	void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+	void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override
 	{
 		float* leftChannel = buffer.getWritePointer(0, 0);
 		float* rightChannel = buffer.getWritePointer(1, 0);

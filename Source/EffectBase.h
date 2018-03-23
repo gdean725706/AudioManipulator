@@ -42,7 +42,8 @@ public:
 		Chorus,
 		Flanger,
 		Speed,
-		PitchShifter
+		PitchShifter,
+		RingMod
 	};
 
 	void setActive(bool active)

@@ -145,6 +145,21 @@ public:
 		m_filled = true;
 	}
 
+	void fillSine(int length = 512, float frequency = 1)
+	{
+		clearBuffer();
+		m_audioBuffer.resize(length);
+
+		int size = m_audioBuffer.size() - 1;
+
+		for (int n = 0; n < size; ++n)
+		{
+			m_audioBuffer[n] = sinf((6.28318530718 * n * frequency) / size);
+		}
+
+		m_filled = true;
+	}
+
 private:
 
 	template <typename T>

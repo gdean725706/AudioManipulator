@@ -35,6 +35,7 @@ public:
 		m_buttonFlanger = new EffectButtonComponent(EffectType::Flanger, "Flanger");
 		m_buttonPlaybackSpeed = new EffectButtonComponent(EffectType::Speed, "Speed");
 		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShifter, "Pitch Shifter");
+		m_buttonRingMod = new EffectButtonComponent(EffectType::RingMod, "Ring Mod");
 
 		// LPF init state on
 		m_buttonLPF->setActive(true);
@@ -47,6 +48,7 @@ public:
 		addAndMakeVisible(m_buttonFlanger);
 		addAndMakeVisible(m_buttonPlaybackSpeed);
 		addAndMakeVisible(m_buttonPitchShifter);
+		addAndMakeVisible(m_buttonRingMod);
 
 		//Add to flexbox
 		items.add(m_buttonLPF->withMargin(3));
@@ -56,6 +58,7 @@ public:
 		items.add(m_buttonFlanger->withMargin(3));
 		items.add(m_buttonPlaybackSpeed->withMargin(3));
 		items.add(m_buttonPitchShifter->withMargin(3));
+		items.add(m_buttonRingMod->withMargin(3));
 
 		//
 		m_buttonLPF->addListener(this);
@@ -65,6 +68,7 @@ public:
 		m_buttonFlanger->addListener(this);
 		m_buttonPlaybackSpeed->addListener(this);
 		m_buttonPitchShifter->addListener(this);
+		m_buttonRingMod->addListener(this);
 
         // Set up flexbox
 	    flexDirection = Direction::row;
@@ -123,6 +127,7 @@ public:
 		m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
 		m_buttonPlaybackSpeed->setActive(m_currentEffect == EffectType::Speed);
 		m_buttonPitchShifter->setActive(m_currentEffect == EffectType::PitchShifter);
+		m_buttonRingMod->setActive(m_currentEffect == EffectType::RingMod);
 
 		// Update AudioProcessor
 		m_processor->setCurrentEffect(m_currentEffect);
@@ -139,7 +144,7 @@ public:
 private:
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,
-		m_buttonPlaybackSpeed, m_buttonPitchShifter;
+		m_buttonPlaybackSpeed, m_buttonPitchShifter, m_buttonRingMod;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
 	MainAudioProcessor* m_processor;

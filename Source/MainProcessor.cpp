@@ -265,6 +265,10 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	{
 		m_effectChain1.processPitchShifter(buffer, midiMessages);
 	}
+	else if (currentEffect == FXType::RingMod)
+	{
+		m_effectChain1.processRingMod(buffer, midiMessages);
+	}
 
 }
 

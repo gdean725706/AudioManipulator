@@ -74,7 +74,7 @@ public:
 		m_rightContainer = new FlexContainer();
 		addAndMakeVisible(m_rightContainer);
 		items.add(m_rightContainer->withMargin(3));
-		m_rightContainer->associatedComponent = this;
+		m_rightContainer->associatedComponent = m_rightContainer;
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -84,9 +84,9 @@ public:
 			m_rightContainer->items.add(m_pathButtons[i]->withMargin(3));
 			m_rightContainer->addAndMakeVisible(m_pathButtons[i]);
 			m_pathButtons[i]->order = i + 3;
-			m_pathButtons[i]->flexGrow = 0;
-			m_pathButtons[i]->flexShrink = 1;
-			m_pathButtons[i]->flexBasis = 0;
+			//m_pathButtons[i]->flexGrow = 1.0f;
+			//m_pathButtons[i]->flexShrink = 1.0f;
+			//m_pathButtons[i]->flexBasis = 0;
 		}
 
 		m_pathButtons[0]->setButtonText("1");
