@@ -57,14 +57,14 @@ public:
 		const float depth = *m_modDepth;
 		const float speed = *m_modFrequency;
 
-		m_phasor.setFrequency(speed);
+		m_phasor.setFrequency(speed * m_sineOscillator.getSize());
 
 		const float osc = m_sineOscillator.getSample(m_phasor.getPhase() * m_sineOscillator.getSize());
 
 		for (int i = 0; i < buffer.getNumSamples(); ++i)
 		{
-			leftChannel[i] += (osc * 0.5f);
-			//leftChannel[i] *= (osc * (depth / 100));
+			//leftChannel[i] = (osc * 0.5f);
+			leftChannel[i] *= (osc * (depth / 100));
 			rightChannel[i] *= (osc * (depth / 100));
 			m_phasor.tick();
 		}
@@ -84,6 +84,6 @@ public:
 
 private:
 	AudioParameterFloat* m_modFrequency, *m_modDepth;
-	RecordingBuffer m_sineOscillator;
+	Wavetable m_sineOscillator;
 	Phasor m_phasor;
 };

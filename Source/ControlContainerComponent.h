@@ -31,9 +31,13 @@ public:
 		m_processor(p),
 		m_chainNumber(number)
     {
+
+
+		// Add XY pad and sliders
+		m_XYPad = new XYPadComponent(300, 200, m_processor->getChain(m_chainNumber), p);
 		// Add and setup sliders
-		m_slider1 = new FlexSlider("flexSlider1", 50, 100);
-		m_slider2 = new FlexSlider("flexSlider2", 50, 100);
+		m_slider1 = new FlexSlider("flexSlider1", 10, 50);
+		m_slider2 = new FlexSlider("flexSlider2", 10, 50);
 
 		m_slider1->setRange(-1.0f, 1.0f, 0.01f);
 		m_slider2->setRange(-1.0f, 1.0f, 0.01f);
@@ -41,15 +45,11 @@ public:
 		m_slider1->setSliderStyle(Slider::LinearVertical);
 		m_slider2->setSliderStyle(Slider::LinearVertical);
 
-		m_slider1->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 50);
-		m_slider2->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 50);
+		m_slider1->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 50, 15);
+		m_slider2->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 50, 15);
 
 		m_slider1->addListener(this);
 		m_slider2->addListener(this);
-
-		// Add XY pad and sliders
-		m_XYPad = new XYPadComponent(400, 400, m_processor->getChain(m_chainNumber), p);
-
 		// Add and make visible
 		addAndMakeVisible(m_slider1);
 		addAndMakeVisible(m_slider2);
@@ -65,9 +65,6 @@ public:
 		m_slider2->order = 1;
 		m_XYPad->order = 2;
 
-		m_XYPad->flexGrow = 1.0f;
-		m_XYPad->flexShrink = 2.0f;
-
 		m_slider1->flexGrow = 1.0f;
 		m_slider2->flexGrow = 1.0f;
 
@@ -79,14 +76,11 @@ public:
 		for (int i = 0; i < 3; ++i)
 		{
 			m_buttonStates[i] = SlotState::Empty;
-			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i, 150, 75);
+			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i, 50, 25);
 			m_pathButtons[i]->addListener(this);
 			m_rightContainer->items.add(m_pathButtons[i]->withMargin(3));
 			m_rightContainer->addAndMakeVisible(m_pathButtons[i]);
 			m_pathButtons[i]->order = i + 3;
-			//m_pathButtons[i]->flexGrow = 1.0f;
-			//m_pathButtons[i]->flexShrink = 1.0f;
-			//m_pathButtons[i]->flexBasis = 0;
 		}
 
 		m_pathButtons[0]->setButtonText("1");
@@ -94,14 +88,11 @@ public:
 		m_pathButtons[2]->setButtonText("3");
 
 		// Playback rate slider
-		m_playbackRateSlider = new FlexSlider("playbackRateSlider", 100, 50);
-		m_playbackRateSlider->setRange(-2.5, 2.5);
-		m_playbackRateSlider->setSliderStyle(Slider::RotaryVerticalDrag);
+		m_playbackRateSlider = new FlexSlider("playbackRateSlider", 50, 25);
+		m_playbackRateSlider->setRange(-2.5, 2.5, 0.01);
+		m_playbackRateSlider->setSliderStyle(Slider::LinearHorizontal);
 		m_playbackRateSlider->order = 5;
-		m_playbackRateSlider->width = 100;
-		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 100, 25);
-		m_playbackRateSlider->flexGrow = 1.0f;
-		m_playbackRateSlider->flexShrink = 2.0f;
+		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxRight, true, 50, 15);
 		m_playbackRateSlider->setValue(1.0, NotificationType::dontSendNotification);
 		m_rightContainer->items.add(m_playbackRateSlider->withMargin(3));
 		m_playbackRateSlider->addListener(this);
@@ -128,10 +119,10 @@ public:
 
 		// flexWrap CSS equiv attribute
 		m_rightContainer->flexDirection = Direction::column;
-		m_rightContainer->flexWrap = Wrap::wrap;
+		m_rightContainer->flexWrap = Wrap::noWrap;
 		m_rightContainer->justifyContent = JustifyContent::center;
 		m_rightContainer->alignItems = AlignItems::center;
-		m_rightContainer->alignContent = AlignContent::center;
+		m_rightContainer->alignContent = AlignContent::stretch;
 
     }
 

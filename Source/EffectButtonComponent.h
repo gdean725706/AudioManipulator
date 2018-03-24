@@ -26,7 +26,7 @@ private:
 public:
 	EffectButtonComponent(EffectType effectType, String buttonName) :
 		m_labelText(buttonName),
-		FlexItem(75, 50),
+		FlexItem(60, 40),
 		Button("btnEffect" + buttonName),
 		m_midiPitch(),
 		m_colour(Colours::lightgrey),
@@ -39,7 +39,6 @@ public:
 
 		// Due to FlexBox multiple inheritance we must set the associated component to this
 		associatedComponent = this;
-		alignSelf = AlignSelf::center;
 		flexShrink = 1.0;
 		flexGrow = 1.0;
 	}

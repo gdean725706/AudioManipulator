@@ -22,9 +22,10 @@ public:
 		Slider(name),
 		FlexItem(width, height)
     {
+		flexGrow = 0.1f;
+		flexShrink = 1.0f;
 		associatedComponent = this;
     }
-
 
     ~FlexSlider()
     {

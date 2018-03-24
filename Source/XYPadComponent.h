@@ -308,7 +308,7 @@ private:
 	bool m_writingToBuffer;
 	int m_pointsSaved;
 
-	std::vector<RecordingBuffer> m_savedBuffersX, m_savedBuffersY;
+	std::vector<Wavetable> m_savedBuffersX, m_savedBuffersY;
 	int m_numberOfBuffers;
 	bool m_playback;
 	int m_playbackX, m_playbackY;

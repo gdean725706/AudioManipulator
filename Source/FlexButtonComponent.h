@@ -33,6 +33,8 @@ public:
 		m_colour(m_baseColour),
 		m_active(false)
     {
+		flexGrow = 1.0f;
+		flexShrink = 1.0f;
 		associatedComponent = this;
     }
 
@@ -67,7 +69,7 @@ public:
 		g.fillAll(m_colour);
 
 		g.setColour(Colours::white);
-		g.setFont(48);
+		g.setFont(scaleRange((int)getWidth(), 50, 150, 24, 48));
 		
 		g.drawText(getButtonText(), getLocalBounds(), Justification::centred, false);
 	}

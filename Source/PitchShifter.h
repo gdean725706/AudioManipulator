@@ -100,7 +100,7 @@ public:
 private:
 	int m_transpose, m_delayTime;
 	DelayUnit m_leftDelay, m_rightDelay;
-	RecordingBuffer m_window;
+	Wavetable m_window;
 	Phasor m_phasor;
 
 };

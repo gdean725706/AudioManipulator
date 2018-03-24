@@ -14,10 +14,10 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include <vector>
 
-class RecordingBuffer
+class Wavetable
 {
 public:
-	RecordingBuffer(float sampleRate = 44100, float bufferSizeSeconds = 5) :
+	Wavetable(float sampleRate = 44100, float bufferSizeSeconds = 5) :
 		m_sampleRate(sampleRate),
 		m_bufferSize(sampleRate * bufferSizeSeconds),
 		m_bufferSizeSeconds(bufferSizeSeconds),
@@ -30,7 +30,7 @@ public:
 
 	}
 
-	RecordingBuffer(int numberOfSamples) :
+	Wavetable(int numberOfSamples) :
 		m_bufferSize(numberOfSamples),
 		m_audioBuffer(numberOfSamples)
 	{
@@ -157,6 +157,7 @@ public:
 			m_audioBuffer[n] = sinf((6.28318530718 * n * frequency) / size);
 		}
 
+
 		m_filled = true;
 	}
 
@@ -202,12 +203,12 @@ private:
 		m_audioPhasor.setFrequency(m_phasorSpeed);
 
 
-		String s = ("Speed = ");
-		s << m_phasorSpeed;
-		String s1 = "Mult = ";
-		s1 << m_phasorSpeedMultiplier;
-		DBG(s);
-		DBG(s1);
+		//String s = ("Speed = ");
+		//s << m_phasorSpeed;
+		//String s1 = "Mult = ";
+		//s1 << m_phasorSpeedMultiplier;
+		//DBG(s);
+		//DBG(s1);
 	}
 
 	float m_sampleRate, m_bufferSize, m_bufferSizeSeconds;

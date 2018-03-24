@@ -103,7 +103,7 @@ private:
 	std::vector<float> m_floatBuffer;
 	int m_bufferIndex;
 
-	std::vector<RecordingBuffer> m_savedBuffers;
+	std::vector<Wavetable> m_savedBuffers;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

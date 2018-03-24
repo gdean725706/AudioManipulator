@@ -75,7 +75,7 @@ public:
 	    flexWrap = Wrap::wrap;
 	    justifyContent = JustifyContent::center;
 	    alignItems = AlignItems::center;
-	    alignContent = AlignContent::center;
+	    alignContent = AlignContent::stretch;
 
     }
 
