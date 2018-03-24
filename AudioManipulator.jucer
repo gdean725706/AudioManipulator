@@ -86,7 +86,7 @@
       </MODULEPATHS>
     </VS2017>
     <ANDROIDSTUDIO targetFolder="Builds/Android" androidSDKPath="" androidNDKPath=""
-                   microphonePermissionNeeded="1">
+                   microphonePermissionNeeded="1" androidTheme="@android:style/Theme.NoTitleBar">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" androidArchitectures="armeabi x86" isDebug="1" optimisation="1"
                        targetName="Audio Manipulator"/>

@@ -70,7 +70,9 @@ public:
 		g.fillAll(m_colour);
 
 		g.setColour(Colours::white);
-		g.drawText(m_labelText, getLocalBounds(), Justification::centred, false);
+		float fontSize = scaleRange((float)getWidth(), 60.0f, 120.0f, 15.0f, 30.0f);
+		g.setFont(fontSize);
+		g.drawFittedText(m_labelText, getLocalBounds(), Justification::centred, 2);
 	}
 
 	int getPitch() 

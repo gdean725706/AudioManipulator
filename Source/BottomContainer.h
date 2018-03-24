@@ -29,7 +29,7 @@ public:
 		{
 			m_buttonStates[i] = SlotState::Empty;
 			m_writing[i] = false;
-			m_recordButtons[i] = new FlexButtonComponent("RecordAudio" + i);
+			m_recordButtons[i] = new FlexButtonComponent("RecordAudio" + i, 100, 50);
 			m_recordButtons[i]->addListener(this);
 			addAndMakeVisible(m_recordButtons[i]);
 			items.add(m_recordButtons[i]->withMargin(3));
@@ -43,7 +43,7 @@ public:
 		flexWrap = Wrap::wrap;
 		justifyContent = JustifyContent::center;
 		alignItems = AlignItems::center;
-		alignContent = AlignContent::spaceBetween;
+		alignContent = AlignContent::stretch;
     }
 
     ~BottomContainer()

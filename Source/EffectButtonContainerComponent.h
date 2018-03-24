@@ -34,7 +34,7 @@ public:
 		m_buttonChorus = new EffectButtonComponent(EffectType::Chorus, "Chorus");
 		m_buttonFlanger = new EffectButtonComponent(EffectType::Flanger, "Flanger");
 		m_buttonPlaybackSpeed = new EffectButtonComponent(EffectType::Speed, "Speed");
-		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShifter, "Pitch Shifter");
+		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShifter, "Pitch Shift");
 		m_buttonRingMod = new EffectButtonComponent(EffectType::RingMod, "Ring Mod");
 
 		// LPF init state on

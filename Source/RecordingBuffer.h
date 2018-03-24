@@ -14,6 +14,48 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include <vector>
 
+//https://devblogs.nvidia.com/lerp-faster-cuda/
+template <class T>
+T lerp(T v0, T v1, T t)
+{
+    return fma(t, v1, fma(-t, v0, v0));
+}
+
+//http://paulbourke.net/miscellaneous/interpolation/
+template <class T>
+T cubicInterpolate(
+        T y0, T y1,
+        T y2, T y3,
+        T mu)
+{
+    T a0, a1, a2, a3, mu2;
+
+    mu2 = mu*mu;
+    a0 = y3 - y2 - y0 + y1;
+    a1 = y0 - y1 - a0;
+    a2 = y2 - y0;
+    a3 = y1;
+
+    return(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
+}
+
+// Rangemap for audio signals
+// same as pd wrap~
+template <class T>
+T wrap(T value)
+{
+    while (value > 1.0)
+    {
+        value -= 1;
+    }
+    while (value < 0.0)
+    {
+        value += 1;
+    }
+
+    return value;
+}
+
 class Wavetable
 {
 public:
@@ -220,44 +262,3 @@ private:
 
 };
 
-//https://devblogs.nvidia.com/lerp-faster-cuda/
-template <class T>
-T lerp(T v0, T v1, T t)
-{
-	return fma(t, v1, fma(-t, v0, v0));
-}
-
-//http://paulbourke.net/miscellaneous/interpolation/
-template <class T>
-T cubicInterpolate(
-	T y0, T y1,
-	T y2, T y3,
-	T mu)
-{
-	T a0, a1, a2, a3, mu2;
-
-	mu2 = mu*mu;
-	a0 = y3 - y2 - y0 + y1;
-	a1 = y0 - y1 - a0;
-	a2 = y2 - y0;
-	a3 = y1;
-
-	return(a0*mu*mu2 + a1*mu2 + a2*mu + a3);
-}
-
-// Rangemap for audio signals
-// same as pd wrap~
-template <class T>
-T wrap(T value)
-{
-	while (value > 1.0)
-	{
-		value -= 1;
-	}
-	while (value < 0.0)
-	{
-		value += 1;
-	}
-
-	return value;
-}

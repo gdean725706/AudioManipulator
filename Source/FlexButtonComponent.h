@@ -69,7 +69,8 @@ public:
 		g.fillAll(m_colour);
 
 		g.setColour(Colours::white);
-		g.setFont(scaleRange((int)getWidth(), 50, 150, 24, 48));
+		float fontSize = scaleRange((float)getWidth(), 60.0f, 334.0f, 24.0f, 64.0f);
+		g.setFont(fontSize);
 		
 		g.drawText(getButtonText(), getLocalBounds(), Justification::centred, false);
 	}

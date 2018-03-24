@@ -41,6 +41,8 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 
 #if JUCE_ANDROID
     Desktop::getInstance().setScreenSaverEnabled(false);
+	//Desktop::getInstance().setOrientationsEnabled(4 | 8 );
+	//Desktop::getInstance().setKioskModeComponent(this, false);
 #endif
 
 }
@@ -72,15 +74,15 @@ void MainContentComponent::resized()
 
 	// Get this windows' bounds and set the containers height as a %age
 	auto bounds = getLocalBounds();
-	int effectContainerHeight = getHeight() * 0.1f;
-	int controlContainerHeight = getHeight() * 0.65f;
-	int bottomContainerHeight = getHeight() * 0.25f;
+	int effectContainerHeight = getHeight() * 0.15f;
+	int controlContainerHeight = getHeight() * 0.7f;
+	int bottomContainerHeight = getHeight() * 0.15f;
 
 	//Effect button and controls at the top of the window
-	m_effectButtonContainer->setBounds(bounds.removeFromTop(effectContainerHeight).reduced(3));
-	m_controlsContainer->setBounds(bounds.removeFromTop(controlContainerHeight).reduced(3));
+	m_effectButtonContainer->setBounds(bounds.removeFromTop(effectContainerHeight).reduced(2));
+	m_controlsContainer->setBounds(bounds.removeFromTop(controlContainerHeight).reduced(2));
 	// Bottom container removes from bottom
-	m_bottomContainer->setBounds(bounds.removeFromBottom(bottomContainerHeight).reduced(3));
+	m_bottomContainer->setBounds(bounds.removeFromBottom(bottomContainerHeight).reduced(2));
 
 	// Call flexbox perform layout method, as we have already set up the list of items
 	// flexbox will magically arrange for us
