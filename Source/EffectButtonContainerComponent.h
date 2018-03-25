@@ -21,11 +21,12 @@
 class EffectButtonContainerComponent    : public FlexContainer, public ButtonListener
 {
 public:
-	EffectButtonContainerComponent(MainAudioProcessor* p) :
-		m_processor(p)
+	EffectButtonContainerComponent(MainAudioProcessor* p, int chain) :
+		m_processor(p),
+		m_chainNumber(chain),
+		m_effectButtons(0)
     {
-        // In your constructor, you should add any child components, and
-        // initialise any special settings that your component needs.
+		m_chain = m_processor->getChain(m_chainNumber);
 
 		// Add buttons
 		m_buttonLPF = new EffectButtonComponent(EffectType::LowPassFilter, "LPF");
@@ -36,6 +37,15 @@ public:
 		m_buttonPlaybackSpeed = new EffectButtonComponent(EffectType::Speed, "Speed");
 		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShifter, "Pitch Shift");
 		m_buttonRingMod = new EffectButtonComponent(EffectType::RingMod, "Ring Mod");
+
+		m_effectButtons.push_back(&m_buttonLPF);
+		m_effectButtons.push_back(&m_buttonHPF);
+		m_effectButtons.push_back(&m_buttonDelay);
+		m_effectButtons.push_back(&m_buttonChorus);
+		m_effectButtons.push_back(&m_buttonFlanger);
+		m_effectButtons.push_back(&m_buttonPlaybackSpeed);
+		m_effectButtons.push_back(&m_buttonPitchShifter);
+		m_effectButtons.push_back(&m_buttonRingMod);
 
 		// LPF init state on
 		m_buttonLPF->setActive(true);
@@ -117,20 +127,24 @@ public:
 	{
 		EffectButtonComponent* effectButton = dynamic_cast<EffectButtonComponent*>(button);
 
-		m_currentEffect = effectButton->getType();
+		effectButton->setActive(!effectButton->getActive());
+
+		m_chain->setEffectState(effectButton->getType(), effectButton->getActive());
+		m_processor->setSimpleEffectState(effectButton->getType(), effectButton->getActive());
+
 
 		// Update active buttons
-		m_buttonLPF->setActive(m_currentEffect == EffectType::LowPassFilter);
-		m_buttonHPF->setActive(m_currentEffect == EffectType::HighPassFilter);
-		m_buttonDelay->setActive(m_currentEffect == EffectType::Delay);
-		m_buttonChorus->setActive(m_currentEffect == EffectType::Chorus);
-		m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
-		m_buttonPlaybackSpeed->setActive(m_currentEffect == EffectType::Speed);
-		m_buttonPitchShifter->setActive(m_currentEffect == EffectType::PitchShifter);
-		m_buttonRingMod->setActive(m_currentEffect == EffectType::RingMod);
+		//m_buttonLPF->setActive(m_currentEffect == EffectType::LowPassFilter);
+		//m_buttonHPF->setActive(m_currentEffect == EffectType::HighPassFilter);
+		//m_buttonDelay->setActive(m_currentEffect == EffectType::Delay);
+		//m_buttonChorus->setActive(m_currentEffect == EffectType::Chorus);
+		//m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
+		//m_buttonPlaybackSpeed->setActive(m_currentEffect == EffectType::Speed);
+		//m_buttonPitchShifter->setActive(m_currentEffect == EffectType::PitchShifter);
+		//m_buttonRingMod->setActive(m_currentEffect == EffectType::RingMod);
 
 		// Update AudioProcessor
-		m_processor->setCurrentEffect(m_currentEffect);
+		//m_processor->setCurrentEffect(m_currentEffect);
 
 		repaint();
 
@@ -145,8 +159,11 @@ private:
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,
 		m_buttonPlaybackSpeed, m_buttonPitchShifter, m_buttonRingMod;
+	std::vector<FlexButtonPtr*> m_effectButtons;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;
 	MainAudioProcessor* m_processor;
+	int m_chainNumber;
+	EffectChain* m_chain;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectButtonContainerComponent)
 };

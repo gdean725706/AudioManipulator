@@ -19,11 +19,12 @@ Flanger::Flanger(int maxDelay, AudioProcessor* processor) :
 	m_phase(0)
 {
     // Set up audio parameters
-	addParameter(m_feedback = new AudioParameterFloat("Feedback", "Feedback", 0.0f, 1.0f, 0.5f));
+	addParameter(m_feedback = new AudioParameterFloat("Feedback", "Feedback", 0.0f, 0.99f, 0.0f));
 	registerParameter(m_feedback);
-	addParameter(m_depth = new AudioParameterFloat("Depth", "Depth", 0.001f, 1.0, 0.5f));
+	addParameter(m_depth = new AudioParameterFloat("Depth", "Depth", 0.0f, 1.0f, 0.5f));
 	registerParameter(m_depth);
-	addParameter(m_frequency = new AudioParameterFloat("Frequency", "Frequency", 0.01f, 8.0f, 1.0f));
+	addParameter(m_frequency = new AudioParameterFloat("Frequency", "Frequency", 0.02f, 5.0f, 0.18f));
+	registerParameter(m_frequency);
 
 }
 
@@ -57,7 +58,7 @@ void Flanger::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 
 	for (int i = 0; i < buffer.getNumSamples(); ++i)
 	{
-		lfo = sin((double_Pi * m_phase * *m_frequency) / 44100); // LFO - make this into wavetable later
+		lfo = sin(((2.0f * double_Pi) * m_phase * *m_frequency) / 44100); // LFO - make this into wavetable later
 
 		delayPos = (lfo * *m_depth) + 440; //depth (offset by 440)
 

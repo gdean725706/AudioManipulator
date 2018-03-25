@@ -74,6 +74,14 @@ public:
 
 	void registerParameter(AudioProcessorParameter* parameter);
 
+	struct SimpleEffect
+	{
+		bool active;
+		EffectBase::EffectType type;
+	};
+
+	void setSimpleEffectState(EffectBase::EffectType effect, bool active);
+
 private:
 
 	// Typedef for our enum containing all the FX types
@@ -104,6 +112,9 @@ private:
 	int m_bufferIndex;
 
 	std::vector<Wavetable> m_savedBuffers;
+
+	SimpleEffect m_speed, m_LPF, m_HPF;
+	std::vector<SimpleEffect*> m_simpleEffects;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

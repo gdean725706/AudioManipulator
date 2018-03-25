@@ -85,6 +85,11 @@ public:
 		m_active = active;
 	}
 
+	bool getActive()
+	{
+		return m_active;
+	}
+
 	EffectType getType()
 	{
 		return m_effectType;

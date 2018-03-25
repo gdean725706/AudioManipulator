@@ -51,13 +51,13 @@ public:
 		m_slider1->addListener(this);
 		m_slider2->addListener(this);
 		// Add and make visible
-		addAndMakeVisible(m_slider1);
-		addAndMakeVisible(m_slider2);
+		//addAndMakeVisible(m_slider1);
+		//addAndMakeVisible(m_slider2);
 		addAndMakeVisible(m_XYPad);
 
 		// Add to flex
-		items.add(m_slider1->withMargin(3));
-		items.add(m_slider2->withMargin(3));
+		//items.add(m_slider1->withMargin(3));
+		//items.add(m_slider2->withMargin(3));
 		items.add(m_XYPad->withMargin(3));
 
 		// Set up order

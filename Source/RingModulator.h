@@ -20,7 +20,8 @@ public:
 	RingModulator(AudioProcessor* processor) :
 		EffectBase(processor),
 		m_sineOscillator(512),
-		m_phasor(44100.0f, 1000)
+		m_phasor(44100.0f, 1000),
+		m_phase(0)
 
 	{
 		
@@ -39,6 +40,7 @@ public:
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override
 	{
+		m_sineOscillator.setSampleRate(sampleRate);
 		m_phasor.setSampleRate(sampleRate);
 	}
 
@@ -57,18 +59,21 @@ public:
 		const float depth = *m_modDepth;
 		const float speed = *m_modFrequency;
 
-		m_phasor.setFrequency(speed * m_sineOscillator.getSize());
+		m_phasor.setFrequency(speed);
 
-		const float osc = m_sineOscillator.getSample(m_phasor.getPhase() * m_sineOscillator.getSize());
+		float osc = 0.0f;
 
 		for (int i = 0; i < buffer.getNumSamples(); ++i)
 		{
-			//leftChannel[i] = (osc * 0.5f);
+
+			osc = m_sineOscillator.getSample(m_phasor.getPhase() * m_sineOscillator.getSize());
 			leftChannel[i] *= (osc * (depth / 100));
 			rightChannel[i] *= (osc * (depth / 100));
 			m_phasor.tick();
-		}
 
+			m_phase++;
+
+		}
 
 	}
 
@@ -86,4 +91,5 @@ private:
 	AudioParameterFloat* m_modFrequency, *m_modDepth;
 	Wavetable m_sineOscillator;
 	Phasor m_phasor;
+	float m_phase;
 };

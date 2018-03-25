@@ -21,7 +21,7 @@ class Flanger : public EffectBase
 {
 private:
 	double m_sampleRate;
-	AudioParameterFloat* m_feedback, *m_depth, *m_frequency;
+	AudioParameterFloat* m_feedback, *m_depth, *m_frequency, *m_offset;
 	DelayUnit m_leftDelay, m_rightDelay;
 	float m_phase;
 

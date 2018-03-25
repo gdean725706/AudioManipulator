@@ -18,7 +18,7 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	m_controlsContainer = new ControlContainerComponent(&p, 0);
 
 	// Create effect button container
-	m_effectButtonContainer = new EffectButtonContainerComponent(&p);
+	m_effectButtonContainer = new EffectButtonContainerComponent(&p, 0);
 
 	m_bottomContainer = new BottomContainer(&p);
 

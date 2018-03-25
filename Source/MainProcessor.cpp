@@ -40,6 +40,17 @@ MainAudioProcessor::MainAudioProcessor()
 	// Initialise IIR Filter
 	m_testFilter = new IIRFilter();
 
+	m_speed.active = false;
+	m_speed.type = FXType::Speed;
+	m_LPF.active = false;
+	m_LPF.type = FXType::LowPassFilter;
+	m_HPF.active = false;
+	m_HPF.type = FXType::HighPassFilter;
+
+	m_simpleEffects.push_back(&m_speed);
+	m_simpleEffects.push_back(&m_LPF);
+	m_simpleEffects.push_back(&m_HPF);
+
 	////Specify number of audio i/o channels
 	//setAudioChannels(2, 2);
 }
@@ -178,7 +189,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	const double res = scaleRange(m_padY, 0.0f, 1.0f, 0.5f, 2.0f) + 0.0001f;
 
 	//set up phasor speed playback control
-	if (m_currentEffect == FXType::Speed)
+	if (m_speed.active)
 	{
 		for (int i = 0; i < 3; ++i)
 		{
@@ -192,19 +203,15 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	IIRCoefficients ic;
 	bool filterEnabled = false;
 	// Get currently selected filter and set up
-	FXType currentEffect =  m_currentEffect;
-	switch (currentEffect)
+	if (m_LPF.active)
 	{
-	case FXType::LowPassFilter:
 		ic = IIRCoefficients::makeLowPass(m_sampleRate, freq, res);
 		filterEnabled = true;
-		break;
-	case FXType::HighPassFilter:
+	}
+	else if (m_HPF.active)
+	{
 		ic = IIRCoefficients::makeHighPass(m_sampleRate, freq, res);
 		filterEnabled = true;
-		break;
-	default:
-		filterEnabled = false;
 	}
 
 	if (filterEnabled)
@@ -253,7 +260,9 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 
 	}
 
-	if (currentEffect == FXType::Delay)
+	m_effectChain1.process(buffer, midiMessages);
+
+	/*if (currentEffect == FXType::Delay)
 	{
 		m_effectChain1.processDelay(buffer, midiMessages);
 	}
@@ -268,7 +277,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	else if (currentEffect == FXType::RingMod)
 	{
 		m_effectChain1.processRingMod(buffer, midiMessages);
-	}
+	}*/
 
 }
 
@@ -378,6 +387,15 @@ void MainAudioProcessor::stopRecording(int index)
 void MainAudioProcessor::registerParameter(AudioProcessorParameter* parameter)
 {
 	addParameter(parameter);
+}
+
+void MainAudioProcessor::setSimpleEffectState(EffectBase::EffectType effect, bool active)
+{
+	for (int i = 0; i < m_simpleEffects.size(); ++i)
+	{
+		if (m_simpleEffects[i]->type == effect)
+			m_simpleEffects[i]->active = active;
+	}
 }
 
 

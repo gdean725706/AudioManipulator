@@ -98,6 +98,7 @@ public:
 
 	float getSample(float index)
 	{
+
 		if (index == (float)index)
 		{
 			double p = index;
@@ -107,7 +108,7 @@ public:
 		}
 		else
 		{
-			return cubicLookup(index);
+			return linearLookup(index);
 		}
 	}
 
@@ -189,18 +190,12 @@ public:
 
 	void fillSine(int length = 512, float frequency = 1)
 	{
-		clearBuffer();
-		m_audioBuffer.resize(length);
-
-		int size = m_audioBuffer.size() - 1;
-
-		for (int n = 0; n < size; ++n)
+		double f = 2.0 * double_Pi / (m_audioBuffer.size() - 1);
+		for (int i = 0; i < m_audioBuffer.size(); ++i)
 		{
-			m_audioBuffer[n] = sinf((6.28318530718 * n * frequency) / size);
+			m_audioBuffer[i] = sin(i * f);
 		}
-
-
-		m_filled = true;
+		m_audioBuffer.at(m_audioBuffer.size() - 1) = m_audioBuffer.at(0);
 	}
 
 private:

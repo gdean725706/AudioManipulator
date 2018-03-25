@@ -21,7 +21,7 @@ class Phasor
 			m_phase -= 1.0f;
 		}
 
-		while (m_phase < 0)
+		while (m_phase < 0.0f)
 		{
 			m_phase += 1.0f;
 		}

@@ -20,6 +20,7 @@ T scaleRange(T input, T inputStart, T inputEnd, T outputStart, T outputEnd)
 	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
 }
 
+
 class EffectBase : public AudioProcessor
 {
 public:
@@ -67,8 +68,6 @@ public:
 			*m_parameterVector[m_xParameter] = (x);
 			*m_parameterVector[m_yParameter] = (y);
 		}
-
-		
 
 		m_xVal = x;
 		m_yVal = y;
@@ -149,15 +148,6 @@ public:
 	}
 	void setStateInformation(const void* data, int sizeInBytes) override
 	{
-	}
-
-	// push our audioprocessor parameters to the vector
-	void registerAudioParameters(const OwnedArray<AudioProcessorParameter>& params)
-	{
-		for (auto param : params)
-		{
-			m_parameterVector.push_back(dynamic_cast<AudioParameterFloat*>(param));
-		}
 	}
 
 	void registerParameter(AudioParameterFloat* param)
