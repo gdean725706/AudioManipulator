@@ -13,6 +13,7 @@
 MainContentComponent::MainContentComponent(MainAudioProcessor& p) 
 	: AudioProcessorEditor(&p), processor(p)
 {
+	processor.setMainComponent(this);
 
 	// Create controls container component
 	m_controlsContainer = new ControlContainerComponent(&p, 0);
@@ -90,6 +91,12 @@ void MainContentComponent::resized()
 
 }
 
+void MainContentComponent::mouseMove(const MouseEvent& evt)
+{
+	repaint();
+
+}
+
 // Callback for button clicked
 void MainContentComponent::buttonClicked(Button * button)
 {
@@ -97,8 +104,18 @@ void MainContentComponent::buttonClicked(Button * button)
 
 }
 
-void MainContentComponent::mouseMove(const MouseEvent& evt)
-{
-	repaint();
 
+EffectButtonContainerComponent* MainContentComponent::getEffectButtonContainer()
+{
+	return m_effectButtonContainer;
+}
+
+BottomContainer* MainContentComponent::getBottomContainer()
+{
+	return m_bottomContainer;
+}
+
+ControlContainerComponent* MainContentComponent::getControlContainer()
+{
+	return m_controlsContainer;
 }

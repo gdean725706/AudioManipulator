@@ -16,6 +16,7 @@
 #include <stack>
 #include "RecordingBuffer.h"
 
+class MainContentComponent;
 
 //==============================================================================
 /*
@@ -82,7 +83,9 @@ public:
 
 	void setSimpleEffectState(EffectBase::EffectType effect, bool active);
 
-	bool updated();
+	void setMainComponent(AudioProcessorEditor* editor);
+
+	AudioProcessorEditor* getMainComponent();
 
 private:
 
@@ -118,8 +121,8 @@ private:
 	SimpleEffect m_speed, m_LPF, m_HPF;
 	std::vector<SimpleEffect*> m_simpleEffects;
 
-	bool m_updateGUI;
-	float m_lastX, m_lastY;
+	// References to UI for XML updating
+	AudioProcessorEditor* m_editor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };

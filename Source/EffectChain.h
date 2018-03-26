@@ -107,11 +107,6 @@ public:
 		m_xVal = x;
 		m_yVal = y;
 	}
-
-	void updateXYGUI(float x, float y)
-	{
-
-	}
 	
 	void updateMapping(EffectBase* effect, int xMap, int yMap)
 	{

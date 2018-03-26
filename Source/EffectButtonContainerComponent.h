@@ -155,6 +155,11 @@ public:
 		return m_currentEffect;
 	}
 
+	std::vector<ScopedPointer<EffectButtonComponent>*> getButtons()
+	{
+		return m_effectButtons;
+	}
+
 private:
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,

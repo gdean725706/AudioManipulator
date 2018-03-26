@@ -33,10 +33,7 @@ MainAudioProcessor::MainAudioProcessor()
 	m_floatBuffer(44100 * 5),
 	m_bufferIndex(0),
 	m_savedBuffers(m_numberOfBuffers),
-	m_effectChain1(this),
-	m_updateGUI(false),
-	m_lastX(0),
-	m_lastY(0)
+	m_effectChain1(this)
 {
 
 	//m_effectChains.push_back(EffectChain());
@@ -309,6 +306,23 @@ void MainAudioProcessor::getStateInformation(MemoryBlock& destData)
 
 	int index = 0;
 
+	if (m_editor != nullptr)
+	{
+		auto* content = dynamic_cast<MainContentComponent*>(m_editor);
+
+		for (auto* button : content->getEffectButtonContainer()->getButtons())
+		{
+			String buttonName = (String)button->get()->getName().replaceCharacter(' ', '_');
+
+			xmlMain.addChildElement( new XmlElement( buttonName ) );
+			
+			xmlMain.getChildElement(index)->setAttribute("Active",(int)button->get()->getActive());
+
+			++index;
+		}
+	}
+
+
 	for (auto* effect : m_effectChain1.getAllEffects())
 	{
 		xmlMain.addChildElement(new XmlElement((String)"Effect_" + (String)effect->getType()));
@@ -342,7 +356,22 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 		{
 			
 			setXY(xmlState->getDoubleAttribute("PadX", m_padX), xmlState->getDoubleAttribute("PadY", m_padY));
-			m_effectChain1
+			
+			if (m_editor != nullptr)
+			{
+				auto* content = dynamic_cast<MainContentComponent*>(m_editor);
+
+				for (auto* button : content->getEffectButtonContainer()->getButtons())
+				{
+					String buttonName = (String)button->get()->getName().replaceCharacter(' ', '_');
+
+					bool state = xmlState->getChildByName(buttonName)->getBoolAttribute("Active");
+
+					button->get()->setActive(state);
+
+					++index;
+				}
+			}
 
 			for (auto* effect : m_effectChain1.getAllEffects())
 			{
@@ -353,6 +382,7 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 						*param = xmlState->getChildElement(index)->getDoubleAttribute((String)param->name.replaceCharacter(' ', '_'));
 					}
 				}
+				++index;
 			}
 		}
 	}
@@ -452,9 +482,14 @@ void MainAudioProcessor::setSimpleEffectState(EffectBase::EffectType effect, boo
 	}
 }
 
-bool MainAudioProcessor::updated()
+void MainAudioProcessor::setMainComponent(AudioProcessorEditor* editor)
 {
-	return m_updateGUI;
+	m_editor = editor;
+}
+
+AudioProcessorEditor* MainAudioProcessor::getMainComponent()
+{
+	return m_editor;
 }
 
 //==============================================================================

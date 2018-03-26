@@ -34,6 +34,10 @@ public:
 
 	void buttonClicked(Button* button) override;
 
+	EffectButtonContainerComponent* getEffectButtonContainer();
+	BottomContainer* getBottomContainer();
+	ControlContainerComponent* getControlContainer();
+
 private:
 
 	// Typedef for our enum containing all the FX types
