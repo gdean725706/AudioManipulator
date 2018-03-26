@@ -298,12 +298,63 @@ void MainAudioProcessor::getStateInformation(MemoryBlock& destData)
 	// You should use this method to store your parameters in the memory block.
 	// You could do that either as raw data, or use the XML or ValueTree classes
 	// as intermediaries to make it easy to save and load complex data.
+
+	XmlElement xmlMain("AM1_SETTINGS");
+
+	xmlMain.setAttribute("PadX", m_padX);
+	xmlMain.setAttribute("PadY", m_padY);
+
+	int index = 0;
+
+	for (auto* effect : m_effectChain1.getAllEffects())
+	{
+		xmlMain.addChildElement(new XmlElement((String)"Effect_" + (String)effect->getType()));
+
+		xmlMain.getChildElement(index)->setAttribute("Enabled", effect->isActive());
+
+		for (auto* param : effect->getAllParameters())
+		{
+			xmlMain.getChildElement(index)->setAttribute((String)param->name.replaceCharacter(' ', '_'), *param);
+		}
+
+		++index;
+
+	}
+
+	copyXmlToBinary(xmlMain, destData);
+
+
 }
 
 void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
 	// You should use this method to restore your parameters from this memory block,
 	// whose contents will have been created by the getStateInformation() call.
+
+	ScopedPointer<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+	int index = 0;
+	if (xmlState != nullptr)
+	{
+		if (xmlState->hasTagName("AM1_SETTINGS"))
+		{
+			m_padX = xmlState->getDoubleAttribute("PadX", m_padX);
+			m_padX = xmlState->getDoubleAttribute("PadY", m_padY);
+
+
+			for (auto* effect : m_effectChain1.getAllEffects())
+			{
+				if (xmlState->getChildElement(index)->hasTagName((String)"Effect_" + (String)effect->getType()))
+				{
+					for (auto* param : effect->getAllParameters())
+					{
+						*param = xmlState->getChildElement(index)->getDoubleAttribute((String)param->name.replaceCharacter(' ', '_'));
+					}
+				}
+			}
+		}
+	}
+
+	DBG("Loaded state successfully");
 }
 
 void MainAudioProcessor::playNote(int note)

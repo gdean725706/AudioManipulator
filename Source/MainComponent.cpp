@@ -33,15 +33,15 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	justifyContent = JustifyContent::center;
 
 	// Set window sizing constraints
-	setResizeLimits(648, 480, 1024, 768);
-	setSize(1024, 768);
+	setResizeLimits(640, 480, 1024, 768);
+	setSize(640, 480);
 
 	// Attach to OpenGL renderer to improve graphics performance
 	m_glContext.attachTo(*this);
 
 #if JUCE_ANDROID
     Desktop::getInstance().setScreenSaverEnabled(false);
-	//Desktop::getInstance().setOrientationsEnabled(4 | 8 );
+	Desktop::getInstance().setOrientationsEnabled(4 | 8 );
 	//Desktop::getInstance().setKioskModeComponent(this, false);
 #endif
 

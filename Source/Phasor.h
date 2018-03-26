@@ -12,7 +12,7 @@ Author:  George Dean
 
 class Phasor
 {
-	float m_phase, m_freq, m_delta, m_sampleRate;
+	float m_phase, m_freq, m_sampleRate, m_delta;
 
 	void clampPhase()
 	{

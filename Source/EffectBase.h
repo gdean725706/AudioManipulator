@@ -178,6 +178,11 @@ public:
 		m_processor = mainProcessor;
 	}
 
+	std::vector<AudioParameterFloat*> getAllParameters()
+	{
+		return m_parameterVector;
+	}
+
 private:
 
 	std::vector<AudioParameterFloat*> m_parameterVector;

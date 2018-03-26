@@ -113,6 +113,11 @@ public:
 		effect->setParameterMapping(xMap, yMap);
 	}
 
+	std::vector<EffectBase*> getAllEffects()
+	{
+		return m_effects;
+	}
+
 private:
 	typedef EffectBase::EffectType FXType;
 
