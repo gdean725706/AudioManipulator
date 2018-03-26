@@ -33,6 +33,7 @@
         <FILE id="lzU5JB" name="FlexSlider.h" compile="0" resource="0" file="Source/FlexSlider.h"/>
       </GROUP>
       <GROUP id="{71B1F06F-79FF-AC10-2049-9AE73604CA73}" name="Effects">
+        <FILE id="DE2tNf" name="Harmonizer.h" compile="0" resource="0" file="Source/Harmonizer.h"/>
         <FILE id="Do6p7O" name="RingModulator.h" compile="0" resource="0" file="Source/RingModulator.h"/>
         <FILE id="p7UrXk" name="Phasor.h" compile="1" resource="0" file="Source/Phasor.h"/>
         <FILE id="LaU9UO" name="PitchShifter.h" compile="0" resource="0" file="Source/PitchShifter.h"/>

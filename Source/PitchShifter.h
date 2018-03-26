@@ -28,13 +28,12 @@ public:
 		m_window(512),
 		m_phasor(44100.0f, 1.0f)
 	{
+		addParameter(m_frequency = new AudioParameterFloat("Frequency", "Frequency", -24, 24, 0));
+		registerParameter(m_frequency);
+		addParameter(m_dryMix = new AudioParameterFloat("DryMix", "DryMix", 0.0f, 1.0f, 0.0f));
+		registerParameter(m_dryMix);
 		// Hannng to ensure sum of overlapping windows is constant
 		m_window.fillHann();
-	}
-
-	~PitchShifter()
-	{
-
 	}
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override
@@ -71,8 +70,8 @@ public:
 			float window = m_window.getSample(phase * m_window.getSize());
 			float offsetWindow = m_window.getSample(offsetPhase * m_window.getSize());
 
-			leftChannel[i] += (leftDelay * window + invleftDelay * offsetWindow);
-			rightChannel[i] += (rightDelay * window + invrightDelay * offsetWindow);
+			leftChannel[i] = (leftDelay * window + invleftDelay * offsetWindow) + (leftChannel[i] * (float)*m_dryMix);
+			rightChannel[i] = (rightDelay * window + invrightDelay * offsetWindow) + (rightChannel[i] * (float)*m_dryMix);
 
 			m_phasor.tick();
 			m_leftDelay.tick();
@@ -80,10 +79,16 @@ public:
 		}
 	}
 
+	void setDryMix(float value)
+	{
+		*m_dryMix = value;
+	}
+
 	//http://msp.ucsd.edu/techniques/v0.11/book-html/node125.html
 	//http://www.katjaas.nl/pitchshift/pitchshift.html
 	void setFrequency(float frequency)
 	{
+		*m_frequency = frequency;
 		m_phasor.setFrequency((((pow(2.0f, frequency / 12.0f) - 1)*-1.0f)*m_transpose));
 	}
 
@@ -94,10 +99,12 @@ public:
 
 	EffectType getType() override
 	{
-		return EffectType::PitchShifter;
+		return EffectType::PitchShift;
 	}
 
 private:
+	AudioParameterFloat* m_frequency, *m_dryMix;
+
 	int m_transpose, m_delayTime;
 	DelayUnit m_leftDelay, m_rightDelay;
 	Wavetable m_window;

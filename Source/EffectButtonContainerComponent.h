@@ -35,8 +35,9 @@ public:
 		m_buttonChorus = new EffectButtonComponent(EffectType::Chorus, "Chorus");
 		m_buttonFlanger = new EffectButtonComponent(EffectType::Flanger, "Flanger");
 		m_buttonPlaybackSpeed = new EffectButtonComponent(EffectType::Speed, "Speed");
-		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShifter, "Pitch Shift");
+		m_buttonPitchShifter = new EffectButtonComponent(EffectType::PitchShift, "Pitch Shift");
 		m_buttonRingMod = new EffectButtonComponent(EffectType::RingMod, "Ring Mod");
+		m_buttonHarmonizer = new EffectButtonComponent(EffectType::Harmonizer, "Harmonizer");
 
 		m_effectButtons.push_back(&m_buttonLPF);
 		m_effectButtons.push_back(&m_buttonHPF);
@@ -46,6 +47,7 @@ public:
 		m_effectButtons.push_back(&m_buttonPlaybackSpeed);
 		m_effectButtons.push_back(&m_buttonPitchShifter);
 		m_effectButtons.push_back(&m_buttonRingMod);
+		m_effectButtons.push_back(&m_buttonHarmonizer);
 
 		// LPF init state on
 		m_buttonLPF->setActive(true);
@@ -59,6 +61,7 @@ public:
 		addAndMakeVisible(m_buttonPlaybackSpeed);
 		addAndMakeVisible(m_buttonPitchShifter);
 		addAndMakeVisible(m_buttonRingMod);
+		addAndMakeVisible(m_buttonHarmonizer);
 
 		//Add to flexbox
 		items.add(m_buttonLPF->withMargin(3));
@@ -69,6 +72,7 @@ public:
 		items.add(m_buttonPlaybackSpeed->withMargin(3));
 		items.add(m_buttonPitchShifter->withMargin(3));
 		items.add(m_buttonRingMod->withMargin(3));
+		items.add(m_buttonHarmonizer->withMargin(3));
 
 		//
 		m_buttonLPF->addListener(this);
@@ -79,6 +83,7 @@ public:
 		m_buttonPlaybackSpeed->addListener(this);
 		m_buttonPitchShifter->addListener(this);
 		m_buttonRingMod->addListener(this);
+		m_buttonHarmonizer->addListener(this);
 
         // Set up flexbox
 	    flexDirection = Direction::row;
@@ -104,8 +109,8 @@ public:
 
         g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId).brighter());   // clear the background
 
-        g.setColour (Colours::transparentWhite);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+        //g.setColour (Colours::transparentWhite);
+        //g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
         //g.setColour (Colours::white);
         //g.setFont (14.0f);
@@ -140,7 +145,7 @@ public:
 		//m_buttonChorus->setActive(m_currentEffect == EffectType::Chorus);
 		//m_buttonFlanger->setActive(m_currentEffect == EffectType::Flanger);
 		//m_buttonPlaybackSpeed->setActive(m_currentEffect == EffectType::Speed);
-		//m_buttonPitchShifter->setActive(m_currentEffect == EffectType::PitchShifter);
+		//m_buttonPitchShifter->setActive(m_currentEffect == EffectType::PitchShift);
 		//m_buttonRingMod->setActive(m_currentEffect == EffectType::RingMod);
 
 		// Update AudioProcessor
@@ -163,7 +168,7 @@ public:
 private:
 	typedef ScopedPointer<EffectButtonComponent> FlexButtonPtr;
 	FlexButtonPtr m_buttonLPF, m_buttonHPF, m_buttonDelay, m_buttonChorus, m_buttonFlanger,
-		m_buttonPlaybackSpeed, m_buttonPitchShifter, m_buttonRingMod;
+		m_buttonPlaybackSpeed, m_buttonPitchShifter, m_buttonRingMod, m_buttonHarmonizer;
 	std::vector<FlexButtonPtr*> m_effectButtons;
 	typedef EffectBase::EffectType EffectType;
 	EffectType m_currentEffect;

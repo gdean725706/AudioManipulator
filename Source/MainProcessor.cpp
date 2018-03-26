@@ -30,7 +30,7 @@ MainAudioProcessor::MainAudioProcessor()
 	m_numberOfBuffers(3),
 	m_writingToBuffer(false),
 	m_samplesWritten(0),
-	m_floatBuffer(44100 * 5),
+	m_floatBuffer(44100 * 10),
 	m_bufferIndex(0),
 	m_savedBuffers(m_numberOfBuffers),
 	m_effectChain1(this)
@@ -128,7 +128,7 @@ void MainAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 	// initialisation that you need..
 	m_sampleRate = sampleRate;
 
-	m_floatBuffer.resize(sampleRate * 5);
+	m_floatBuffer.reserve(sampleRate * 10);
 
 	m_effectChain1.prepareToPlay(sampleRate, samplesPerBlock);
 
@@ -234,7 +234,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 				// Prevent overflow of 5 second buffer
 				// TODO: way to link this to UI component to sync button state
 				// and stoprecording() method
-				if (m_samplesWritten <= m_sampleRate * 5)
+				if (m_samplesWritten <= m_floatBuffer.size())
 				{
 					m_floatBuffer.push_back(inBuffer[sample]);
 					m_samplesWritten++;
@@ -270,7 +270,7 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 	{
 		m_effectChain1.processFlanger(buffer, midiMessages);
 	}
-	else if (currentEffect == FXType::PitchShifter)
+	else if (currentEffect == FXType::PitchShift)
 	{
 		m_effectChain1.processPitchShifter(buffer, midiMessages);
 	}
@@ -304,43 +304,39 @@ void MainAudioProcessor::getStateInformation(MemoryBlock& destData)
 	xmlMain.setAttribute("PadX", m_padX);
 	xmlMain.setAttribute("PadY", m_padY);
 
+	// Track node position
 	int index = 0;
 
+	// Button States
 	if (m_editor != nullptr)
 	{
 		auto* content = dynamic_cast<MainContentComponent*>(m_editor);
 
 		for (auto* button : content->getEffectButtonContainer()->getButtons())
 		{
+			// Use button name as tag name, replacing spaces with underscores
 			String buttonName = (String)button->get()->getName().replaceCharacter(' ', '_');
-
 			xmlMain.addChildElement( new XmlElement( buttonName ) );
-			
 			xmlMain.getChildElement(index)->setAttribute("Active",(int)button->get()->getActive());
 
 			++index;
 		}
 	}
 
-
+	// DSP Effect States
 	for (auto* effect : m_effectChain1.getAllEffects())
 	{
 		xmlMain.addChildElement(new XmlElement((String)"Effect_" + (String)effect->getType()));
-
 		xmlMain.getChildElement(index)->setAttribute("Enabled", effect->isActive());
 
 		for (auto* param : effect->getAllParameters())
 		{
 			xmlMain.getChildElement(index)->setAttribute((String)param->name.replaceCharacter(' ', '_'), *param);
 		}
-
 		++index;
-
 	}
 
 	copyXmlToBinary(xmlMain, destData);
-
-
 }
 
 void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
@@ -354,19 +350,14 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 	{
 		if (xmlState->hasTagName("AM1_SETTINGS"))
 		{
-			
 			setXY(xmlState->getDoubleAttribute("PadX", m_padX), xmlState->getDoubleAttribute("PadY", m_padY));
-			
 			if (m_editor != nullptr)
 			{
 				auto* content = dynamic_cast<MainContentComponent*>(m_editor);
-
 				for (auto* button : content->getEffectButtonContainer()->getButtons())
 				{
 					String buttonName = (String)button->get()->getName().replaceCharacter(' ', '_');
-
 					bool state = xmlState->getChildByName(buttonName)->getBoolAttribute("Active");
-
 					button->get()->setActive(state);
 
 					++index;
