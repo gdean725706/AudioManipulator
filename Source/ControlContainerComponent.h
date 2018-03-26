@@ -204,6 +204,13 @@ public:
 		}
 	}
 
+	// Forces XY to update.
+	// x and y must be normalised values (0.0-1.0)
+	void updateXYGUI(float x, float y)
+	{
+		m_XYPad->forceXYUpdate(x, y);
+	}
+
 private:
 	void toggleRecordButton(Button* button, int index)
 	{

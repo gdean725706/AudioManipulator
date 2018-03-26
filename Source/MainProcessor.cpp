@@ -33,7 +33,10 @@ MainAudioProcessor::MainAudioProcessor()
 	m_floatBuffer(44100 * 5),
 	m_bufferIndex(0),
 	m_savedBuffers(m_numberOfBuffers),
-	m_effectChain1(this)
+	m_effectChain1(this),
+	m_updateGUI(false),
+	m_lastX(0),
+	m_lastY(0)
 {
 
 	//m_effectChains.push_back(EffectChain());
@@ -337,9 +340,9 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 	{
 		if (xmlState->hasTagName("AM1_SETTINGS"))
 		{
-			m_padX = xmlState->getDoubleAttribute("PadX", m_padX);
-			m_padX = xmlState->getDoubleAttribute("PadY", m_padY);
-
+			
+			setXY(xmlState->getDoubleAttribute("PadX", m_padX), xmlState->getDoubleAttribute("PadY", m_padY));
+			m_effectChain1
 
 			for (auto* effect : m_effectChain1.getAllEffects())
 			{
@@ -449,6 +452,10 @@ void MainAudioProcessor::setSimpleEffectState(EffectBase::EffectType effect, boo
 	}
 }
 
+bool MainAudioProcessor::updated()
+{
+	return m_updateGUI;
+}
 
 //==============================================================================
 // This creates new instances of the plugin..

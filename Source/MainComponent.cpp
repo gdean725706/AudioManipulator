@@ -100,4 +100,5 @@ void MainContentComponent::buttonClicked(Button * button)
 void MainContentComponent::mouseMove(const MouseEvent& evt)
 {
 	repaint();
+
 }

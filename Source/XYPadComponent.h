@@ -153,36 +153,7 @@ static enum InterpolationMode
 		repaint();		
 	}
 
-	void updateXYPoints()
-	{
-		int x = 0, y = 0;
-
-		if (m_playback)
-		{
-			x = m_playbackX;
-			y = m_playbackY;
-		}
-		else
-		{
-			// get mouse point relative to this component
-			auto mousePoint = this->getMouseXYRelative();
-			x = mousePoint.x;
-			y = mousePoint.y;
-		}
-
-		// Clamp values for safety so we can't exceed bounds of component
-		m_pointX = clamp(x, m_width, 0.0);
-		m_pointY = clamp(y, m_height, 0.0);
-
-		// Update normalised values
-		m_normalX = getXValueNormalised();
-		m_normalY = getYValueNormalised();
-		
-		// Pass back normalised values to processors
-		m_linkedEffectChain->setXY(m_normalX, m_normalY);
-		m_processor->setXY(m_normalX, m_normalY);
 	
-	}
 
 	// Update string containing mouse XY values
 	void updateMouseXYText()
@@ -291,8 +262,46 @@ static enum InterpolationMode
 		return m_currentInterpolationMode;
 	}
 
+	void forceXYUpdate(float x, float y)
+	{
+		m_pointX = x * m_width;
+		m_pointY = (1-y) * m_height;
+	}
 
 private:
+
+	void updateXYPoints()
+	{
+		int x = 0, y = 0;
+
+		if (m_playback)
+		{
+			x = m_playbackX;
+			y = m_playbackY;
+		}
+		else
+		{
+			// get mouse point relative to this component
+			auto mousePoint = this->getMouseXYRelative();
+			x = mousePoint.x;
+			y = mousePoint.y;
+		}
+
+		// Clamp values for safety so we can't exceed bounds of component
+		m_pointX = clamp(x, m_width, 0.0);
+		m_pointY = clamp(y, m_height, 0.0);
+
+		// Update normalised values
+		m_normalX = getXValueNormalised();
+		m_normalY = getYValueNormalised();
+
+		// Pass back normalised values to processors
+		m_linkedEffectChain->setXY(m_normalX, m_normalY);
+		m_processor->setXY(m_normalX, m_normalY);
+
+	}
+
+
 	Colour m_colour;
 
 	int m_width, m_height;

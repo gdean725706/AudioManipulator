@@ -82,6 +82,8 @@ public:
 
 	void setSimpleEffectState(EffectBase::EffectType effect, bool active);
 
+	bool updated();
+
 private:
 
 	// Typedef for our enum containing all the FX types
@@ -115,6 +117,9 @@ private:
 
 	SimpleEffect m_speed, m_LPF, m_HPF;
 	std::vector<SimpleEffect*> m_simpleEffects;
+
+	bool m_updateGUI;
+	float m_lastX, m_lastY;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAudioProcessor)
 };
