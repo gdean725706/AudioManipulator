@@ -214,9 +214,13 @@ private:
 		{
 		case SlotState::Empty:
 		{
-			m_XYPad->startRecordingPoints(index);
-			flexBtn->updateBaseColour(Colours::red);
-			m_buttonStates[index] = SlotState::Recording;
+			if (!m_writingPoints && !m_readingPoints)
+			{
+				m_XYPad->startRecordingPoints(index);
+				flexBtn->updateBaseColour(Colours::red);
+				m_buttonStates[index] = SlotState::Recording;
+				m_writingPoints = true;
+			}
 			break;
 		}
 		case SlotState::Recording:
@@ -224,6 +228,7 @@ private:
 			m_XYPad->stopRecordingPoints(index);
 			flexBtn->updateBaseColour(Colours::green);
 			m_buttonStates[index] = SlotState::Ready;
+			m_writingPoints = false;
 			break;
 		}
 		case SlotState::Ready:
@@ -231,6 +236,7 @@ private:
 			m_XYPad->startPointPlayback(index);
 			flexBtn->updateBaseColour(Colours::lightgreen);
 			m_buttonStates[index] = SlotState::Playback;
+			m_readingPoints = true;
 			break;
 		}
 		case SlotState::Playback:
@@ -238,6 +244,7 @@ private:
 			m_XYPad->stopPointPlayback(index);
 			flexBtn->updateBaseColour(Colours::green);
 			m_buttonStates[index] = SlotState::Ready;
+			m_readingPoints = false;
 			break;
 		}
 		case SlotState::Deleting:

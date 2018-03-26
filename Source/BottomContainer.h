@@ -23,12 +23,13 @@ class BottomContainer    : public FlexContainer, public ButtonListener
 {
 public:
     BottomContainer(MainAudioProcessor *p):
-		m_processor(p)
+		m_processor(p),
+		m_recording(false),
+		m_playback(false)
     {
 		for (int i = 0; i < 3; ++i)
 		{
 			m_buttonStates[i] = SlotState::Empty;
-			m_writing[i] = false;
 			m_recordButtons[i] = new FlexButtonComponent("RecordAudio" + i, 100, 50);
 			m_recordButtons[i]->addListener(this);
 			addAndMakeVisible(m_recordButtons[i]);
@@ -110,9 +111,13 @@ private:
 		// Clicked while empty. Start recording and set state
 		case SlotState::Empty:
 		{
-			m_processor->startRecording(index);
-			flexBtn->updateBaseColour(Colours::red);
-			m_buttonStates[index] = SlotState::Recording;
+			if (!m_recording && !m_playback)
+			{
+				m_processor->startRecording(index);
+				flexBtn->updateBaseColour(Colours::red);
+				m_buttonStates[index] = SlotState::Recording;
+				m_recording = true;
+			}
 			break;
 		}
 		// Clicked while recording, stop recording and set state
@@ -121,6 +126,7 @@ private:
 			m_processor->stopRecording(index);
 			flexBtn->updateBaseColour(Colours::green);
 			m_buttonStates[index] = SlotState::Ready;
+			m_recording = false;
 			break;
 		}
 		// Clicked while ready, start playback and set state
@@ -129,6 +135,7 @@ private:
 			m_processor->startPlayback(index);
 			flexBtn->updateBaseColour(Colours::lightgreen);
 			m_buttonStates[index] = SlotState::Playback;
+			m_playback = true;
 			break;
 		}
 		// Clicked while playing back, stop playback and set state
@@ -137,6 +144,7 @@ private:
 			m_processor->stopPlayback(index);
 			flexBtn->updateBaseColour(Colours::green);
 			m_buttonStates[index] = SlotState::Ready;
+			m_playback = false;
 			break;
 		}
 		case SlotState::Deleting:
@@ -155,7 +163,7 @@ private:
 	typedef ScopedPointer<FlexButtonComponent> FlexButtonPtr;
 	
 	FlexButtonPtr m_recordButtons[3];
-	bool m_writing[3];
+	bool m_recording, m_playback;
 	enum SlotState
 	{
 		Empty,
