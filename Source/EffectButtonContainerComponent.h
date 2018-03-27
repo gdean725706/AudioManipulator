@@ -49,9 +49,6 @@ public:
 		m_effectButtons.push_back(&m_buttonRingMod);
 		m_effectButtons.push_back(&m_buttonHarmonizer);
 
-		// LPF init state on
-		m_buttonLPF->setActive(true);
-
 		// Make visible
 		addAndMakeVisible(m_buttonLPF);
 		addAndMakeVisible(m_buttonHPF);

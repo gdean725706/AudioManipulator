@@ -85,6 +85,9 @@ public:
 			m_ptrContainers.push_back(&m_modContainers[i]);
 		}
 
+		m_modContainers.at(1)->setLFOMaxRate(35.0f);
+		m_modContainers.back()->setLFOMaxRate(80.0f);
+
 		// Right container
 		m_rightContainer = new FlexContainer();
 		addAndMakeVisible(m_rightContainer);
@@ -179,14 +182,14 @@ public:
 		// Call flexbox performlayout method to arrange flex items
 		auto bounds = getLocalBounds();
 
-		int rightContainerWidth = getWidth() * 0.25f;
+		int rightContainerWidth = getWidth() * 0.225f;
 		m_rightContainer->setBounds(bounds.removeFromRight(rightContainerWidth).reduced(3));
 		m_rightContainer->width = rightContainerWidth;
 
 		int buttonWidth = m_rightContainer->getWidth() * 0.9f;
 		int rightContainerHeight = m_rightContainer->getHeight();
 
-		int leftContainerWidth = getWidth() * 0.15f;
+		int leftContainerWidth = getWidth() * 0.175f;
 		m_leftContainer->setBounds(bounds.removeFromLeft(leftContainerWidth).reduced(3));
 		m_leftContainer->width = leftContainerWidth;
 

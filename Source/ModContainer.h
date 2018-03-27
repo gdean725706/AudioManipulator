@@ -21,9 +21,10 @@
 class ModContainer    : public FlexContainer, public Slider::Listener
 {
 public:
-    ModContainer(XYPadComponent* xy, int id):
+    ModContainer(XYPadComponent* xy, int id, float lfoMaxRate = 10.0f):
 		m_XYPad(xy),
-		m_id(id)
+		m_id(id),
+		m_lfoMaxRate(lfoMaxRate)
     {
 		m_sliders.reserve(3);
 		setName("modContainer_" + (String)m_id);
@@ -32,30 +33,31 @@ public:
 		flexGrow = 1.0f;
 		flexShrink = 1.0f;
 
-		m_LFORateSlider = new FlexSlider("LFORateSlider" + (String)id, 30, 55);
-		m_ampXSlider = new FlexSlider("AmpXSlider" + (String)id, 30, 55);
-		m_ampYSlider = new FlexSlider("AmpYSlider" + (String)id, 30, 55);
+		m_LFORateSlider = new FlexSlider("LFORateSlider" + (String)id, 57, 57);
+		m_ampXSlider = new FlexSlider("AmpXSlider" + (String)id, 52, 52);
+		m_ampYSlider = new FlexSlider("AmpYSlider" + (String)id, 52 ,52);
 
 		m_sliders.push_back(m_LFORateSlider);
 		m_sliders.push_back(m_ampXSlider);
 		m_sliders.push_back(m_ampYSlider);
 
+
 		m_LFORateSlider->flexGrow = 2.0f;
-		m_LFORateSlider->flexShrink = 1.0f;
+		m_LFORateSlider->flexShrink = 2.0f;
 		m_ampXSlider->flexGrow = 1.0f;
 		m_ampXSlider->flexShrink = 1.0f;
 		m_ampYSlider->flexGrow = 1.0f;
 		m_ampYSlider->flexShrink = 1.0f;
 
-		m_LFORateSlider->setRange(0.0, 40.0, 0.2);
-		m_ampXSlider->setRange(0.0, 1.0, 0.02);
-		m_ampYSlider->setRange(0.0, 1.0, 0.02);
+		m_LFORateSlider->setRange(0.0, m_lfoMaxRate, 0.02);
+		m_ampXSlider->setRange(0.0, 1.0, 0.01);
+		m_ampYSlider->setRange(0.0, 1.0, 0.01);
 
 		m_LFORateSlider->setSliderStyle(Slider::RotaryVerticalDrag);
 		m_ampXSlider->setSliderStyle(Slider::RotaryVerticalDrag);
 		m_ampYSlider->setSliderStyle(Slider::RotaryVerticalDrag);
 
-		m_LFORateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 45, 15);
+		m_LFORateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 48, 15);
 		m_ampXSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow,true,40, 15);
 		m_ampYSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true,40, 15);
 
@@ -68,6 +70,7 @@ public:
 		m_LFORateSlider->addListener(this);
 		m_ampXSlider->addListener(this);
 		m_ampYSlider->addListener(this);
+
 
 		items.add(m_ampXSlider->withMargin(0));
 		items.add(m_ampYSlider->withMargin(0));
@@ -87,6 +90,12 @@ public:
 
     ~ModContainer()
     {
+	}
+
+	void setLFOMaxRate(float rate)
+	{
+		m_lfoMaxRate = rate;
+		m_LFORateSlider->setRange(0.0, m_lfoMaxRate, 0.2);
 	}
 
 	void sliderValueChanged(Slider* slider) override
@@ -143,5 +152,6 @@ private:
 	std::vector<FlexSlider*> m_sliders;
 	XYPadComponent* m_XYPad;
 	int m_id;
+	float m_lfoMaxRate;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModContainer)
 };

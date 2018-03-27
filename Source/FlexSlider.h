@@ -22,8 +22,8 @@ public:
 		Slider(name),
 		FlexItem(width, height)
     {
-		flexGrow = 0.1f;
-		flexShrink = 1.0f;
+		flexGrow = 0.1;
+		flexShrink = 0.5f;
 		associatedComponent = this;
     }
 

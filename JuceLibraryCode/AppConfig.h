@@ -70,7 +70,7 @@
 // juce_audio_devices flags:
 
 #ifndef    JUCE_ASIO
- //#define JUCE_ASIO 1
+ #define   JUCE_ASIO 1
 #endif
 
 #ifndef    JUCE_WASAPI
@@ -288,7 +288,7 @@
  #define JucePlugin_Build_Standalone       1
 #endif
 #ifndef  JucePlugin_Enable_IAA
- #define JucePlugin_Enable_IAA             0
+ #define JucePlugin_Enable_IAA             1
 #endif
 #ifndef  JucePlugin_Name
  #define JucePlugin_Name                   "Audio Manipulator"

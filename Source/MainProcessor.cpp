@@ -262,23 +262,6 @@ void MainAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 
 	m_effectChain1.process(buffer, midiMessages);
 
-	/*if (currentEffect == FXType::Delay)
-	{
-		m_effectChain1.processDelay(buffer, midiMessages);
-	}
-	else if (currentEffect == FXType::Flanger)
-	{
-		m_effectChain1.processFlanger(buffer, midiMessages);
-	}
-	else if (currentEffect == FXType::PitchShift)
-	{
-		m_effectChain1.processPitchShifter(buffer, midiMessages);
-	}
-	else if (currentEffect == FXType::RingMod)
-	{
-		m_effectChain1.processRingMod(buffer, midiMessages);
-	}*/
-
 }
 
 //==============================================================================
@@ -336,13 +319,18 @@ void MainAudioProcessor::getStateInformation(MemoryBlock& destData)
 	}
 
 	// DSP Effect States
+	// Iterate through all effects within the effect chain
 	for (auto* effect : m_effectChain1.getAllEffects())
 	{
+		// Create a child element per effect
 		xmlMain.addChildElement(new XmlElement((String)"Effect_" + (String)effect->getType()));
+		// Enabled attribute
 		xmlMain.getChildElement(index)->setAttribute("Enabled", effect->isActive());
 
+		// Find all the parameters within each effect
 		for (auto* param : effect->getAllParameters())
 		{
+			// Add attribute for each parameter to the effect element
 			xmlMain.getChildElement(index)->setAttribute((String)param->name.replaceCharacter(' ', '_'), *param);
 		}
 		++index;
@@ -365,8 +353,11 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 			setXY(xmlState->getDoubleAttribute("PadX", m_padX), xmlState->getDoubleAttribute("PadY", m_padY));
 			if (m_editor != nullptr)
 			{
+				// Get main component window
 				auto* content = dynamic_cast<MainContentComponent*>(m_editor);
+				// Update X-Y Pad
 				content->getControlContainer()->updateXYGUI(m_padX, m_padY);
+				// Iterate through all effect buttons and update with values from XML
 				for (auto* button : content->getEffectButtonContainer()->getButtons())
 				{
 					String buttonName = (String)button->get()->getName().replaceCharacter(' ', '_');
@@ -386,8 +377,6 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 					}
 				}
 			}
-
-
 
 			for (auto* effect : m_effectChain1.getAllEffects())
 			{

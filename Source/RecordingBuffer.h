@@ -216,22 +216,30 @@ private:
 		return lerp(m_audioBuffer[aIndex], m_audioBuffer[bIndex], r);
 	}
 
+	// Table lookup using cubic interpolation
 	template <typename T>
 	T cubicLookup(T index)
 	{
+		// Pull out remainder and base integer value from index
 		T lower, remainder;
 		remainder = modf(index, &lower);
+
+		// Get four discrete sample index points from low int value
 		T y0 = lower - 1;
 		T y1 = lower;
 		T y2 = lower + 1;
 		T y3 = lower + 2;
 
+		// Ensure all are within table range
 		rangeMap(y0);
 		rangeMap(y1);
 		rangeMap(y2);
 		rangeMap(y3);
 
+		// Pull out discrete samples from wavetable
 		T y0Val(m_audioBuffer[y0]), y1Val(m_audioBuffer[y1]), y2Val(m_audioBuffer[y2]), y3Val(m_audioBuffer[y3]);
+		
+		// Apply cubic interpolation
 		return cubicInterpolate(y0Val, y1Val, y2Val, y3Val, remainder);
 	}
 

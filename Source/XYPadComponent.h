@@ -75,7 +75,7 @@ public:
 //==============================================================================
 /*
 */
-class XYPadComponent    : public Component, public FlexItem, public Timer
+class XYPadComponent    : public AnimatedAppComponent, public FlexItem
 {
 public:
 
@@ -106,11 +106,12 @@ static enum InterpolationMode
 		m_lfoMod(true),
 		m_lfoAmpX(3),
 		m_lfoAmpY(3),
-		m_LFOs(3)
+		m_LFOs(3),
+		m_trail(30),
+		m_trailIndex(0)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
-
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -142,12 +143,67 @@ static enum InterpolationMode
 		m_normalY = 0;
 		m_playback = false;
 
-		startTimerHz(timer_rate_Hz);
+		setFramesPerSecond(60);
     }
 
     ~XYPadComponent()
     {
     }
+
+	void update() override
+	{
+
+		if (m_playback)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				if (m_savedBuffersX[i].isActive() == true)
+				{
+					if (m_currentInterpolationMode == InterpolationMode::Cubic)
+						m_playbackX = m_savedBuffersX[i].getNextSampleCubic();
+					else
+						m_playbackX = m_savedBuffersX[i].getNextSampleLinear();
+				}
+
+				if (m_savedBuffersY[i].isActive() == true)
+				{
+					if (m_currentInterpolationMode == InterpolationMode::Cubic)
+						m_playbackY = m_savedBuffersY[i].getNextSampleCubic();
+					else
+						m_playbackY = m_savedBuffersY[i].getNextSampleLinear();
+				}
+			}
+
+			updateXYPoints();
+			repaint();
+
+		}
+		else if (m_writingToBuffer)
+		{
+			m_bufferX.push_back(m_lastX);
+			m_bufferY.push_back(m_lastY);
+			m_pointsSaved++;
+		}
+
+		int lfosActive = 0;
+		for (int i = 0; i < 3; ++i)
+		{
+			if (m_LFOs[i].isActive())
+			{
+				lfosActive += 1;
+			}
+		}
+		if (lfosActive != 0)
+		{
+			modifyXY();
+
+		}
+
+		// Trail
+		m_trailIndex %= m_trail.size();
+		m_trail[m_trailIndex].setXY(m_pointX, m_pointY);
+		m_trailIndex++;
+	}
 
 	// Getters for X & Y values
 	// Return value normalised to a specified range
@@ -191,14 +247,32 @@ static enum InterpolationMode
 		// Vertical line
 		g.drawRect(0, m_pointY, this->getWidth(), 2, 1);
 
+		// Draw trail
+		g.setColour(Colours::aliceblue);
+		//const int trailLength = m_trail.size();
+		//Path trailPath;
+
+		//for (int i = 0; i < trailLength; ++i)
+		//{
+		//	Point<float> p = m_trail[i];
+		//	//Point<float> p(m_pointX + i *radius * std::sin(getFrameCounter() * 0.02f + i) , m_pointY + i *radius * std::cos(getFrameCounter() * 0.02f + i));
+
+		//	//g.fillEllipse(p.x - i, p.y - i, 1.0f + 1.0f * i, 1.0f + 1.0f * i);
+
+		//	if (i == 0)
+		//		trailPath.startNewSubPath(p);
+		//	else
+		//		trailPath.lineTo(p);
+		//}
+
+		//g.strokePath(trailPath, PathStrokeType(4.0f));
+		//g.setColour(getLookAndFeel().findColour(Slider::backgroundColourId));
+		//g.fillPath(trailPath);
+
         g.setColour (Colours::white);
         g.setFont (14.0f);
         g.drawText (m_currentXY, getLocalBounds(),
-                    Justification::centred, true);   // draw some placeholder text
-		//String points;
-		//points << m_pointsSaved;
-		//g.drawText(points, getLocalBounds().removeFromLeft(50),
-		//	Justification::centred, true);   // debug points saved
+                    Justification::centred, true);
    
 	}
 
@@ -249,7 +323,6 @@ static enum InterpolationMode
 			m_bufferX.clear();
 			m_bufferY.clear();
 			m_writingToBuffer = true;
-			startTimerHz(timer_rate_Hz);
 		}
 	}
 
@@ -291,54 +364,6 @@ static enum InterpolationMode
 		}
 	}
 
-	void timerCallback() override
-	{
-		if (m_playback)
-		{
-			for (int i = 0; i < 3; ++i)
-			{
-				if (m_savedBuffersX[i].isActive() == true)
-				{
-					if (m_currentInterpolationMode == InterpolationMode::Cubic)
-						m_playbackX = m_savedBuffersX[i].getNextSampleCubic();
-					else
-						m_playbackX = m_savedBuffersX[i].getNextSampleLinear();
-				}
-
-				if (m_savedBuffersY[i].isActive() == true)
-				{
-					if (m_currentInterpolationMode == InterpolationMode::Cubic)
-						m_playbackY = m_savedBuffersY[i].getNextSampleCubic();
-					else
-						m_playbackY = m_savedBuffersY[i].getNextSampleLinear();
-				}
-			}
-
-			updateXYPoints();
-			repaint();
-
-		}
-		else if (m_writingToBuffer)
-		{
-			m_bufferX.push_back(m_pointX);
-			m_bufferY.push_back(m_pointY);
-			m_pointsSaved++;
-		}
-
-		int lfosActive = 0;
-		for (int i = 0; i < 3; ++i)
-		{
-			if (m_LFOs[i].isActive())
-			{
-				lfosActive += 1;
-			}
-		}
-		if (lfosActive != 0)
-		{
-			modifyXY();
-
-		}
-	}
 
 	void setInterpolationMode(InterpolationMode mode)
 	{
@@ -363,7 +388,6 @@ static enum InterpolationMode
 
 	void setLfoAmplitude(float amplitude, int index, int axis)
 	{
-		index = clamp(index, 0, 3);
 		if (axis == 0)
 		{
 			m_lfoAmpX[index] = amplitude;
@@ -380,7 +404,6 @@ static enum InterpolationMode
 
 	void setLfoFrequency(float frequency, int index)
 	{
-		index = clamp(index, 0, 3);
 
 		m_LFOs[index].setFrequency(frequency);
 
@@ -453,6 +476,8 @@ private:
 					m_LFOs[i].tick();
 				}
 			}
+			DBG(totalPointsX);
+			DBG(totalPointsY);
 
 			m_pointX = m_lastX + totalPointsX;
 			m_pointY = m_lastY + totalPointsY;
@@ -499,6 +524,10 @@ private:
 	bool m_lfoMod;
 	std::vector<float> m_lfoAmpX, m_lfoAmpY;
 	std::vector<LFO> m_LFOs;
+
+
+	std::vector<Point<float>> m_trail;
+	int m_trailIndex;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XYPadComponent)
 };

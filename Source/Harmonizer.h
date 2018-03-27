@@ -29,7 +29,7 @@ public:
 		registerParameter(m_harmony2Pitch);
 
 		m_harmony1.setDryMix(1.0f);
-		m_harmony2.setDryMix(1.0f);
+		m_harmony2.setDryMix(0.0f);
 	}
 
 	void prepareToPlay(double sampleRate, int maxExpectedSamplesPerBlock) override
@@ -46,8 +46,18 @@ public:
 
 	void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override
 	{
+		float* leftChannel = buffer.getWritePointer(0, 0);
+		float* rightChannel = buffer.getWritePointer(1, 0);
+
 		m_harmony1.processBlock(buffer, midiMessages);
 		m_harmony2.processBlock(buffer, midiMessages);
+
+		// Reduce gain 
+		for (int i = 0; i < buffer.getNumSamples(); ++i)
+		{
+			leftChannel[i] *= 0.33f;
+			rightChannel[i] *= 0.33f;
+		}
 	}
 
 	void updateFrequencies()
