@@ -448,8 +448,8 @@ private:
 			{
 				if (m_LFOs[i].isActive())
 				{
-					totalPointsX += (m_LFOs[i].getSample() * (m_lfoAmpX[i] * 10));
-					totalPointsY += (m_LFOs[i].getSample() * (m_lfoAmpY[i] * 10));
+					totalPointsX += (m_LFOs[i].getSample() * (m_lfoAmpX[i] * (m_width * 0.5f)));
+					totalPointsY += (m_LFOs[i].getSample() * (m_lfoAmpY[i] * (m_height * 0.5f)));
 					m_LFOs[i].tick();
 				}
 			}
@@ -458,36 +458,6 @@ private:
 			m_pointY = m_lastY + totalPointsY;
 
 		}
-/*
-		if (m_lfoMod)
-		{
-			for (int i = 0; i < 3; ++i)
-			{
-				
-
-				xAmount += (m_LFOs[i].getSample());
-				yAmount += (m_LFOs[i].getSample());
-
-				if (i == 0)
-				{
-					DBG(xAmount);
-				}
-
-				xAmount *= m_lfoAmpX[i] * 10;
-				yAmount *= m_lfoAmpY[i] * 10;
-
-
-
-				m_LFOs[i].tick();
-			}
-			xAmount += m_lastX;
-			yAmount += m_lastY;
-
-			m_pointX = xAmount;
-			m_pointY = yAmount;
-		}
-
-*/
 
 		//DBG(m_LFOs[0].getSample());
 

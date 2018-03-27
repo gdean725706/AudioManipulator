@@ -3,7 +3,7 @@
 
     ModContainer.h
     Created: 26 Mar 2018 8:41:15pm
-    Author:  deano
+    Author:  George Dean
 
   ==============================================================================
 */
@@ -55,13 +55,15 @@ public:
 		m_ampXSlider->setSliderStyle(Slider::RotaryVerticalDrag);
 		m_ampYSlider->setSliderStyle(Slider::RotaryVerticalDrag);
 
-		m_LFORateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 40, 15);
+		m_LFORateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 45, 15);
 		m_ampXSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow,true,40, 15);
 		m_ampYSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true,40, 15);
 
 		m_LFORateSlider->setColour(Slider::textBoxOutlineColourId, Colours::transparentWhite);
 		m_ampXSlider->setColour(Slider::textBoxOutlineColourId, Colours::transparentWhite);
 		m_ampYSlider->setColour(Slider::textBoxOutlineColourId, Colours::transparentWhite);
+
+		m_LFORateSlider->setTextValueSuffix("Hz");
 
 		m_LFORateSlider->addListener(this);
 		m_ampXSlider->addListener(this);

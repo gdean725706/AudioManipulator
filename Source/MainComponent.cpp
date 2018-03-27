@@ -34,7 +34,7 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	justifyContent = JustifyContent::center;
 
 	// Set window sizing constraints
-	setResizeLimits(661, 496, 1366, 768);
+	setResizeLimits(661, 496, 1280, 720);
 	setSize(720, 540);
 
 	// Attach to OpenGL renderer to improve graphics performance
