@@ -190,12 +190,17 @@ public:
 
 	void fillSine(int length = 512, float frequency = 1)
 	{
+		clearBuffer();
+		m_audioBuffer.resize(length);
+
 		double f = 2.0 * double_Pi / (m_audioBuffer.size() - 1);
 		for (int i = 0; i < m_audioBuffer.size(); ++i)
 		{
 			m_audioBuffer[i] = sin(i * f);
 		}
 		m_audioBuffer.at(m_audioBuffer.size() - 1) = m_audioBuffer.at(0);
+		
+		m_filled = true;
 	}
 
 private:

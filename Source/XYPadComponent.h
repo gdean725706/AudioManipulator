@@ -16,6 +16,62 @@
 #include "RecordingBuffer.h"
 
 
+class LFO
+{
+	Wavetable m_lfoOsc;
+	Phasor m_phasor;
+	float m_xMod, m_yMod;
+	bool m_active;
+public:
+	LFO(float sampleRate = 44100.0f, float frequency = 1.0f) :
+		m_lfoOsc(512),
+		m_phasor(sampleRate, frequency),
+		m_xMod(0),
+		m_yMod(0)
+	{
+		m_lfoOsc.setSampleRate(sampleRate);
+		m_lfoOsc.fillSine();
+		m_phasor.setSampleRate(sampleRate);
+	}
+
+	float getNextSample()
+	{
+		float s = m_lfoOsc.getSample(m_phasor.getPhase() * m_lfoOsc.getSize());
+		m_phasor.tick();
+		return s;
+	}
+
+	float getSample()
+	{
+		return m_lfoOsc.getSample(m_phasor.getPhase() * m_lfoOsc.getSize());
+	}
+
+	void tick()
+	{
+		m_phasor.tick();
+	}
+
+	void setSampleRate(float sampleRate)
+	{
+		m_phasor.setSampleRate(sampleRate);
+	}
+
+	void setFrequency(float frequency)
+	{
+		m_phasor.setFrequency(frequency);
+	}
+	
+	bool isActive()
+	{
+		return m_active;
+	}
+
+	void setActive(bool active)
+	{
+		m_active = active;
+	}
+};
+
 //==============================================================================
 /*
 */
@@ -36,6 +92,8 @@ static enum InterpolationMode
 		FlexItem(width,height),
 		m_pointX(0),
 		m_pointY(height),
+		m_lastX(0),
+		m_lastY(height),
 		m_colour(Colours::grey),
 		m_currentXY("Default"),
 		m_linkedEffectChain(effectChain),
@@ -44,10 +102,23 @@ static enum InterpolationMode
 		m_savedBuffersY(3),
 		m_playbackX(0),
 		m_playbackY(0),
-		m_bufferInterpolation(0.0f)
+		m_bufferInterpolation(0.0f),
+		m_lfoMod(true),
+		m_lfoAmpX(3),
+		m_lfoAmpY(3),
+		m_LFOs(3)
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
+
+
+		for (int i = 0; i < 3; ++i)
+		{
+			m_LFOs[i].setSampleRate(timer_rate_Hz);
+			m_LFOs[i].setFrequency(1.0f);
+			m_lfoAmpX[i] = 0.0f;
+			m_lfoAmpY[i] = 0.0f;
+		}
 
 		//Set up flex item
 		associatedComponent = this;
@@ -58,7 +129,10 @@ static enum InterpolationMode
 		{
 			m_savedBuffersX[i].setSampleRate(timer_rate_Hz);
 			m_savedBuffersY[i].setSampleRate(timer_rate_Hz);
+
 		}
+
+
 
 		m_bufferX.reserve(32000);
 		m_bufferY.reserve(32000);
@@ -67,7 +141,8 @@ static enum InterpolationMode
 		m_normalX = 0;
 		m_normalY = 0;
 		m_playback = false;
-		
+
+		startTimerHz(timer_rate_Hz);
     }
 
     ~XYPadComponent()
@@ -197,7 +272,6 @@ static enum InterpolationMode
 		m_savedBuffersX[index].setActive(true);
 		m_savedBuffersY[index].setActive(true);
 		m_playback = true;
-		startTimerHz(timer_rate_Hz);
 	}
 
 	void stopPointPlayback(int index)
@@ -205,7 +279,7 @@ static enum InterpolationMode
 		m_savedBuffersX[index].setActive(false);
 		m_savedBuffersY[index].setActive(false);
 		m_playback = false;
-		stopTimer();
+		
 	}
 
 	void setPlaybackRate(float rate)
@@ -250,6 +324,20 @@ static enum InterpolationMode
 			m_bufferY.push_back(m_pointY);
 			m_pointsSaved++;
 		}
+
+		int lfosActive = 0;
+		for (int i = 0; i < 3; ++i)
+		{
+			if (m_LFOs[i].isActive())
+			{
+				lfosActive += 1;
+			}
+		}
+		if (lfosActive != 0)
+		{
+			modifyXY();
+
+		}
 	}
 
 	void setInterpolationMode(InterpolationMode mode)
@@ -268,6 +356,39 @@ static enum InterpolationMode
 		m_pointY = (1-y) * m_height;
 	}
 
+	void setLfoMod(bool active)
+	{
+		m_lfoMod = active;
+	}
+
+	void setLfoAmplitude(float amplitude, int index, int axis)
+	{
+		index = clamp(index, 0, 3);
+		if (axis == 0)
+		{
+			m_lfoAmpX[index] = amplitude;
+		}
+		else if (axis == 1)
+		{
+			m_lfoAmpY[index] = amplitude;
+		}
+
+		DBG("Setting active lfo " + (String)index);
+
+		m_LFOs[index].setActive(amplitude >= 0.0f);
+	}
+
+	void setLfoFrequency(float frequency, int index)
+	{
+		index = clamp(index, 0, 3);
+
+		m_LFOs[index].setFrequency(frequency);
+
+		m_LFOs[index].setActive(frequency >= 0.0f);
+
+		DBG("Setting freq of lfo " + (String)index);
+	}
+
 private:
 
 	void updateXYPoints()
@@ -278,6 +399,8 @@ private:
 		{
 			x = m_playbackX;
 			y = m_playbackY;
+			m_lastX = x;
+			m_lastY = y;
 		}
 		else
 		{
@@ -285,11 +408,24 @@ private:
 			auto mousePoint = this->getMouseXYRelative();
 			x = mousePoint.x;
 			y = mousePoint.y;
+			m_lastX = x;
+			m_lastY = y;
 		}
+
 
 		// Clamp values for safety so we can't exceed bounds of component
 		m_pointX = clamp(x, m_width, 0.0);
 		m_pointY = clamp(y, m_height, 0.0);
+
+		finalise();
+
+	}
+
+	void finalise()
+	{
+		// Clamp values again for safety 
+		m_pointX = clamp(m_pointX, m_width, 0.0);
+		m_pointY = clamp(m_pointY, m_height, 0.0);
 
 		// Update normalised values
 		m_normalX = getXValueNormalised();
@@ -298,14 +434,72 @@ private:
 		// Pass back normalised values to processors
 		m_linkedEffectChain->setXY(m_normalX, m_normalY);
 		m_processor->setXY(m_normalX, m_normalY);
+	}
 
+	void modifyXY()
+	{
+
+		float totalPointsX = 0, totalPointsY = 0;
+
+		if (m_lfoMod)
+		{
+
+			for (int i = 0; i < 3; ++i)
+			{
+				if (m_LFOs[i].isActive())
+				{
+					totalPointsX += (m_LFOs[i].getSample() * (m_lfoAmpX[i] * 10));
+					totalPointsY += (m_LFOs[i].getSample() * (m_lfoAmpY[i] * 10));
+					m_LFOs[i].tick();
+				}
+			}
+
+			m_pointX = m_lastX + totalPointsX;
+			m_pointY = m_lastY + totalPointsY;
+
+		}
+/*
+		if (m_lfoMod)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				
+
+				xAmount += (m_LFOs[i].getSample());
+				yAmount += (m_LFOs[i].getSample());
+
+				if (i == 0)
+				{
+					DBG(xAmount);
+				}
+
+				xAmount *= m_lfoAmpX[i] * 10;
+				yAmount *= m_lfoAmpY[i] * 10;
+
+
+
+				m_LFOs[i].tick();
+			}
+			xAmount += m_lastX;
+			yAmount += m_lastY;
+
+			m_pointX = xAmount;
+			m_pointY = yAmount;
+		}
+
+*/
+
+		//DBG(m_LFOs[0].getSample());
+
+		finalise();
+		repaint();
 	}
 
 
 	Colour m_colour;
 
 	int m_width, m_height;
-	int m_pointX, m_pointY;
+	int m_pointX, m_pointY, m_lastX, m_lastY;
 	float m_normalX, m_normalY;
 	String m_currentXY;
 
@@ -332,5 +526,10 @@ private:
 		return std::min(upper, std::max(x, lower));
 	}
 
+	bool m_lfoMod;
+	std::vector<float> m_lfoAmpX, m_lfoAmpY;
+	std::vector<LFO> m_LFOs;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XYPadComponent)
 };
+

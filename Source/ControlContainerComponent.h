@@ -17,6 +17,7 @@
 #include "EffectChain.h"
 #include "FlexContainer.h"
 #include "FlexComboBox.h"
+#include "ModContainer.h"
 
 //==============================================================================
 /*
@@ -29,9 +30,10 @@ public:
 		m_writingPoints(false),
 		m_readingPoints(false),
 		m_processor(p),
-		m_chainNumber(number)
+		m_chainNumber(number),
+		m_modContainers(3)
     {
-
+		m_ptrContainers.reserve(3);
 
 		// Add XY pad and sliders
 		m_XYPad = new XYPadComponent(300, 200, m_processor->getChain(m_chainNumber), p);
@@ -68,6 +70,22 @@ public:
 		m_slider1->flexGrow = 1.0f;
 		m_slider2->flexGrow = 1.0f;
 
+		// Left container
+		m_leftContainer = new FlexContainer();
+		addAndMakeVisible(m_leftContainer);
+		items.add(m_leftContainer->withMargin(3));
+		m_leftContainer->associatedComponent = m_leftContainer;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			m_modContainers[i] = new ModContainer(m_XYPad, i);
+			m_leftContainer->items.add(m_modContainers[i]->withMargin(1));
+			m_leftContainer->addAndMakeVisible(m_modContainers[i]);
+
+			m_ptrContainers.push_back(&m_modContainers[i]);
+		}
+
+		// Right container
 		m_rightContainer = new FlexContainer();
 		addAndMakeVisible(m_rightContainer);
 		items.add(m_rightContainer->withMargin(3));
@@ -124,6 +142,13 @@ public:
 		m_rightContainer->alignItems = AlignItems::center;
 		m_rightContainer->alignContent = AlignContent::stretch;
 
+		m_leftContainer->flexDirection = Direction::column;
+		m_leftContainer->flexWrap = Wrap::noWrap;
+		m_leftContainer->justifyContent = JustifyContent::center;
+		m_leftContainer->alignItems = AlignItems::center;
+		m_leftContainer->alignContent = AlignContent::stretch;
+
+
     }
 
     ~ControlContainerComponent()
@@ -160,6 +185,10 @@ public:
 
 		int buttonWidth = m_rightContainer->getWidth() * 0.9f;
 		int rightContainerHeight = m_rightContainer->getHeight();
+
+		int leftContainerWidth = getWidth() * 0.15f;
+		m_leftContainer->setBounds(bounds.removeFromLeft(leftContainerWidth).reduced(3));
+		m_leftContainer->width = leftContainerWidth;
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -209,6 +238,11 @@ public:
 	void updateXYGUI(float x, float y)
 	{
 		m_XYPad->forceXYUpdate(x, y);
+	}
+
+	std::vector<ScopedPointer<ModContainer>*> getModContainers()
+	{
+		return m_ptrContainers;
 	}
 
 private:
@@ -272,9 +306,12 @@ private:
 	XYPadPtr m_XYPad;
 	ScopedPointer<FlexSlider> m_slider1, m_slider2, m_playbackRateSlider;
 
-	ScopedPointer<FlexContainer> m_rightContainer;
+	ScopedPointer<FlexContainer> m_rightContainer, m_leftContainer;
 
 	ScopedPointer<FlexComboBox> m_interpSelection;
+
+	std::vector<ScopedPointer<ModContainer>> m_modContainers;
+	std::vector<ScopedPointer<ModContainer>*> m_ptrContainers;
 
 	enum SlotState
 	{

@@ -17,6 +17,7 @@
 #include "RecordingBuffer.h"
 
 class MainContentComponent;
+class ModContainer;
 
 //==============================================================================
 /*

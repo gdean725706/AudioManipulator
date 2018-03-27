@@ -307,11 +307,12 @@ void MainAudioProcessor::getStateInformation(MemoryBlock& destData)
 	// Track node position
 	int index = 0;
 
-	// Button States
+	// Button & Slider States
 	if (m_editor != nullptr)
 	{
 		auto* content = dynamic_cast<MainContentComponent*>(m_editor);
 
+		// Effect Buttons
 		for (auto* button : content->getEffectButtonContainer()->getButtons())
 		{
 			// Use button name as tag name, replacing spaces with underscores
@@ -320,6 +321,17 @@ void MainAudioProcessor::getStateInformation(MemoryBlock& destData)
 			xmlMain.getChildElement(index)->setAttribute("Active",(int)button->get()->getActive());
 
 			++index;
+		}
+
+		// Mod Sliders
+		for (auto* modContainer : content->getControlContainer()->getModContainers())
+		{
+			String containerName = (String)modContainer->get()->getName();
+			xmlMain.addChildElement(new XmlElement(containerName));
+			for (auto* slider : modContainer->get()->getSliders())
+			{
+				xmlMain.getChildByName(containerName)->setAttribute(slider->getName(), slider->getValue());
+			}
 		}
 	}
 
@@ -354,6 +366,7 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 			if (m_editor != nullptr)
 			{
 				auto* content = dynamic_cast<MainContentComponent*>(m_editor);
+				content->getControlContainer()->updateXYGUI(m_padX, m_padY);
 				for (auto* button : content->getEffectButtonContainer()->getButtons())
 				{
 					String buttonName = (String)button->get()->getName().replaceCharacter(' ', '_');
@@ -362,7 +375,19 @@ void MainAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 
 					++index;
 				}
+
+				// Mod Sliders
+				for (auto* modContainer : content->getControlContainer()->getModContainers())
+				{
+					String containerName = (String)modContainer->get()->getName();
+					for (auto* slider : modContainer->get()->getSliders())
+					{
+						slider->setValue(xmlState->getChildByName(containerName)->getDoubleAttribute(slider->getName()));
+					}
+				}
 			}
+
+
 
 			for (auto* effect : m_effectChain1.getAllEffects())
 			{
