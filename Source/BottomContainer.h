@@ -135,7 +135,7 @@ private:
 		case SlotState::Ready:
 		{
 			m_processor->startPlayback(index);
-			flexBtn->updateBaseColour(Colours::lightgreen);
+			flexBtn->updateBaseColour(Colours::green.brighter());
 			flexBtn->setLabelText("Playing Sample");
 			m_buttonStates[index] = SlotState::Playback;
 			m_playback = true;

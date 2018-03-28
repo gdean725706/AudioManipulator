@@ -13,6 +13,7 @@
 #include "ControlContainerComponent.h"
 #include "MainProcessor.h"
 #include "BottomContainer.h"
+#include "CustomLookAndFeel.h"
 
 //==============================================================================
 /*

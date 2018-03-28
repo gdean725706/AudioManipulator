@@ -88,12 +88,15 @@ public:
 
 	void fillBuffer(std::vector<float> data, int size)
 	{
-		m_audioBuffer.clear();
-		m_audioBuffer.resize(size - 1);
-		m_audioBuffer = data;
-		m_bufferSize = size;
-		calculatePhasorFrequency();
-		m_filled = true;
+		if (size != 0)
+		{
+			m_audioBuffer.clear();
+			m_audioBuffer.resize(size - 1);
+			m_audioBuffer = data;
+			m_bufferSize = size;
+			calculatePhasorFrequency();
+			m_filled = true;
+		}
 	}
 
 	float getSample(float index)

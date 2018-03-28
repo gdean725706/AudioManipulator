@@ -7,7 +7,6 @@
 */
 
 #include "MainComponent.h"
-#include "MainProcessor.h"
 
 //==============================================================================
 MainContentComponent::MainContentComponent(MainAudioProcessor& p) 
@@ -34,7 +33,7 @@ MainContentComponent::MainContentComponent(MainAudioProcessor& p)
 	justifyContent = JustifyContent::center;
 
 	// Set window sizing constraints
-	setResizeLimits(661, 496, 1280, 720);
+	setResizeLimits(661, 496, 1180, 700);
 	setSize(872, 546);
 
 	// Attach to OpenGL renderer to improve graphics performance

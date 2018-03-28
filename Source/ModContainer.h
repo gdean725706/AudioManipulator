@@ -14,6 +14,7 @@
 #include "FlexContainer.h"
 #include "XYPadComponent.h"
 #include "FlexSlider.h"
+#include "CustomLookAndFeel.h"
 
 //==============================================================================
 /*
@@ -36,6 +37,33 @@ public:
 		m_LFORateSlider = new FlexSlider("LFORateSlider" + (String)id, 57, 57);
 		m_ampXSlider = new FlexSlider("AmpXSlider" + (String)id, 52, 52);
 		m_ampYSlider = new FlexSlider("AmpYSlider" + (String)id, 52 ,52);
+
+		m_laf1.setCustomText("LFO Rate " + (String)id);
+		m_laf2.setCustomText("X");
+		m_laf3.setCustomText("Y");
+
+		m_laf2.setJustification(Justification::left);
+		m_laf3.setJustification(Justification::left);
+
+		m_LFORateSlider->setLookAndFeel(&m_laf1);
+		m_ampXSlider->setLookAndFeel(&m_laf2);
+		m_ampYSlider->setLookAndFeel(&m_laf3);
+
+		//m_rateLabel = new Label("LFORateLabel_" + (String)id, "LFO Rate " + (String)id);
+		//m_ampXLabel = new Label("AmpXLabel_" + (String)id, "Mod X " + (String)id);
+		//m_ampYLabel = new Label("AmpYLabel_" + (String)id, "Mod Y " + (String)id);
+
+		//m_rateLabel->attachToComponent(m_LFORateSlider, false);
+		//m_ampXLabel->attachToComponent(m_ampXSlider, false);
+		//m_ampYLabel->attachToComponent(m_ampYSlider, false);
+
+		//m_rateLabel->setColour(Label::textColourId, Colours::lightgrey);
+		//m_ampXLabel->setColour(Label::textColourId, Colours::lightgrey);
+		//m_ampYLabel->setColour(Label::textColourId, Colours::lightgrey);
+
+		//m_rateLabel->setJustificationType(Justification::centredTop);
+		//m_ampXLabel->setJustificationType(Justification::centredTop);
+		//m_ampYLabel->setJustificationType(Justification::centredTop);
 
 		m_sliders.push_back(m_LFORateSlider);
 		m_sliders.push_back(m_ampXSlider);
@@ -153,5 +181,6 @@ private:
 	int m_id;
 	float m_lfoMaxRate;
 	ScopedPointer<Label> m_rateLabel, m_ampXLabel, m_ampYLabel;
+	CustomLookAndFeel m_laf1, m_laf2, m_laf3;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModContainer)
 };

@@ -281,7 +281,7 @@ private:
 		case SlotState::Ready:
 		{
 			m_XYPad->startPointPlayback(index);
-			flexBtn->updateBaseColour(Colours::lightgreen);
+			flexBtn->updateBaseColour(Colours::green.brighter());
 			flexBtn->setLabelText("Playing Path");
 			m_buttonStates[index] = SlotState::Playback;
 			m_readingPoints = true;

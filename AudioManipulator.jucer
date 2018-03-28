@@ -16,6 +16,8 @@
   <MAINGROUP id="m0xuvL" name="Audio Manipulator">
     <GROUP id="{35DB2B9A-58E8-C1F8-FF20-E89CAA1A7890}" name="Source">
       <GROUP id="{360B0141-FFB2-00E6-1314-CFFBC84E3C5A}" name="UI Components">
+        <FILE id="a7cddO" name="CustomLookAndFeel.h" compile="0" resource="0"
+              file="Source/CustomLookAndFeel.h"/>
         <FILE id="X22dHK" name="ModContainer.h" compile="0" resource="0" file="Source/ModContainer.h"/>
         <FILE id="cNi36Y" name="FlexComboBox.h" compile="0" resource="0" file="Source/FlexComboBox.h"/>
         <FILE id="nQ8YMY" name="FlexContainer.h" compile="0" resource="0" file="Source/FlexContainer.h"/>
