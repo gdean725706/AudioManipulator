@@ -30,7 +30,7 @@ public:
 		for (int i = 0; i < 3; ++i)
 		{
 			m_buttonStates[i] = SlotState::Empty;
-			m_recordButtons[i] = new FlexButtonComponent("RecordAudio" + i, 100, 50);
+			m_recordButtons[i] = new FlexButtonComponent("RecordAudio" + i, 100, 50, "Audio Sampler");
 			m_recordButtons[i]->addListener(this);
 			addAndMakeVisible(m_recordButtons[i]);
 			items.add(m_recordButtons[i]->withMargin(3));
@@ -115,6 +115,7 @@ private:
 			{
 				m_processor->startRecording(index);
 				flexBtn->updateBaseColour(Colours::red);
+				flexBtn->setLabelText("Recording Sample");
 				m_buttonStates[index] = SlotState::Recording;
 				m_recording = true;
 			}
@@ -125,6 +126,7 @@ private:
 		{
 			m_processor->stopRecording(index);
 			flexBtn->updateBaseColour(Colours::green);
+			flexBtn->setLabelText("Playback Sample");
 			m_buttonStates[index] = SlotState::Ready;
 			m_recording = false;
 			break;
@@ -134,6 +136,7 @@ private:
 		{
 			m_processor->startPlayback(index);
 			flexBtn->updateBaseColour(Colours::lightgreen);
+			flexBtn->setLabelText("Playing Sample");
 			m_buttonStates[index] = SlotState::Playback;
 			m_playback = true;
 			break;
@@ -143,6 +146,7 @@ private:
 		{
 			m_processor->stopPlayback(index);
 			flexBtn->updateBaseColour(Colours::green);
+			flexBtn->setLabelText("Playback Sample");
 			m_buttonStates[index] = SlotState::Ready;
 			m_playback = false;
 			break;

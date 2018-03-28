@@ -74,6 +74,15 @@ public:
 		m_yVal = y;
 	}
 
+	void getCurrentParameterNames(String &x, String &y)
+	{
+		if (!m_parameterVector.empty())
+		{
+			x = m_parameterVector[m_xParameter]->name;
+			y = m_parameterVector[m_yParameter]->name;
+		}
+	}
+
 	// Sets up which audio parameter is linked to which axis of the XY pad
 	void setParameterMapping(int x, int y)
 	{

@@ -130,7 +130,6 @@ public:
 		EffectButtonComponent* effectButton = dynamic_cast<EffectButtonComponent*>(button);
 
 		effectButton->setActive(!effectButton->getActive());
-
 		m_chain->setEffectState(effectButton->getType(), effectButton->getActive());
 		m_processor->setSimpleEffectState(effectButton->getType(), effectButton->getActive());
 

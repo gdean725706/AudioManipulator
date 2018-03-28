@@ -97,7 +97,7 @@ public:
 		for (int i = 0; i < 3; ++i)
 		{
 			m_buttonStates[i] = SlotState::Empty;
-			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i, 50, 25);
+			m_pathButtons[i] = new FlexButtonComponent("RecordPaths" + i, 50, 25, "Record Path");
 			m_pathButtons[i]->addListener(this);
 			m_rightContainer->items.add(m_pathButtons[i]->withMargin(3));
 			m_rightContainer->addAndMakeVisible(m_pathButtons[i]);
@@ -115,6 +115,7 @@ public:
 		m_playbackRateSlider->order = 5;
 		m_playbackRateSlider->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxRight, true, 50, 15);
 		m_playbackRateSlider->setValue(1.0, NotificationType::dontSendNotification);
+		m_playbackRateSlider->setColour(Slider::textBoxOutlineColourId, Colours::transparentWhite);
 		m_rightContainer->items.add(m_playbackRateSlider->withMargin(3));
 		m_playbackRateSlider->addListener(this);
 		m_rightContainer->addAndMakeVisible(m_playbackRateSlider);
@@ -262,6 +263,7 @@ private:
 			{
 				m_XYPad->startRecordingPoints(index);
 				flexBtn->updateBaseColour(Colours::red);
+				flexBtn->setLabelText("Recording Path");
 				m_buttonStates[index] = SlotState::Recording;
 				m_writingPoints = true;
 			}
@@ -271,6 +273,7 @@ private:
 		{
 			m_XYPad->stopRecordingPoints(index);
 			flexBtn->updateBaseColour(Colours::green);
+			flexBtn->setLabelText("Playback Path");
 			m_buttonStates[index] = SlotState::Ready;
 			m_writingPoints = false;
 			break;
@@ -279,6 +282,7 @@ private:
 		{
 			m_XYPad->startPointPlayback(index);
 			flexBtn->updateBaseColour(Colours::lightgreen);
+			flexBtn->setLabelText("Playing Path");
 			m_buttonStates[index] = SlotState::Playback;
 			m_readingPoints = true;
 			break;
@@ -287,6 +291,7 @@ private:
 		{
 			m_XYPad->stopPointPlayback(index);
 			flexBtn->updateBaseColour(Colours::green);
+			flexBtn->setLabelText("Playback Path");
 			m_buttonStates[index] = SlotState::Ready;
 			m_readingPoints = false;
 			break;

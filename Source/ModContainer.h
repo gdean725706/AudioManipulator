@@ -134,7 +134,6 @@ public:
 	void resized() override
 	{
 		auto bounds = getLocalBounds();
-
 		performLayout(bounds);
 		// This method is where you should set the bounds of any child
 		// components that your component contains..
@@ -153,5 +152,6 @@ private:
 	XYPadComponent* m_XYPad;
 	int m_id;
 	float m_lfoMaxRate;
+	ScopedPointer<Label> m_rateLabel, m_ampXLabel, m_ampYLabel;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModContainer)
 };

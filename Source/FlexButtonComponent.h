@@ -25,13 +25,15 @@ class FlexButtonComponent    : public Button, public FlexItem
 private:
 	Colour m_baseColour, m_colour;
 	bool m_active;
+	String m_labelText;
 public:
-    FlexButtonComponent(String buttonName, int width = 150, int height = 75) :
+    FlexButtonComponent(String buttonName, int width = 150, int height = 75, String labelText = "Record") :
 		Button("btn" + buttonName),
 		FlexItem(width, height),
 		m_baseColour(getLookAndFeel().findColour(TextButton::buttonColourId)),
 		m_colour(m_baseColour),
-		m_active(false)
+		m_active(false),
+		m_labelText(labelText)
     {
 		flexGrow = 1.0f;
 		flexShrink = 1.0f;
@@ -41,6 +43,11 @@ public:
     ~FlexButtonComponent()
     {
     }
+
+	void setLabelText(String text)
+	{
+		m_labelText = text;
+	}
 
 	// Override paint virtual to make it do what we want it to do
 	void paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown) override
@@ -68,10 +75,16 @@ public:
 		// fill colours
 		g.fillAll(m_colour);
 
+		g.setColour(Colours::lightgrey);
+		g.setFont(14);
+		g.drawText(m_labelText, getLocalBounds(), Justification::centredTop, false);
+
 		g.setColour(Colours::white);
+
 		float fontSize = scaleRange((float)getWidth(), 60.0f, 334.0f, 24.0f, 64.0f);
 		g.setFont(fontSize);
 		
+
 		g.drawText(getButtonText(), getLocalBounds(), Justification::centred, false);
 	}
 

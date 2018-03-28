@@ -22,8 +22,8 @@ public:
 		m_harmony1(processor),
 		m_harmony2(processor)
 	{
-		addParameter(m_harmony1Pitch = new AudioParameterFloat("Harmonizer1Pitch", "Harmonizer1Pitch", -16, 16, 0));
-		addParameter(m_harmony2Pitch = new AudioParameterFloat("Harmonizer2Pitch", "Harmonizer2Pitch", -16, 16, 0));
+		addParameter(m_harmony1Pitch = new AudioParameterFloat("Harmonizer1Pitch", "Harmonizer 1 Pitch", -16, 16, 0));
+		addParameter(m_harmony2Pitch = new AudioParameterFloat("Harmonizer2Pitch", "Harmonizer 2 Pitch", -16, 16, 0));
 		
 		registerParameter(m_harmony1Pitch);
 		registerParameter(m_harmony2Pitch);

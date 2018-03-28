@@ -67,8 +67,8 @@ public:
 		{
 
 			osc = m_sineOscillator.getSample(m_phasor.getPhase() * m_sineOscillator.getSize());
-			leftChannel[i] *= (osc * (depth / 100));
-			rightChannel[i] *= (osc * (depth / 100));
+			leftChannel[i] *= (osc * (depth * 0.01f));
+			rightChannel[i] *= (osc * (depth * 0.01f));
 			m_phasor.tick();
 
 			m_phase++;

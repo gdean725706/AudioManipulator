@@ -108,7 +108,9 @@ static enum InterpolationMode
 		m_lfoAmpY(3),
 		m_LFOs(3),
 		m_trail(30),
-		m_trailIndex(0)
+		m_trailIndex(0),
+		m_xParamName("XParam"),
+		m_yParamName("YParam")
     {
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
@@ -242,7 +244,12 @@ static enum InterpolationMode
 		// Update string with XY coords
 		updateMouseXYText();
 
+		m_linkedEffectChain->getLatestNames(m_xParamName, m_yParamName);
+
 		// Horizontal Line
+		g.drawMultiLineText(m_xParamName, m_pointX + 4, 13, 200);
+		g.drawMultiLineText(m_yParamName, 2, m_pointY + 15, 200);
+
 		g.drawRect(m_pointX, 0, 2, this->getHeight(), 1);
 		// Vertical line
 		g.drawRect(0, m_pointY, this->getWidth(), 2, 1);
@@ -412,6 +419,12 @@ static enum InterpolationMode
 		DBG("Setting freq of lfo " + (String)index);
 	}
 
+	void setXYStringName(String x, String y)
+	{
+		m_xParamName = x;
+		m_yParamName = y;
+	}
+
 private:
 
 	void updateXYPoints()
@@ -528,6 +541,8 @@ private:
 
 	std::vector<Point<float>> m_trail;
 	int m_trailIndex;
+
+	String m_xParamName, m_yParamName;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XYPadComponent)
 };

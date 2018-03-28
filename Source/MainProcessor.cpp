@@ -42,10 +42,15 @@ MainAudioProcessor::MainAudioProcessor()
 
 	m_speed.active = false;
 	m_speed.type = FXType::Speed;
+	m_speed.param1 = "Speed Multiplier";
 	m_LPF.active = false;
 	m_LPF.type = FXType::LowPassFilter;
+	m_LPF.param1 = "Cutoff Frequency";
+	m_LPF.param2 = "Resonance";
 	m_HPF.active = false;
 	m_HPF.type = FXType::HighPassFilter;
+	m_HPF.param1 = "Cutoff Frequency";
+	m_HPF.param2 = "Resonance";
 
 	m_simpleEffects.push_back(&m_speed);
 	m_simpleEffects.push_back(&m_LPF);
