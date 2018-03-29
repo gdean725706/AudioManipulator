@@ -38,37 +38,15 @@ public:
 		// Add XY pad and sliders
 		m_XYPad = new XYPadComponent(300, 200, m_processor->getChain(m_chainNumber), p);
 		// Add and setup sliders
-		m_slider1 = new FlexSlider("flexSlider1", 10, 50);
-		m_slider2 = new FlexSlider("flexSlider2", 10, 50);
 
-		m_slider1->setRange(-1.0f, 1.0f, 0.01f);
-		m_slider2->setRange(-1.0f, 1.0f, 0.01f);
-
-		m_slider1->setSliderStyle(Slider::LinearVertical);
-		m_slider2->setSliderStyle(Slider::LinearVertical);
-
-		m_slider1->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 50, 15);
-		m_slider2->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, true, 50, 15);
-
-		m_slider1->addListener(this);
-		m_slider2->addListener(this);
 		// Add and make visible
-		//addAndMakeVisible(m_slider1);
-		//addAndMakeVisible(m_slider2);
 		addAndMakeVisible(m_XYPad);
 
 		// Add to flex
-		//items.add(m_slider1->withMargin(3));
-		//items.add(m_slider2->withMargin(3));
 		items.add(m_XYPad->withMargin(3));
 
 		// Set up order
-		m_slider1->order = 0;
-		m_slider2->order = 1;
 		m_XYPad->order = 2;
-
-		m_slider1->flexGrow = 1.0f;
-		m_slider2->flexGrow = 1.0f;
 
 		// Left container
 		m_leftContainer = new FlexContainer();
@@ -159,21 +137,6 @@ public:
     {
     }
 
-    //void paint (Graphics& g) override
-    //{
-    //    /* This demo code just fills the component's background and
-    //       draws some placeholder text to get you started.
-
-    //       You should replace everything in this method with your own
-    //       drawing code..
-    //    */
-
-    //    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
-
-    //    g.setColour (Colours::grey);
-    //    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    //}
 
     void resized() override
     {
@@ -312,7 +275,7 @@ private:
 
 	typedef ScopedPointer<XYPadComponent> XYPadPtr;
 	XYPadPtr m_XYPad;
-	ScopedPointer<FlexSlider> m_slider1, m_slider2, m_playbackRateSlider;
+	ScopedPointer<FlexSlider> m_playbackRateSlider;
 
 	ScopedPointer<FlexContainer> m_rightContainer, m_leftContainer;
 

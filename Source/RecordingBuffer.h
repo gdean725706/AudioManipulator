@@ -212,7 +212,7 @@ private:
 	T linearLookup(T index)
 	{
 		T aIndex, bIndex, r;
-		r = modf(index, &aIndex);
+		r = std::modf(index, &aIndex);
 		bIndex = aIndex + 1;
 		rangeMap(aIndex);
 		rangeMap(bIndex);
@@ -225,7 +225,7 @@ private:
 	{
 		// Pull out remainder and base integer value from index
 		T lower, remainder;
-		remainder = modf(index, &lower);
+		remainder = std::modf(index, &lower);
 
 		// Get four discrete sample index points from low int value
 		T y0 = lower - 1;

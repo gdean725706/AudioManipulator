@@ -76,12 +76,13 @@ public:
 		g.fillAll(m_colour);
 
 		g.setColour(Colours::lightgrey);
-		g.setFont(14);
+        float labelSize = scaleRange((float)getWidth(), 60.0f, 334.0f, 8.0f, 16.0f);
+		g.setFont(labelSize);
 		g.drawText(m_labelText, getLocalBounds(), Justification::centredTop, false);
 
 		g.setColour(Colours::white);
 
-		float fontSize = scaleRange((float)getWidth(), 60.0f, 334.0f, 24.0f, 64.0f);
+		float fontSize = scaleRange((float)getWidth(), 60.0f, 334.0f, 16.0f, 64.0f);
 		g.setFont(fontSize);
 		
 

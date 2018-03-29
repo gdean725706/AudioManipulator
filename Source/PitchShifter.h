@@ -16,6 +16,8 @@
 #include "DelayUnit.h"
 #include "EffectBase.h"
 
+//http://msp.ucsd.edu/techniques/v0.11/book-html/node125.html
+//http://www.katjaas.nl/pitchshift/pitchshift.html
 class PitchShifter : public EffectBase
 {
 public:
@@ -55,21 +57,27 @@ public:
 
 		for (int i = 0; i < buffer.getNumSamples(); ++i)
 		{
+			// Write to delay
 			m_leftDelay.writeSample(leftChannel[i]);
 			m_rightDelay.writeSample(rightChannel[i]);
 
+			// phase and inv phase for each tape head and overlapping hann windows
 			float phase = m_phasor.getPhase();
 			float offsetPhase = wrap(phase + 0.5);
 
+			// fetch modded delay
 			float leftDelay = m_leftDelay.getDelay(phase * m_delayTime);
 			float rightDelay = m_rightDelay.getDelay(phase * m_delayTime);
 			
+			// fetch inv delay
 			float invleftDelay = m_leftDelay.getDelay(offsetPhase * m_delayTime);
 			float invrightDelay = m_rightDelay.getDelay(offsetPhase * m_delayTime);
 
+			// get windows
 			float window = m_window.getSample(phase * m_window.getSize());
 			float offsetWindow = m_window.getSample(offsetPhase * m_window.getSize());
 
+			// Sum everything & mix in dry
 			leftChannel[i] = (leftDelay * window + invleftDelay * offsetWindow) + (leftChannel[i] * (float)*m_dryMix);
 			rightChannel[i] = (rightDelay * window + invrightDelay * offsetWindow) + (rightChannel[i] * (float)*m_dryMix);
 
@@ -84,8 +92,7 @@ public:
 		*m_dryMix = value;
 	}
 
-	//http://msp.ucsd.edu/techniques/v0.11/book-html/node125.html
-	//http://www.katjaas.nl/pitchshift/pitchshift.html
+
 	void setFrequency(float frequency)
 	{
 		*m_frequency = frequency;

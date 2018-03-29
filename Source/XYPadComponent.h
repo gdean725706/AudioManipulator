@@ -247,15 +247,29 @@ static enum InterpolationMode
 		m_linkedEffectChain->getLatestNames(m_xParamName, m_yParamName);
 
 		// Horizontal Line
-		g.drawMultiLineText(m_xParamName, m_pointX + 4, 13, 200);
-		g.drawMultiLineText(m_yParamName, 2, m_pointY + 15, 200);
+
+		int xTextPos(0), yTextPos(0);
+		float on(0);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			on += m_lfoAmpX[i];
+			on += m_lfoAmpY[i];
+		}
+
+		// Detach the text when LFOs activate
+		xTextPos = on != 0.0f ? m_width - 200 : m_pointX;
+		yTextPos = on != 0.0f ? 0 : m_pointY;
+		
+		g.drawMultiLineText(m_xParamName, xTextPos + 4, 13, 200);
+		g.drawMultiLineText(m_yParamName, 2, yTextPos + 15, 200);
 
 		g.drawRect(m_pointX, 0, 2, this->getHeight(), 1);
 		// Vertical line
 		g.drawRect(0, m_pointY, this->getWidth(), 2, 1);
 
 		// Draw trail
-		g.setColour(Colours::aliceblue);
+		//g.setColour(Colours::aliceblue);
 		//const int trailLength = m_trail.size();
 		//Path trailPath;
 
@@ -276,7 +290,6 @@ static enum InterpolationMode
 		//g.setColour(getLookAndFeel().findColour(Slider::backgroundColourId));
 		//g.fillPath(trailPath);
 
-        g.setColour (Colours::white);
         g.setFont (14.0f);
         g.drawText (m_currentXY, getLocalBounds(),
                     Justification::centred, true);
@@ -489,8 +502,8 @@ private:
 					m_LFOs[i].tick();
 				}
 			}
-			DBG(totalPointsX);
-			DBG(totalPointsY);
+			//DBG(totalPointsX);
+			//DBG(totalPointsY);
 
 			m_pointX = m_lastX + totalPointsX;
 			m_pointY = m_lastY + totalPointsY;

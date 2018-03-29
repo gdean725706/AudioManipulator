@@ -38,7 +38,7 @@ public:
 		m_ampXSlider = new FlexSlider("AmpXSlider" + (String)id, 52, 52);
 		m_ampYSlider = new FlexSlider("AmpYSlider" + (String)id, 52 ,52);
 
-		m_laf1.setCustomText("LFO Rate " + (String)id);
+		m_laf1.setCustomText("LFO " + (String)(id+1) + " Rate");
 		m_laf2.setCustomText("X");
 		m_laf3.setCustomText("Y");
 
