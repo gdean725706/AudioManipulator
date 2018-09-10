@@ -4,7 +4,7 @@ Audio Manipulator is a real-time audio processing application for standalone and
 An X-Y based control system with user motion and modulation functionality provides dynamic control over a selection of in-built effects which utilise digital signal processing techniques to drastically alter incoming audio. 
 
 ## Installation
-Audio Manipulator still in development and not every Platform / DAW combination has been tested, so use at your own risk!
+Audio Manipulator is still in development and not every Platform / DAW combination has been tested, so use at your own risk!
 
 Builds for Windows, Mac & Android are published in the Releases section.
 
