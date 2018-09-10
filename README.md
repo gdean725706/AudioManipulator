@@ -1,5 +1,5 @@
 # Audio Manipulator
-! [am1_img](https://i.imgur.com/7WMaRet.png)
+![am1_img](https://i.imgur.com/7WMaRet.png)
 Audio Manipulator is a real-time audio processing application for standalone and mobile devices aimed at musicians, performers, and individuals alike, who wish to creatively process audio for recording and live performance. 
 
 An X-Y based control system with user motion and modulation functionality provides dynamic control over a selection of in-built effects which utilise digital signal processing techniques to drastically alter incoming audio. 
